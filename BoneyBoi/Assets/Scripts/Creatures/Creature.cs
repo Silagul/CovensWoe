@@ -43,4 +43,12 @@ public class Creature : MonoBehaviour
         }
         return false;
     }
+
+    protected float cameraWeight = 0.0f;
+    public virtual void IsVisible(bool visible)
+    {
+        cameraWeight = Mathf.Max(cameraWeight - Time.deltaTime, 0.0f);
+        Camera.main.orthographicSize = Mathf.Lerp(5, 4, cameraWeight);
+        Camera.main.GetComponentInChildren<SpriteRenderer>().color = new Color32(0, 0, 0, (byte)Mathf.Lerp(0, 255, cameraWeight));
+    }
 }

@@ -39,11 +39,13 @@ public class Human : Creature
 
     void Interact()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (Input.GetKeyDown(KeyCode.E) && cameraWeight == 0.0f) //Can't leave when seen
         {
             SetState("Hollow");
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position, Quaternion.identity);
         }
+        if (Input.GetKey(KeyCode.Escape))
+            Game.ActivateMenu("GameMenu");
     }
 
     void Arise()
@@ -62,6 +64,22 @@ public class Human : Creature
             case "Arise": tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
             case "Hollow": tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
             default: isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
+        }
+    }
+
+    public override void IsVisible(bool visible)
+    {
+        if (isActive)
+        {
+            if (visible) { cameraWeight = Mathf.Min(cameraWeight + Time.deltaTime, 1.0f); }
+            else { cameraWeight = Mathf.Max(cameraWeight - Time.deltaTime, 0.0f); }
+            Camera.main.orthographicSize = Mathf.Lerp(5, 4, cameraWeight);
+            Camera.main.GetComponentInChildren<SpriteRenderer>().color = new Color32(0, 0, 0, (byte)Mathf.Lerp(0, 255, cameraWeight));
+            if (cameraWeight == 1.0f && !Game.MenuActive("DeathMenu"))
+            {
+                isActive = false;
+                Game.ActivateMenu("DeathMenu");
+            }
         }
     }
 }

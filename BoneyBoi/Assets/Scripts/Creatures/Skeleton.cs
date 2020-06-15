@@ -48,6 +48,8 @@ public class Skeleton : Creature
         else if (Input.GetKey(KeyCode.Q))
             if ((target = CollidesWith("Movable")) != null)
                 target.transform.position = transform.position + new Vector3(0, 1.0f, 1.0f);
+        if (Input.GetKey(KeyCode.Escape))
+            Game.ActivateMenu("GameMenu");
     }
 
     void Arise()

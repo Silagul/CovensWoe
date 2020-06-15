@@ -1,17 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class World : MonoBehaviour
 {
     public static List<GameObject> chunks = new List<GameObject>();
+    public static readonly float renderDistance = 48.0f;
     void Start()
     {
         chunks.Add(CreateChunk("Start", true));
     }
 
-    void Update()
+    void FixedUpdate()
     {
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Creature>().IsVisible(Time.time < 10.0f);
         for (int i = chunks.Count - 1; i >= 0; i--)
         {
             if (chunks[i] != null)
@@ -30,11 +33,11 @@ public class World : MonoBehaviour
 
     GameObject CreateChunk(string chunkName, bool checkForNeighbours)
     {
-        GameObject chunk = Instantiate(Resources.Load<GameObject>($"Prefabs/Chunk_{chunkName}"));
+        GameObject chunk = Instantiate(Resources.Load<GameObject>($"Prefabs/World/Chunk_{chunkName}"), transform);
         Vector3 cameraPosition = Camera.main.transform.position;
         Vector3 chunkPosition = chunk.transform.position;
         float distance = Vector2.Distance(new Vector2(cameraPosition.x, cameraPosition.y), new Vector2(chunkPosition.x, chunkPosition.y));
-        if (distance < 48.0f)
+        if (distance < renderDistance)
         {
             string[] neighbours = chunk.GetComponent<Chunk>().neighbours;
             if (checkForNeighbours)
@@ -51,7 +54,7 @@ public class World : MonoBehaviour
         return chunk;
     }
 
-    bool ChunkExists(string chunkName)
+    static bool ChunkExists(string chunkName)
     {
         foreach (GameObject chunk in chunks)
             if (chunk != null && chunk.name == $"Chunk_{chunkName}(Clone)")
