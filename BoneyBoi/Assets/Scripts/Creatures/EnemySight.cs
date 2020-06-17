@@ -13,7 +13,7 @@ public class EnemySight : MonoBehaviour
     private float angleIncrease;    //the value for how much the angle is increased after every ray
     private float timeInSight = 0f;
     private bool killingChild = false;
-    private bool calmingDown = false;
+    //private bool calmingDown = false;
 
     public float timeToDie;
     public float startingAngle;    //starting angle of the fov
@@ -128,15 +128,15 @@ public class EnemySight : MonoBehaviour
         killingChild = false;
     }
 
-    private IEnumerator CalmingDown()
-    {
-        calmingDown = true;
-        if (timeInSight > 0)
-        {
-            yield return new WaitForSeconds(1);
-            timeInSight -= 1f;
-            StartCoroutine("CalmingDown");
-        }
-        calmingDown = false;
-    }
+    //private IEnumerator CalmingDown()
+    //{
+    //    calmingDown = true;
+    //    if (timeInSight > 0)
+    //    {
+    //        yield return new WaitForSeconds(1);
+    //        timeInSight -= 1f;
+    //        StartCoroutine("CalmingDown");
+    //    }
+    //    calmingDown = false;
+    //}
 }
