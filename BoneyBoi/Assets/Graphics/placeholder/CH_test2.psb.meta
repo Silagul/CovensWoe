@@ -61,6 +61,7 @@ ScriptedImporter:
     maxTextureSizeSet: 0
     compressionQualitySet: 0
     textureFormatSet: 0
+    applyGammaDecoding: 0
   spriteImportData:
   - name: 
     originalName: 
@@ -3733,30 +3734,8 @@ ScriptedImporter:
       order: 0
     dimension: {x: 0, y: 0}
     characterGroups: []
-  boneGOs:
-  - go: {fileID: -820021539988368428, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 0
-  - go: {fileID: -1538928172614413707, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 1
-  - go: {fileID: 6753151388508842182, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 2
-  - go: {fileID: -5056566817475172318, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 3
-  - go: {fileID: -4099800881458618379, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 4
-  - go: {fileID: 774483901849239747, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 5
-  - go: {fileID: -4531011339706246684, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 6
-  - go: {fileID: 6204385859249404372, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 7
-  - go: {fileID: -4761782958238397038, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 8
-  - go: {fileID: 2898892832609533355, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 9
-  - go: {fileID: 441422245649979756, guid: 2b7d5486327e71540a02318e29592f35, type: 3}
-    index: 10
   generateGOHierarchy: 0
   textureAssetName: CH_test2 Texture
   prefabAssetName: CH_test2 Prefab
   spriteLibAssetName: CH_test2 Sprite Lib
+  secondarySpriteTextures: []
