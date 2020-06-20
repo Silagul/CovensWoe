@@ -25,8 +25,18 @@ public class Soul : Creature
                 if (target.GetComponent<Creature>().Possess())
                     SetState("Possession");
         }
-        if (Input.GetKey(KeyCode.Escape))
-            Game.ActivateMenu("GameMenu");
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Game.menu == null)
+                Game.ActivateMenu("GameMenu");
+            else if (Game.MenuActive("GameMenu"))
+                Destroy(Game.menu);
+            else if (Game.MenuActive("OptionsMenu"))
+            {
+                Options.SaveData();
+                Game.ActivateMenu("GameMenu");
+            }
+        }
     }
 
     void Movement()

@@ -13,7 +13,8 @@ public class Human : Creature
     void Start()
     {
         SetState("Hollow");
-        GetComponent<MeshRenderer>().material.color = new Color32(75, 75, 75, 255);
+        GetComponent<SpriteRenderer>().color = new Color32(75, 75, 75, 255);
+        transform.parent = null;
     }
 
     void Movement()
@@ -21,7 +22,7 @@ public class Human : Creature
         float horizontalGoal = 0.0f;
         if (isActive)
         {
-            Camera.main.GetComponent<CameraMovement>().lookat = transform.position;
+            Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
             if (Input.GetKey(KeyCode.D)) { horizontalGoal += speed; }
             if (Input.GetKey(KeyCode.A)) { horizontalGoal -= speed; }
         }
@@ -29,7 +30,7 @@ public class Human : Creature
         GameObject floor = CollidesWith("Floor");
         if (floor != null)
         {
-            if (Input.GetKey(KeyCode.Space) && isActive) { vertical = 9.81f; }
+            if (Input.GetKey(KeyCode.Space) && isActive) { vertical = 7.0f; }
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>())) { vertical = Mathf.Max(0.0f, vertical); }
         }
         else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime); }
@@ -39,13 +40,23 @@ public class Human : Creature
 
     void Interact()
     {
-        if (Input.GetKeyDown(KeyCode.E) && cameraWeight == 0.0f) //Can't leave when seen
+        if (isActive && Input.GetKeyDown(KeyCode.E) && visibleTime == 0.0f)
         {
             SetState("Hollow");
-            Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position, Quaternion.identity);
+            Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
-        if (Input.GetKey(KeyCode.Escape))
-            Game.ActivateMenu("GameMenu");
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Game.menu == null)
+                Game.ActivateMenu("GameMenu");
+            else if (Game.MenuActive("GameMenu"))
+                Destroy(Game.menu);
+            else if (Game.MenuActive("OptionsMenu"))
+            {
+                Options.SaveData();
+                Game.ActivateMenu("GameMenu");
+            }
+        }
     }
 
     void Arise()
@@ -63,23 +74,7 @@ public class Human : Creature
         {
             case "Arise": tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
             case "Hollow": tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
-            default: isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
-        }
-    }
-
-    public override void IsVisible(bool visible)
-    {
-        if (isActive)
-        {
-            if (visible) { cameraWeight = Mathf.Min(cameraWeight + Time.deltaTime, 1.0f); }
-            else { cameraWeight = Mathf.Max(cameraWeight - Time.deltaTime, 0.0f); }
-            Camera.main.orthographicSize = Mathf.Lerp(5, 4, cameraWeight);
-            Camera.main.GetComponentInChildren<SpriteRenderer>().color = new Color32(0, 0, 0, (byte)Mathf.Lerp(0, 255, cameraWeight));
-            if (cameraWeight == 1.0f && !Game.MenuActive("DeathMenu"))
-            {
-                isActive = false;
-                Game.ActivateMenu("DeathMenu");
-            }
+            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
         }
     }
 }

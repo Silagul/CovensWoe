@@ -32,6 +32,14 @@ public class Slider : MonoBehaviour
                 }
                 isDragging = false;
             }
+            else
+            {
+                switch (name)
+                {
+                    case "Volume": AudioListener.volume = weight; break;
+                    case "Brightness": RenderSettings.ambientLight = Color32.Lerp(Color.black, Color.white, weight); break;
+                }
+            }
         }
     }
 

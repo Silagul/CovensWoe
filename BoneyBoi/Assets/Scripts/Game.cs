@@ -22,7 +22,14 @@ public class Game : MonoBehaviour
     {
         GameObject world = GameObject.Find("World(Clone)");
         if (world != null)
+        {
             Destroy(world);
+            Destroy(GameObject.Find("Human"));
+            Destroy(GameObject.Find("Skeleton"));
+            if (GameObject.Find("Soul(Clone)") != null)
+                Destroy(GameObject.Find("Soul(Clone)"));
+        }
+        Creature.visibleTime = 0.0f;
         Instantiate(Resources.Load<GameObject>("Prefabs/World/World"));
     }
 

@@ -16,7 +16,7 @@ public class Creature : MonoBehaviour
     public GameObject CollidesWith(string tag)
     {
         foreach (GameObject go in collisions)
-            if (go.tag == tag)
+            if (go != null && go.tag == tag)
                 return go;
         return null;
     }
@@ -44,11 +44,21 @@ public class Creature : MonoBehaviour
         return false;
     }
 
-    protected float cameraWeight = 0.0f;
-    public virtual void IsVisible(bool visible)
+    public static float visibleTime = 0.0f;
+    public void IsVisible(bool visible)
     {
-        cameraWeight = Mathf.Max(cameraWeight - Time.deltaTime, 0.0f);
-        Camera.main.orthographicSize = Mathf.Lerp(5, 4, cameraWeight);
-        Camera.main.GetComponentInChildren<SpriteRenderer>().color = new Color32(0, 0, 0, (byte)Mathf.Lerp(0, 255, cameraWeight));
+        if (visible) { visibleTime = Mathf.Min(1.0f, visibleTime + (Time.deltaTime / Time.timeScale)); CameraMovement.darken = true; }
+        else { visibleTime = Mathf.Max(0.0f, visibleTime - Time.deltaTime); }
+        if (isActive)
+        {
+            if (visibleTime == 1.0f)
+            {
+                if (Game.menu == null || !Game.MenuActive("DeathMenu"))
+                {
+                    isActive = false;
+                    Game.ActivateMenu("DeathMenu");
+                }
+            }
+        }
     }
 }

@@ -14,7 +14,11 @@ public class Button : MonoBehaviour
                     Game.ActivateMenu("MainMenu");
                     GameObject world;
                     if ((world = GameObject.Find("World(Clone)")) != null)
+                    {
                         Destroy(world);
+                        Destroy(GameObject.Find("Human"));
+                        Destroy(GameObject.Find("Skeleton"));
+                    }
                     break;
                 case "Continue":
                     Game.menu = null;
