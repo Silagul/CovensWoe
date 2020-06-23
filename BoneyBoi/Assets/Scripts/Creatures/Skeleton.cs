@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class Skeleton : Creature
 {
+    Animator anim;
     float speed = 4.0f;
     public float vertical = 0.0f;
     public float horizontal = 0.0f;
@@ -12,6 +13,7 @@ public class Skeleton : Creature
     float timer = 0.0f;
     void Start()
     {
+        anim = GetComponent<Animator>();
         SetState("Hollow");
         GetComponent<SpriteRenderer>().color = new Color32(75, 75, 75, 255);
     }
@@ -29,12 +31,17 @@ public class Skeleton : Creature
         GameObject floor = CollidesWith("Floor");
         if (floor != null)
         {
-            if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q) && CollidesWith("Floor") != null) { vertical = 9.81f; }
-            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>())) { vertical = Mathf.Max(0.0f, vertical); }
+            if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q)) { vertical = 9.81f; anim.SetBool("Foothold", false); }
+            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
+            {
+                anim.SetBool("Foothold", true);
+                vertical = Mathf.Max(0.0f, vertical);
+            }
         }
         else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime); }
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        anim.SetFloat("Horizontal", horizontal);
     }
 
     void Interact()

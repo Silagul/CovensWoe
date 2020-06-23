@@ -17,7 +17,7 @@ public class CameraMovement : MonoBehaviour
         else darken = false;
         GameObject player;
         if ((player = GameObject.FindGameObjectWithTag("Player")) != null)
-            player.GetComponent<Creature>().IsVisible(); //Might overwrite darken value
+            player?.GetComponent<Creature>().IsVisible(); //Might overwrite darken value
         transform.position = (Vector3)lookat - new Vector3(0, 0, 20);
         Darken();
     }

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class Human : Creature
 {
+    Animator anim;
     float speed = 4.0f;
     public float vertical = 0.0f;
     public float horizontal = 0.0f;
@@ -13,7 +14,7 @@ public class Human : Creature
     void Start()
     {
         SetState("Hollow");
-        GetComponent<SpriteRenderer>().color = new Color32(75, 75, 75, 255);
+        anim = GetComponent<Animator>();
         transform.parent = null;
     }
 
@@ -30,12 +31,19 @@ public class Human : Creature
         GameObject floor = CollidesWith("Floor");
         if (floor != null)
         {
-            if (Input.GetKey(KeyCode.Space) && isActive) { vertical = 7.0f; }
-            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>())) { vertical = Mathf.Max(0.0f, vertical); }
+            if (Input.GetKey(KeyCode.Space) && isActive) { vertical = 7.0f; anim.SetBool("Foothold", false); }
+            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
+            {
+                anim.SetBool("Foothold", true);
+                vertical = Mathf.Max(0.0f, vertical);
+            }
         }
         else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime); }
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
+        anim.SetFloat("Horizontal", Mathf.Abs(horizontal));
+        if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
+        else if (horizontal < 0.0f) transform.localScale = new Vector3(0.2f, 0.2f, 1);
     }
 
     void Interact()
