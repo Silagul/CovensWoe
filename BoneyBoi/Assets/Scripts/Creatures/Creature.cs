@@ -45,6 +45,7 @@ public class Creature : MonoBehaviour
         return false;
     }
 
+
     public static float visibleTime = 0.0f;
     public void IsVisible()
     {
