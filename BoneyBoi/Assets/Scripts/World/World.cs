@@ -6,12 +6,12 @@ using UnityEngine.Rendering;
 public class World : MonoBehaviour
 {
     public static List<Chunk> chunks = new List<Chunk>();
-    public static List<string> loadlist = new List<string>();
     public static readonly float renderDistance = 48.0f;
     void Start()
     {
         chunks.Clear();
         chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Chunk_Start"), transform).GetComponent<Chunk>());
+        Chunk.currentChunk = chunks[0].name;
         chunks[0].Reload();
     }
 

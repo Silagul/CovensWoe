@@ -6,10 +6,6 @@ public class Chunk : MonoBehaviour
 {
     public static string currentChunk = "Chunk_Start(Clone)";
     public string[] neighbours = new string[] { };
-    void Start()
-    {
-        World.loadlist.AddRange(neighbours);
-    }
 
     public void Reload()
     {
@@ -38,7 +34,7 @@ public class Chunk : MonoBehaviour
     {
         foreach (string neighbour in neighbours)
             if (!World.ChunkExists(neighbour))
-                World.chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Chunk_{neighbour}")).GetComponent<Chunk>());
+                World.chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Chunk_{neighbour}"), transform.parent).GetComponent<Chunk>());
     }
 
     void Deactivate()
