@@ -68,11 +68,13 @@ public class Human : Creature
 
     public override void SetState(string stateName)
     {
+        state = stateName;
         updates.Clear();
         fixedUpdates.Clear();
         switch (stateName)
         {
             case "Arise": tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
+            case "Dead": isActive = false; break;
             case "Hollow": tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
             default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
         }
