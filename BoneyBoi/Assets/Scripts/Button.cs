@@ -18,6 +18,9 @@ public class Button : MonoBehaviour
                         Destroy(world);
                         Destroy(GameObject.Find("Human"));
                         Destroy(GameObject.Find("Skeleton"));
+                        if (GameObject.Find("Soul(Clone)") != null)
+                            Destroy(GameObject.Find("Soul(Clone)"));
+                        Creature.visibleTime = 0.0f;
                     }
                     break;
                 case "Continue":

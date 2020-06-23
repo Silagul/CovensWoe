@@ -67,11 +67,13 @@ public class Soul : Creature
 
     public override void SetState(string stateName)
     {
+        state = stateName;
         updates.Clear();
         fixedUpdates.Clear();
         switch (stateName)
         {
             case "Possession": isActive = false; fixedUpdates.Add(Movement); updates.Add(Vanish); timer = 0.0f; break;
+            case "Dead": SetState("default"); break;
             default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); timer = 0.0f; break;
         }
     }

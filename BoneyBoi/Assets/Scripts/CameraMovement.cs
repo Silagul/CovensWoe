@@ -5,6 +5,7 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     public Vector2 lookat = Vector2.zero;
+    public static bool willDie = false;
     void Start()
     {
         transform.GetChild(0).localScale = new Vector3(Screen.width / 64.0f, Screen.height / 64.0f, 1);
@@ -16,7 +17,7 @@ public class CameraMovement : MonoBehaviour
         else darken = false;
         GameObject player;
         if ((player = GameObject.FindGameObjectWithTag("Player")) != null)
-            player.GetComponent<Creature>().IsVisible(transform.position.y > 4.0f); //Might overwrite darken value
+            player?.GetComponent<Creature>().IsVisible(); //Might overwrite darken value
         transform.position = (Vector3)lookat - new Vector3(0, 0, 20);
         Darken();
     }
