@@ -13,7 +13,7 @@ public class Human : Creature
     float timer = 0.0f;
     void Start()
     {
-        SetState("Hollow");
+        SetState("Default");
         anim = GetComponent<Animator>();
         transform.parent = null;
     }
@@ -82,7 +82,7 @@ public class Human : Creature
         switch (stateName)
         {
             case "Arise": tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
-            case "Dead": isActive = false; break;
+            case "Dead": tag = "Untagged"; isActive = false; break;
             case "Hollow": tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
             default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
         }
