@@ -28,11 +28,13 @@ public class Backforth : MonoBehaviour
 
             Vector2 direction = (nextPoint - (Vector2)transform.position);
             Vector2 movement = direction.normalized * speed * Time.fixedDeltaTime;
-            if (movement.magnitude > direction.magnitude)
+            if (movement.magnitude >= direction.magnitude - 0.01f)
             {
                 movement = direction.normalized * movement.magnitude;
-                if (nextPoint == startPoint) nextPoint = endPoint;
-                else nextPoint = startPoint;
+                {
+                    if (nextPoint == startPoint) { nextPoint = endPoint; }
+                    else { nextPoint = startPoint; }
+                }
             }
             transform.position += (Vector3)movement;
         }

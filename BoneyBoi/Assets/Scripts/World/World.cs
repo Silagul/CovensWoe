@@ -10,7 +10,7 @@ public class World : MonoBehaviour
     void Start()
     {
         chunks.Clear();
-        chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Chunk_Start"), transform).GetComponent<Chunk>());
+        chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Master/Chunk_Start"), transform).GetComponent<Chunk>());
         Chunk.currentChunk = chunks[0].name;
         chunks[0].Reload();
     }
