@@ -12,9 +12,8 @@ public class Human : Creature
     float acceleration = 16.0f;
     float timer = 0.0f;
     void Start()
-    {
+    {        anim = GetComponent<Animator>();
         SetState("Default");
-        anim = GetComponent<Animator>();
         transform.parent = null;
     }
 
@@ -38,7 +37,7 @@ public class Human : Creature
                 vertical = Mathf.Max(0.0f, vertical);
             }
         }
-        else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime); }
+        else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime); anim.SetBool("Foothold", false); }
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         anim.SetFloat("Horizontal", Mathf.Abs(horizontal));
@@ -81,10 +80,10 @@ public class Human : Creature
         fixedUpdates.Clear();
         switch (stateName)
         {
-            case "Arise": tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
+            case "Arise": anim.SetBool("IsPossessed", true); tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
             case "Dead": tag = "Untagged"; isActive = false; break;
-            case "Hollow": tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
-            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
+            case "Hollow": anim.SetBool("IsPossessed", false); tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
+            default: anim.SetBool("IsPossessed", true); tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
         }
     }
 }
