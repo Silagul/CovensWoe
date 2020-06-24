@@ -49,7 +49,7 @@ public class Creature : MonoBehaviour
     public static float visibleTime = 0.0f;
     public void IsVisible()
     {
-        if (transform.position.y > 4.0f || state == "Dead") { visibleTime = Mathf.Min(1.0f, visibleTime + (Time.deltaTime / Time.timeScale)); CameraMovement.darken = true; }
+        if (state == "Dead") { visibleTime = Mathf.Min(1.0f, visibleTime + (Time.deltaTime / Time.timeScale)); CameraMovement.darken = true; }
         else { visibleTime = Mathf.Max(0.0f, visibleTime - Time.deltaTime); }
         if (visibleTime == 1.0f)
         {

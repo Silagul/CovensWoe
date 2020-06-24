@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class Movable : Interactable
 {
-    bool isDragging = false;
     public Vector3 offset;
     public float vertical = 0.0f;
     public void FixedUpdate()
     {
-        if (!isDragging & GetComponentInParent<Platform>().floorCount == 0)
+        if (GetComponentInParent<Platform>().floorCount == 0)
             vertical = Mathf.Max(vertical - 9.81f * Time.fixedDeltaTime, -9.81f);
         else
             vertical = 0.0f;
@@ -24,7 +23,7 @@ public class Movable : Interactable
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (vertical < 0.0f && collision.tag == "Player")
+        if (vertical < 0.0f && collision.GetComponent<Creature>() != null && transform.position.y > collision.transform.position.y + 1.0f)
             collision.GetComponent<Creature>().SetState("Dead");
     }
 
@@ -42,11 +41,10 @@ public class Movable : Interactable
 
     public override void Interact(Creature creature)
     {
-        if (Input.GetKey(KeyCode.Q) && creature.CollidesWith("Floor")?.gameObject != transform.parent.gameObject)
+        if (Input.GetKey(KeyCode.Q) && creature.CollidesWith("Floor")?.gameObject != null && GetComponentInParent<Platform>().floorCount != 0)
         {
-            isDragging = true;
+            offset.x = -creature.transform.localScale.x;
             Movement(creature.transform.position + offset);
         }
-        else isDragging = false;
     }
 }
