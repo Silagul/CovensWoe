@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemySight : MonoBehaviour
 {
-    private GameManager gameManager;
+    private GameManagerTest gameManager;
     [SerializeField]
     private LayerMask layerMask;    //layerMask used to determine what fov hits
     private Mesh mesh;  //the mesh that shows the field of vision
@@ -23,7 +23,7 @@ public class EnemySight : MonoBehaviour
 
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManagerTest>();
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         angleIncrease = fov / rayCount;   //this is used to count how much we need to increase the angle for the next ray

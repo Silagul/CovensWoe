@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Analytics;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
+public class GameManagerTest : MonoBehaviour
 {
     private int score = 0;
     private Scene thisScene;
@@ -19,8 +19,6 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.P))
         {
-            //Dictionary<string, object> customParams = new Dictionary<string, object>();
-            //customParams.Add("Score", score);
             AnalyticsEvent.Custom("Score", new Dictionary<string, object>
             {
                 {"score", score}
