@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class ColorMatch : Interactable
+public class ColorShroom : Interactable
 {
-    public static ColorMatch[] colorMatches = new ColorMatch[5];
+    public static ColorShroom[] colorShrooms = new ColorShroom[5];
     public Color32 color {
         get { return GetComponent<SpriteRenderer>().color; }
         set { GetComponent<SpriteRenderer>().color = value; } }
@@ -17,7 +17,7 @@ public class ColorMatch : Interactable
     void Start()
     {
         color = new Color32(127, 127, 127, 255);
-        colorMatches[index] = this;
+        colorShrooms[index] = this;
     }
 
     void Update()
@@ -26,31 +26,31 @@ public class ColorMatch : Interactable
         {
             isActive = false;
             time = Mathf.Infinity;
-            foreach (ColorMatch colorMatch in colorMatches)
+            foreach (ColorShroom colorMatch in colorShrooms)
                 colorMatch.color = new Color32(127, 127, 127, 255);
         }
     }
 
-    public override void Interact()
+    void OnTriggerEnter2D(Collider2D collision) { if (collision.tag == "Player") Interact(collision.GetComponent<Creature>()); }
+    void OnTriggerStay2D(Collider2D collision) { }
+
+    public override void Interact(Creature creature)
     {
-        if (Input.GetKey(KeyCode.F))
+        if (!isActive)
         {
-            if (!isActive)
-            {
-                isActive = true;
-                time = Time.time;
-            }
-            if (color.CompareRGB(new Color32(127, 127, 127, 255)))
-                color = Random.ColorHSV();
-            if (CheckForColorMatch())
-                Debug.Log("Colors Match");
+            isActive = true;
+            time = Time.time;
         }
+        if (color.CompareRGB(new Color32(127, 127, 127, 255)))
+            color = Random.ColorHSV();
+        if (CheckForColorMatch())
+            Debug.Log("Colors Match");
     }
 
     public bool CheckForColorMatch()
     {
         for (int i = 0; i < 5; i++)
-            if (colorMatches[i].color.CompareRGB(new Color32(127, 127, 127, 255)))
+            if (colorShrooms[i].color.CompareRGB(new Color32(127, 127, 127, 255)))
                 return false;
         return true;
     }

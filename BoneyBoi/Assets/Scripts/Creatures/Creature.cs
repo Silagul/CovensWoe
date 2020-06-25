@@ -33,6 +33,7 @@ public class Creature : MonoBehaviour
             fixedUpdates[i].Invoke();
     }
 
+    public string state;
     public virtual void SetState(string stateName) { }
     public bool Possess()
     {
@@ -44,20 +45,18 @@ public class Creature : MonoBehaviour
         return false;
     }
 
+
     public static float visibleTime = 0.0f;
-    public void IsVisible(bool visible)
+    public void IsVisible()
     {
-        if (visible) { visibleTime = Mathf.Min(1.0f, visibleTime + (Time.deltaTime / Time.timeScale)); CameraMovement.darken = true; }
+        if (state == "Dead") { visibleTime = Mathf.Min(1.0f, visibleTime + (Time.deltaTime / Time.timeScale)); CameraMovement.darken = true; }
         else { visibleTime = Mathf.Max(0.0f, visibleTime - Time.deltaTime); }
-        if (isActive)
+        if (visibleTime == 1.0f)
         {
-            if (visibleTime == 1.0f)
+            if (Game.menu == null || !Game.MenuActive("DeathMenu"))
             {
-                if (Game.menu == null || !Game.MenuActive("DeathMenu"))
-                {
-                    isActive = false;
-                    Game.ActivateMenu("DeathMenu");
-                }
+                isActive = false;
+                Game.ActivateMenu("DeathMenu");
             }
         }
     }

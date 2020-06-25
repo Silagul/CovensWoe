@@ -11,7 +11,7 @@ public class Lever : Interactable
         time += Time.deltaTime;
     }
 
-    public override void Interact()
+    public override void Interact(Creature creature)
     {
         if (Input.GetKey(KeyCode.F))
         {
