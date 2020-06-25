@@ -6,39 +6,132 @@ using UnityEngine.SceneManagement;
 
 public class GameManagerTest : MonoBehaviour
 {
-    private int score = 0;
-    private Scene thisScene;
+    //private int score = 0;
+    //private Scene thisScene;
+    private float realStartTime = 0f;
+    [SerializeField]
+    private float timeAsChild = 0f;
+    private float timeSinceChild = 0f;
+    [SerializeField]
+    private float timeAsSkeleton = 0f;
+    private float timeSinceSkeleton = 0f;
+    [SerializeField]
+    private float timeAsSoul = 0f;
+    private float timeSinceSoul = 0f;
+
 
     private void Awake()
     {
-        thisScene = SceneManager.GetActiveScene();
-        AnalyticsEvent.LevelStart(thisScene.name, thisScene.buildIndex);
+        //thisScene = SceneManager.GetActiveScene();
+        //AnalyticsEvent.LevelStart(thisScene.name, thisScene.buildIndex);
+    }
+
+    private void Start()
+    {
+        
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            AnalyticsEvent.Custom("Score", new Dictionary<string, object>
-            {
-                {"score", score}
-            });
-            AnalyticsResult ar = AnalyticsEvent.Custom("Score");
-            Debug.Log("Result is " + ar.ToString());
-        }
+        //if (Input.GetKeyDown(KeyCode.P))
+        //{
+        //    AnalyticsEvent.Custom("Score", new Dictionary<string, object>
+        //    {
+        //        {"score", score}
+        //    });
+        //    AnalyticsResult ar = AnalyticsEvent.Custom("Score");
+        //    Debug.Log("Result is " + ar.ToString());
+        //}
 
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            AddScore();
-        }
+        //if (Input.GetKeyDown(KeyCode.L))
+        //{
+        //    AddScore();
+        //}
 
     }
 
-    public void AddScore()
+    public void GetRealStartTime(float time)
     {
-        score++;
-        Debug.Log(score);
+        realStartTime = time;
     }
+
+    public void TimeAsChild()
+    {
+        timeAsChild = (Time.timeSinceLevelLoad - realStartTime) - timeSinceChild;
+    }
+
+    public void TimeSinceChild()
+    {
+        timeSinceChild = (Time.timeSinceLevelLoad - realStartTime) - timeAsChild;
+    }
+
+    public void TimeAsSkeleton()
+    {
+        timeAsSkeleton = (Time.timeSinceLevelLoad - realStartTime) - timeSinceSkeleton;
+    }
+
+    public void TimeSinceSkeleton()
+    {
+        timeSinceSkeleton = (Time.timeSinceLevelLoad - realStartTime) - timeAsSkeleton;
+    }
+
+    public void TimeAsSoul()
+    {
+        timeAsSoul = (Time.timeSinceLevelLoad - realStartTime) - timeSinceSoul;
+    }
+
+    public void TimeSinceSoul()
+    {
+        timeSinceSoul = (Time.timeSinceLevelLoad - realStartTime) - timeAsSoul;
+    }
+
+    //When logging time, take the current active states time too
+    //for example if child is the active character run TimeAsChild()
+
+
+    private void OnApplicationQuit()
+    {
+        GameObject gameObject = GameObject.FindGameObjectWithTag("Player");
+        switch (gameObject.name)
+        {
+            case "Human":
+                {
+                    TimeAsChild();
+                    break;
+                }
+
+            case "Skeleton":
+                {
+                    TimeAsSkeleton();
+                    break;
+                }
+
+            case "Soul":
+                {
+                    TimeAsSoul();
+                    break;
+                }
+
+            default:
+                break;
+        }
+        
+        AnalyticsEvent.Custom("TimeSpentAs", new Dictionary<string, object>
+            {
+                {"Child", timeAsChild},
+                {"Skeleton", timeAsSkeleton},
+                {"Soul", timeAsSoul}
+            });
+
+        AnalyticsResult ar = AnalyticsEvent.Custom("TimeSpentAs");
+        Debug.Log("Result is " + ar.ToString());
+    }
+
+    //public void AddScore()
+    //{
+    //    score++;
+    //    Debug.Log(score);
+    //}
 
 
 
