@@ -8,7 +8,7 @@ public class Creature : MonoBehaviour
     protected List<System.Action> updates = new List<System.Action>();
     protected List<System.Action> fixedUpdates = new List<System.Action>();
 
-    List<GameObject> collisions = new List<GameObject>();
+    protected List<GameObject> collisions = new List<GameObject>();
     void OnCollisionEnter2D(Collision2D collision) { collisions.Add(collision.gameObject); }
     void OnCollisionExit2D(Collision2D collision) { collisions.Remove(collision.gameObject); }
     void OnTriggerEnter2D(Collider2D collider) { collisions.Add(collider.gameObject); }
@@ -45,18 +45,21 @@ public class Creature : MonoBehaviour
         return false;
     }
 
-
+    public static bool dying = false;
     public static float visibleTime = 0.0f;
     public void IsVisible()
     {
-        if (state == "Dead") { visibleTime = Mathf.Min(1.0f, visibleTime + (Time.deltaTime / Time.timeScale)); CameraMovement.darken = true; }
+        if (dying || EnemySight.shouldDie) { visibleTime = Mathf.Min(1.0f, visibleTime + (Time.deltaTime / Time.timeScale)); CameraMovement.darken = true; }
         else { visibleTime = Mathf.Max(0.0f, visibleTime - Time.deltaTime); }
         if (visibleTime == 1.0f)
         {
-            if (Game.menu == null || !Game.MenuActive("DeathMenu"))
+            if (GameManager.menu == null || !GameManager.MenuActive("DeathMenu"))
             {
+                GameManager gameManager;
+                gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+                gameManager.DeathCounter();
                 isActive = false;
-                Game.ActivateMenu("DeathMenu");
+                GameManager.ActivateMenu("DeathMenu");
             }
         }
     }

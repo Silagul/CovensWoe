@@ -9,10 +9,17 @@ public class Soul : Creature
     float speed = 4.0f;
     float acceleration = 16.0f;
     float timer = 0.0f;
+
+    private GameManager gameManager;
+
     void Start()
     {
+        gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+        name = name.Substring(0, name.Length - 7);
         SetState("Default");
         GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
+        transform.parent = GameManager.world.transform;
+        gameManager.TimeSinceSoul();
     }
 
     void Interact()
@@ -27,14 +34,14 @@ public class Soul : Creature
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Game.menu == null)
-                Game.ActivateMenu("GameMenu");
-            else if (Game.MenuActive("GameMenu"))
-                Destroy(Game.menu);
-            else if (Game.MenuActive("OptionsMenu"))
+            if (GameManager.menu == null)
+                GameManager.ActivateMenu("GameMenu");
+            else if (GameManager.MenuActive("GameMenu"))
+                Destroy(GameManager.menu);
+            else if (GameManager.MenuActive("OptionsMenu"))
             {
                 Options.SaveData();
-                Game.ActivateMenu("GameMenu");
+                GameManager.ActivateMenu("GameMenu");
             }
         }
     }
@@ -54,7 +61,8 @@ public class Soul : Creature
         movement = Vector2.Lerp(movement, movementGoal,
             (acceleration * Time.fixedDeltaTime) / Vector2.Distance(movement, movementGoal));
         GetComponent<Rigidbody2D>().velocity = movement;
-        Instantiate(Resources.Load<GameObject>("Prefabs/Ectoplasm"), transform.position + Random.insideUnitSphere * 0.5f, Quaternion.identity);
+        GameObject go = Instantiate(Resources.Load<GameObject>("Prefabs/Ectoplasm"), transform.position + Random.insideUnitSphere * 0.5f, Quaternion.identity);
+        go.transform.parent = transform.parent;
     }
 
     void Vanish()
@@ -62,7 +70,11 @@ public class Soul : Creature
         timer += Time.deltaTime;
         transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, timer);
         if (timer > 1.0f)
+        {
+            gameManager.TimeAsSoul();
             Destroy(gameObject);
+        }
+
     }
 
     public override void SetState(string stateName)

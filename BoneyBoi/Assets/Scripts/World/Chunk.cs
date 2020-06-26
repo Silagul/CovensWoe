@@ -5,15 +5,16 @@ using UnityEngine;
 public class Chunk : MonoBehaviour
 {
     public Vector3 localSpawnPoint;
-    public static string currentChunk = "Chunk_Start(Clone)";
+    public static string currentChunk = "Chunk_Start";
     static string[] users = new string[6] { "Jukka", "Minttu", "Tarina", "Saku", "Petra", "Jordan" };
     public string[] neighbours = new string[] { };
 
-    void Start()
+    void Awake()
     {
+        name = name.Substring(0, name.Length - 7);
         foreach (string user in users)
         {
-            GameObject chunk = Resources.Load<GameObject>($"Prefabs/World/{user}/{name.Substring(0, name.Length - 7)}");
+            GameObject chunk = Resources.Load<GameObject>($"Prefabs/World/{user}/{name}");
             if (chunk != null)
                 foreach (Transform child in chunk.transform)
                     Instantiate(chunk, transform);
@@ -45,6 +46,8 @@ public class Chunk : MonoBehaviour
 
     void Activate()
     {
+        if (!Options.optionsData.availableChunks.Contains(name))
+            Options.optionsData.availableChunks.Add(name);
         foreach (string neighbour in neighbours)
             if (!World.ChunkExists(neighbour))
                 World.chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Master/Chunk_{neighbour}"), transform.parent).GetComponent<Chunk>());
@@ -60,6 +63,7 @@ public class Chunk : MonoBehaviour
         if (other.name == "Human")
         {
             currentChunk = name;
+            Options.SaveData();
             Reload();
             for (int i = World.chunks.Count - 1; i >= 0; i--)
                 if (World.chunks[i] != this)

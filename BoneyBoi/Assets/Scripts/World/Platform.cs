@@ -29,7 +29,7 @@ public class Platform : MonoBehaviour
     void OnCollisionExit2D(Collision2D collision)
     {
         if (collision.gameObject.tag == "Player")
-            collision.transform.parent = null;
+            collision.transform.parent = GameManager.world.transform;
         else if (collision.gameObject.tag == "Floor")
             floorCount--;
     }
@@ -37,7 +37,7 @@ public class Platform : MonoBehaviour
     void OnDestroy()
     {
         foreach (Transform child in transform)
-            if (child.tag == "Player")
-                child.parent = null;
+            if (child.name == "Human")
+                child.parent = GameManager.world.transform;
     }
 }

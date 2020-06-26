@@ -10,8 +10,12 @@ public class Skeleton : Creature
     public float horizontal = 0.0f;
     float acceleration = 16.0f;
     float timer = 0.0f;
+
+    private GameManager gameManager;
+
     void Start()
     {
+        gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         SetState("Hollow");
         GetComponent<SpriteRenderer>().color = new Color32(75, 75, 75, 255);
     }
@@ -29,7 +33,7 @@ public class Skeleton : Creature
         GameObject floor = CollidesWith("Floor");
         if (floor != null)
         {
-            if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q)) { vertical = 9.81f; }
+            if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q)) { vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.2f); ; }
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
                 vertical = Mathf.Max(0.0f, vertical);
         }
@@ -45,18 +49,19 @@ public class Skeleton : Creature
         if (Input.GetKeyDown(KeyCode.E))
         {
             SetState("Hollow");
+            gameManager.TimeAsSkeleton();
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Game.menu == null)
-                Game.ActivateMenu("GameMenu");
-            else if (Game.MenuActive("GameMenu"))
-                Destroy(Game.menu);
-            else if (Game.MenuActive("OptionsMenu"))
+            if (GameManager.menu == null)
+                GameManager.ActivateMenu("GameMenu");
+            else if (GameManager.MenuActive("GameMenu"))
+                Destroy(GameManager.menu);
+            else if (GameManager.MenuActive("OptionsMenu"))
             {
                 Options.SaveData();
-                Game.ActivateMenu("GameMenu");
+                GameManager.ActivateMenu("GameMenu");
             }
         }
     }
@@ -65,7 +70,11 @@ public class Skeleton : Creature
     {
         timer += Time.deltaTime;
         if (timer > 1.0f)
+        {
             SetState("Default");
+            gameManager.TimeSinceSkeleton();
+        }
+
     }
 
     public override void SetState(string stateName)
