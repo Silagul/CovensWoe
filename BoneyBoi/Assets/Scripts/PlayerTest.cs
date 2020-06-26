@@ -6,8 +6,6 @@ using UnityEngine.Analytics;
 public class PlayerTest : MonoBehaviour
 {
     public string state = "";
-    //private float timeAsChild = 0f;
-    //private float timeSinceChild = 0f;
     private float realStartTime = 0f;
 
     private GameManagerTest gameManagerTest;
@@ -57,20 +55,5 @@ public class PlayerTest : MonoBehaviour
             Debug.Log(state);
             gameManagerTest.TimeAsSkeleton();
         }
-
-        //if (Input.GetKeyDown(KeyCode.I))
-        //{
-        //    Destroy(this.gameObject);
-        //}
     }
-
-    //private void OnDestroy()
-    //{
-    //    AnalyticsEvent.Custom("TimeSpentAsChild", new Dictionary<string, object>
-    //        {
-    //            {"childTime", timeAsChild}
-    //        });
-    //    AnalyticsResult ar = AnalyticsEvent.Custom("TimeSpentAsChild");
-    //    Debug.Log("Result is " + ar.ToString());
-    //}
 }

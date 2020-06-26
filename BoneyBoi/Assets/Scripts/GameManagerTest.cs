@@ -18,37 +18,8 @@ public class GameManagerTest : MonoBehaviour
     [SerializeField]
     private float timeAsSoul = 0f;
     private float timeSinceSoul = 0f;
-
-
-    private void Awake()
-    {
-        //thisScene = SceneManager.GetActiveScene();
-        //AnalyticsEvent.LevelStart(thisScene.name, thisScene.buildIndex);
-    }
-
-    private void Start()
-    {
-        
-    }
-
-    private void Update()
-    {
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    AnalyticsEvent.Custom("Score", new Dictionary<string, object>
-        //    {
-        //        {"score", score}
-        //    });
-        //    AnalyticsResult ar = AnalyticsEvent.Custom("Score");
-        //    Debug.Log("Result is " + ar.ToString());
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.L))
-        //{
-        //    AddScore();
-        //}
-
-    }
+    [SerializeField]
+    private int deaths = 0;
 
     public void GetRealStartTime(float time)
     {
@@ -123,18 +94,14 @@ public class GameManagerTest : MonoBehaviour
                 {"Soul", timeAsSoul}
             });
 
+        AnalyticsEvent.Custom("Deaths", new Dictionary<string, object>
+        {
+            {"Deaths", deaths}
+        });
+
         AnalyticsResult ar = AnalyticsEvent.Custom("TimeSpentAs");
         Debug.Log("Result is " + ar.ToString());
     }
-
-    //public void AddScore()
-    //{
-    //    score++;
-    //    Debug.Log(score);
-    //}
-
-
-
 
     public Vector3 GetVectorFromAngle(float angle)  //this is used to get vector3 form angle
     {
