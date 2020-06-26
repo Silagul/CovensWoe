@@ -29,7 +29,7 @@ public class Skeleton : Creature
         GameObject floor = CollidesWith("Floor");
         if (floor != null)
         {
-            if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q)) { vertical = 9.81f; }
+            if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q)) { vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.2f); ; }
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
                 vertical = Mathf.Max(0.0f, vertical);
         }

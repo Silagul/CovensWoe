@@ -11,8 +11,10 @@ public class Soul : Creature
     float timer = 0.0f;
     void Start()
     {
+        name = name.Substring(0, name.Length - 7);
         SetState("Default");
         GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
+        transform.parent = Game.world.transform;
     }
 
     void Interact()
@@ -54,7 +56,8 @@ public class Soul : Creature
         movement = Vector2.Lerp(movement, movementGoal,
             (acceleration * Time.fixedDeltaTime) / Vector2.Distance(movement, movementGoal));
         GetComponent<Rigidbody2D>().velocity = movement;
-        Instantiate(Resources.Load<GameObject>("Prefabs/Ectoplasm"), transform.position + Random.insideUnitSphere * 0.5f, Quaternion.identity);
+        GameObject go = Instantiate(Resources.Load<GameObject>("Prefabs/Ectoplasm"), transform.position + Random.insideUnitSphere * 0.5f, Quaternion.identity);
+        go.transform.parent = transform.parent;
     }
 
     void Vanish()

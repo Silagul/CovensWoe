@@ -23,7 +23,7 @@ public class Movable : Interactable
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        if (vertical < 0.0f && collision.GetComponent<Creature>() != null && transform.position.y > collision.transform.position.y + 1.0f)
+        if (vertical < 0.0f && collision.GetComponent<Creature>() != null && transform.position.y > collision.transform.position.y + 2.0f)
             collision.GetComponent<Creature>().SetState("Dead");
     }
 
