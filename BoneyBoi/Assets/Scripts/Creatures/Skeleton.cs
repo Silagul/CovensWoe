@@ -10,8 +10,12 @@ public class Skeleton : Creature
     public float horizontal = 0.0f;
     float acceleration = 16.0f;
     float timer = 0.0f;
+
+    private GameManager gameManager;
+
     void Start()
     {
+        gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         SetState("Hollow");
         GetComponent<SpriteRenderer>().color = new Color32(75, 75, 75, 255);
     }
@@ -45,18 +49,19 @@ public class Skeleton : Creature
         if (Input.GetKeyDown(KeyCode.E))
         {
             SetState("Hollow");
+            gameManager.TimeAsSkeleton();
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Game.menu == null)
-                Game.ActivateMenu("GameMenu");
-            else if (Game.MenuActive("GameMenu"))
-                Destroy(Game.menu);
-            else if (Game.MenuActive("OptionsMenu"))
+            if (GameManager.menu == null)
+                GameManager.ActivateMenu("GameMenu");
+            else if (GameManager.MenuActive("GameMenu"))
+                Destroy(GameManager.menu);
+            else if (GameManager.MenuActive("OptionsMenu"))
             {
                 Options.SaveData();
-                Game.ActivateMenu("GameMenu");
+                GameManager.ActivateMenu("GameMenu");
             }
         }
     }
@@ -65,7 +70,11 @@ public class Skeleton : Creature
     {
         timer += Time.deltaTime;
         if (timer > 1.0f)
+        {
             SetState("Default");
+            gameManager.TimeSinceSkeleton();
+        }
+
     }
 
     public override void SetState(string stateName)

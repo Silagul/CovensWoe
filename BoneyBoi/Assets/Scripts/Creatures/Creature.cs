@@ -53,10 +53,13 @@ public class Creature : MonoBehaviour
         else { visibleTime = Mathf.Max(0.0f, visibleTime - Time.deltaTime); }
         if (visibleTime == 1.0f)
         {
-            if (Game.menu == null || !Game.MenuActive("DeathMenu"))
+            if (GameManager.menu == null || !GameManager.MenuActive("DeathMenu"))
             {
+                GameManager gameManager;
+                gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+                gameManager.DeathCounter();
                 isActive = false;
-                Game.ActivateMenu("DeathMenu");
+                GameManager.ActivateMenu("DeathMenu");
             }
         }
     }
