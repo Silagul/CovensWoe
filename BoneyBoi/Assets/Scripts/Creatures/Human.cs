@@ -12,12 +12,19 @@ public class Human : Creature
     float acceleration = 16.0f;
     float timer = 0.0f;
 
+    private GameManager gameManager;
+    private float realStartTime = 0f;
+
     void Start()
     {
+        gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+        realStartTime = Time.timeSinceLevelLoad;
+        gameManager.GetRealStartTime(realStartTime);
+
         name = name.Substring(0, name.Length - 7);
         anim = GetComponent<Animator>();
         SetState("Default");
-        transform.parent = Game.world.transform;
+        transform.parent = GameManager.world.transform;
     }
 
     void Movement()
@@ -42,18 +49,19 @@ public class Human : Creature
         if (isActive && Input.GetKeyDown(KeyCode.E) && visibleTime == 0.0f)
         {
             SetState("Hollow");
+            gameManager.TimeAsChild();
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (Game.menu == null)
-                Game.ActivateMenu("GameMenu");
-            else if (Game.MenuActive("GameMenu"))
-                Destroy(Game.menu);
-            else if (Game.MenuActive("OptionsMenu"))
+            if (GameManager.menu == null)
+                GameManager.ActivateMenu("GameMenu");
+            else if (GameManager.MenuActive("GameMenu"))
+                Destroy(GameManager.menu);
+            else if (GameManager.MenuActive("OptionsMenu"))
             {
                 Options.SaveData();
-                Game.ActivateMenu("GameMenu");
+                GameManager.ActivateMenu("GameMenu");
             }
         }
 
@@ -74,7 +82,11 @@ public class Human : Creature
     {
         timer += Time.deltaTime;
         if (timer > 1.0f)
+        {
             SetState("Default");
+            gameManager.TimeSinceChild();
+        }
+
     }
 
     void Jump()

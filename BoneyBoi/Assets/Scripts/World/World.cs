@@ -17,8 +17,8 @@ public class World : MonoBehaviour
         Creature.dying = false;
         Creature.visibleTime = 0.0f;
         Remove();
-        chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Master/{Chunk.currentChunk}"), Game.world.transform).GetComponent<Chunk>());
-        GameObject human = Instantiate(Resources.Load<GameObject>("Prefabs/Human"), Game.world.transform);
+        chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Master/{Chunk.currentChunk}"), GameManager.world.transform).GetComponent<Chunk>());
+        GameObject human = Instantiate(Resources.Load<GameObject>("Prefabs/Human"), GameManager.world.transform);
         human.transform.position = chunks[0].transform.TransformPoint(chunks[0].localSpawnPoint);
         chunks[0].Reload();
     }
@@ -27,7 +27,7 @@ public class World : MonoBehaviour
     {
         Creature.dying = false;
         Creature.visibleTime = 0.0f;
-        foreach (Transform t in Game.world.transform)
+        foreach (Transform t in GameManager.world.transform)
             Destroy(t.gameObject);
         chunks.Clear();
     }
