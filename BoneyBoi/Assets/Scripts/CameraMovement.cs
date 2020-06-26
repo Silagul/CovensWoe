@@ -32,6 +32,7 @@ public class CameraMovement : MonoBehaviour
         Time.timeScale = Mathf.Lerp(1.0f, 0.1f, cameraWeight);
         Time.fixedDeltaTime = Mathf.Lerp(0.016667f, 0.001667f, cameraWeight);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
+        player?.GetComponent<Creature>().IsVisible();
     }
 
     public static void SetCameraMask(string[] layers)

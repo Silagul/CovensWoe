@@ -28,6 +28,7 @@ public static class Options
     public static void CreateData()
     {
         optionsData = new OptionsData();
+        optionsData.availableChunks.Add("Chunk_Start");
         SaveData();
     }
 
@@ -51,4 +52,5 @@ public class OptionsData
 {
     public float volume = 1.0f;
     public float brightness = 1.0f;
+    public List<string> availableChunks = new List<string>();
 }

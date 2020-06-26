@@ -11,11 +11,13 @@ public class Human : Creature
     public float horizontal = 0.0f;
     float acceleration = 16.0f;
     float timer = 0.0f;
+
     void Start()
     {
+        name = name.Substring(0, name.Length - 7);
         anim = GetComponent<Animator>();
         SetState("Default");
-        transform.parent = null;
+        transform.parent = Game.world.transform;
     }
 
     void Movement()
@@ -28,17 +30,6 @@ public class Human : Creature
             if (Input.GetKey(KeyCode.A)) { horizontalGoal -= speed; }
         }
         horizontal = Mathf.Lerp(horizontal, horizontalGoal, (acceleration * Time.fixedDeltaTime) / Mathf.Abs(horizontal - horizontalGoal));
-        GameObject floor = CollidesWith("Floor");
-        if (floor != null)
-        {
-            if (Input.GetKey(KeyCode.Space) && isActive) { vertical = 7.0f; anim.SetBool("Foothold", false); }
-            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
-            {
-                anim.SetBool("Foothold", true);
-                vertical = Mathf.Max(0.0f, vertical);
-            }
-        }
-        else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime); anim.SetBool("Foothold", false); }
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         anim.SetFloat("Horizontal", Mathf.Abs(horizontal));
@@ -65,12 +56,31 @@ public class Human : Creature
                 Game.ActivateMenu("GameMenu");
             }
         }
+
+        GameObject floor = CollidesWith("Floor");
+        if (floor != null)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && isActive) { vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f); SetState("Jump"); }
+            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
+            {
+                anim.SetBool("Foothold", true);
+                vertical = Mathf.Max(0.0f, vertical);
+            }
+        }
+        else { vertical = Mathf.Max(-53.0f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
     }
 
     void Arise()
     {
         timer += Time.deltaTime;
         if (timer > 1.0f)
+            SetState("Default");
+    }
+
+    void Jump()
+    {
+        timer += Time.deltaTime;
+        if (timer > 0.5f)
             SetState("Default");
     }
 
@@ -81,10 +91,23 @@ public class Human : Creature
         fixedUpdates.Clear();
         switch (stateName)
         {
+            case "Jump": anim.Play("Jump"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
             case "Arise": anim.SetBool("IsPossessed", true); tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
-            case "Dead": tag = "Untagged"; isActive = false; break;
+            case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; break;
             case "Hollow": anim.SetBool("IsPossessed", false); tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
             default: anim.SetBool("IsPossessed", true); tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        collisions.Add(collision.gameObject);
+        float t = vertical / -9.81f;
+        float fallDistance = -9.81f * t * t * 0.5f;
+        if (fallDistance < -6.0f)
+        {
+            anim.SetBool("Foothold", true);
+            SetState("Dead");
         }
     }
 }

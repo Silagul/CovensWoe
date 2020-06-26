@@ -20,6 +20,7 @@ public class EnemySight : MonoBehaviour
     public float fov = 90f;    //the fov of the enemy
     public int rayCount = 50;  //the amount of rays, adding more makes the fov more rounded and more accurate
     public float viewDistance = 5f;    //length of the fov
+    public static bool shouldDie = false;
 
     void Start()
     {
@@ -33,36 +34,35 @@ public class EnemySight : MonoBehaviour
     private void Update()
     {
         //Debug.Log(timeInSight);
+        origin = transform.position;
         angle = startingAngle;
         Vector3[] vertices = new Vector3[rayCount + 2];
         Vector2[] uv = new Vector2[vertices.Length];
         int[] triangles = new int[rayCount * 3];
 
-        vertices[0] = origin;
+        vertices[0] = Vector3.zero;
 
+        bool childVisible = false;
         int vertexIndex = 1;
         int triangleIndex = 0;
         for (int i = 0; i <= rayCount; i++)
         {
             Vector3 vertex;
-            RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, gameManager.GetVectorFromAngle(angle), viewDistance, layerMask);
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, GameManager.GetVectorFromAngle(angle), viewDistance, layerMask);
 
             if (raycastHit2D.collider == null)  //no hit
             {
-                vertex = origin + gameManager.GetVectorFromAngle(angle) * viewDistance;
+                vertex = GameManager.GetVectorFromAngle(angle) * viewDistance;
             }
 
             else   //hit
             {
-                vertex = raycastHit2D.point;
-
-                if (raycastHit2D.collider.name == "Player")
+                vertex = transform.InverseTransformPoint(raycastHit2D.point);
+                if (raycastHit2D.collider.name == "Human")
                 {
                     Debug.Log("Seeing Player");
                     if (killingChild == false)
-                    {
-                        StartCoroutine("KillingChild");
-                    }
+                        childVisible = true;
                 }
 
                 //else
@@ -89,6 +89,10 @@ public class EnemySight : MonoBehaviour
             angle -= angleIncrease;
         }
 
+        if (childVisible)
+            shouldDie = true;
+        else
+            shouldDie = false;
         mesh.vertices = vertices;
         mesh.uv = uv;
         mesh.triangles = triangles;
@@ -109,12 +113,13 @@ public class EnemySight : MonoBehaviour
 
     public void SetAimDirection(Vector3 aimDirection)   //this sets the starting angle of the fov to the middle of the direction that the enemy is facing
     {
-        startingAngle = gameManager.GetAngleFromVectorFloat(aimDirection) - fov / 2f;
+        startingAngle = GameManager.GetAngleFromVectorFloat(aimDirection) - fov / 2f;
     }
 
     private IEnumerator KillingChild()
     {
         killingChild = true;
+        Creature.dying = true;
         if (timeInSight < timeToDie)
         {
             yield return new WaitForSeconds(1);

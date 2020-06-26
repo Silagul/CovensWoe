@@ -5087,7 +5087,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/VasOlkap\xE4\xE4"
+    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/OikOlkap\xE4\xE4/OikKyyner"
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5097,7 +5097,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/VasOlkap\xE4\xE4"
+    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/OikOlkap\xE4\xE4/OikKyyner"
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5107,7 +5107,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/VasOlkap\xE4\xE4"
+    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/OikOlkap\xE4\xE4/OikKyyner"
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5117,7 +5117,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: "selk\xE4_1"
+    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/VasOlkap\xE4\xE4"
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5127,7 +5127,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: "selk\xE4_1"
+    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/VasOlkap\xE4\xE4"
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5137,7 +5137,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: "selk\xE4_1"
+    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/VasOlkap\xE4\xE4"
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5267,7 +5267,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.z
-    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/OikOlkap\xE4\xE4/OikKyyner"
+    path: "selk\xE4_1/VasReisi/VasS\xE4\xE4ri"
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5277,7 +5277,7 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.y
-    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/OikOlkap\xE4\xE4/OikKyyner"
+    path: "selk\xE4_1/VasReisi/VasS\xE4\xE4ri"
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5287,7 +5287,37 @@ AnimationClip:
       m_PostInfinity: 2
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
-    path: "selk\xE4_1/selk\xE4_2/selk\xE4_3/selk\xE4_4/kaula/OikOlkap\xE4\xE4/OikKyyner"
+    path: "selk\xE4_1/VasReisi/VasS\xE4\xE4ri"
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.z
+    path: "selk\xE4_1"
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.y
+    path: "selk\xE4_1"
+    classID: 4
+    script: {fileID: 0}
+  - curve:
+      serializedVersion: 2
+      m_Curve: []
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    attribute: m_LocalEulerAngles.x
+    path: "selk\xE4_1"
     classID: 4
     script: {fileID: 0}
   - curve:
@@ -5318,36 +5348,6 @@ AnimationClip:
       m_RotationOrder: 4
     attribute: m_LocalEulerAngles.x
     path: "selk\xE4_1/OikReisi"
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.z
-    path: "selk\xE4_1/VasReisi/VasS\xE4\xE4ri"
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.y
-    path: "selk\xE4_1/VasReisi/VasS\xE4\xE4ri"
-    classID: 4
-    script: {fileID: 0}
-  - curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 2
-      m_PostInfinity: 2
-      m_RotationOrder: 4
-    attribute: m_LocalEulerAngles.x
-    path: "selk\xE4_1/VasReisi/VasS\xE4\xE4ri"
     classID: 4
     script: {fileID: 0}
   - curve:
