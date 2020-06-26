@@ -105,6 +105,9 @@ public class Human : Creature
         float t = vertical / -9.81f;
         float fallDistance = -9.81f * t * t * 0.5f;
         if (fallDistance < -6.0f)
+        {
+            anim.SetBool("Foothold", true);
             SetState("Dead");
+        }
     }
 }
