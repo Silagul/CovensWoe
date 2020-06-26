@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemySight : MonoBehaviour
 {
-    private GameManagerTest gameManager;
+    private GameManager gameManager;
     [SerializeField]
     private LayerMask layerMask;    //layerMask used to determine what fov hits
     private Mesh mesh;  //the mesh that shows the field of vision
@@ -24,7 +24,7 @@ public class EnemySight : MonoBehaviour
 
     void Start()
     {
-        gameManager = GameObject.Find("GameManager").GetComponent<GameManagerTest>();
+        gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         angleIncrease = fov / rayCount;   //this is used to count how much we need to increase the angle for the next ray
@@ -48,11 +48,11 @@ public class EnemySight : MonoBehaviour
         for (int i = 0; i <= rayCount; i++)
         {
             Vector3 vertex;
-            RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, GameManager.GetVectorFromAngle(angle), viewDistance, layerMask);
+            RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, gameManager.GetVectorFromAngle(angle), viewDistance, layerMask);
 
             if (raycastHit2D.collider == null)  //no hit
             {
-                vertex = GameManager.GetVectorFromAngle(angle) * viewDistance;
+                vertex = gameManager.GetVectorFromAngle(angle) * viewDistance;
             }
 
             else   //hit
@@ -113,7 +113,7 @@ public class EnemySight : MonoBehaviour
 
     public void SetAimDirection(Vector3 aimDirection)   //this sets the starting angle of the fov to the middle of the direction that the enemy is facing
     {
-        startingAngle = GameManager.GetAngleFromVectorFloat(aimDirection) - fov / 2f;
+        startingAngle = gameManager.GetAngleFromVectorFloat(aimDirection) - fov / 2f;
     }
 
     private IEnumerator KillingChild()

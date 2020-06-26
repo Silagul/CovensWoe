@@ -8,7 +8,7 @@ public class PlayerTest : MonoBehaviour
     public string state = "";
     private float realStartTime = 0f;
 
-    private GameManagerTest gameManagerTest;
+    private GameManager gameManager;
 
     public void Wasted()
     {
@@ -17,10 +17,10 @@ public class PlayerTest : MonoBehaviour
 
     private void Start()
     {
-        gameManagerTest = GameObject.Find("GameManager").GetComponent<GameManagerTest>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         state = "Default";
         realStartTime = Time.timeSinceLevelLoad;
-        gameManagerTest.GetRealStartTime(realStartTime);
+        gameManager.GetRealStartTime(realStartTime);
         //timeAsChild = 0f;
     }
 
@@ -31,14 +31,14 @@ public class PlayerTest : MonoBehaviour
         {
             state = "Default";
             Debug.Log(state);
-            gameManagerTest.TimeSinceChild();
+            gameManager.TimeSinceChild();
         }
 
         if (Input.GetKeyDown(KeyCode.H)) 
         {
             state = "Hollow";
             Debug.Log(state);
-            gameManagerTest.TimeAsChild();
+            gameManager.TimeAsChild();
         }
 
         //////////////////////////////////////////////FOR SKELETON/////////////////////////////////////
@@ -46,14 +46,14 @@ public class PlayerTest : MonoBehaviour
         {
             state = "Default";
             Debug.Log(state);
-            gameManagerTest.TimeSinceSkeleton();
+            gameManager.TimeSinceSkeleton();
         }
 
         if (Input.GetKeyDown(KeyCode.E))
         {
             state = "Hollow";
             Debug.Log(state);
-            gameManagerTest.TimeAsSkeleton();
+            gameManager.TimeAsSkeleton();
         }
     }
 }

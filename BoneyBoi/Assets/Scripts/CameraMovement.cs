@@ -12,7 +12,7 @@ public class CameraMovement : MonoBehaviour
 
     void Update()
     {
-        if (Game.menu != null) darken = true;
+        if (GameManager.menu != null) darken = true;
         else darken = false;
         GameObject player;
         if ((player = GameObject.FindGameObjectWithTag("Player")) != null)

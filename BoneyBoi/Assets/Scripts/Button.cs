@@ -4,8 +4,12 @@ using UnityEngine;
 
 public class Button : MonoBehaviour
 {
+    private GameManager gameManager;
+
     void Start()
     {
+        gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+
         if (name.Substring(0, 5) == "Chunk")
             if (!Options.optionsData.availableChunks.Contains(name))
             {
@@ -21,31 +25,41 @@ public class Button : MonoBehaviour
             switch (name)
             {
                 case "MainMenu":
-                    Game.ActivateMenu("MainMenu");
+                    gameManager.SaveAnalytics();
+                    Debug.Log("POG");
+                    GameManager.ActivateMenu("MainMenu");
                     World.Remove();
                     Options.SaveData();
                     break;
                 case "Continue":
-                    Game.menu = null;
+                    GameManager.menu = null;
                     Destroy(transform.parent.gameObject);
                     break;
                 case "Return":
-                    if (GameObject.Find("World").transform.childCount != 0) Game.ActivateMenu("GameMenu");
-                    else Game.ActivateMenu("MainMenu");
+                    if (GameObject.Find("World").transform.childCount != 0)
+                    {
+                        GameManager.ActivateMenu("GameMenu");
+                    }
+                    else
+                    {
+                        GameManager.ActivateMenu("MainMenu");
+                    }
                     break;
-                case "OptionsMenu": Game.ActivateMenu("OptionsMenu"); break;
-                case "Start": Game.ActivateMenu("ChapterMenu"); break;
+                case "OptionsMenu": GameManager.ActivateMenu("OptionsMenu"); break;
+                case "Start": GameManager.ActivateMenu("ChapterMenu"); break;
                 case "Retry":
+                    Debug.Log("What do");
                     World.Restart();
-                    Game.menu = null;
+                    GameManager.menu = null;
                     Destroy(transform.parent.gameObject);
                     break;
                 case "QuitGame":
                     Application.Quit();
                     break;
                 default:
-                    if (name.Substring(0, 5) == "Chunk") {
-                        Destroy(Game.menu);
+                    if (name.Substring(0, 5) == "Chunk")
+                    {
+                        Destroy(GameManager.menu);
                         Chunk.currentChunk = name;
                         World.Restart();
                     }    
