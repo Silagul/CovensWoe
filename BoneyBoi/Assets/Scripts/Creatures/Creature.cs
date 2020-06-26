@@ -55,6 +55,9 @@ public class Creature : MonoBehaviour
         {
             if (GameManager.menu == null || !GameManager.MenuActive("DeathMenu"))
             {
+                GameManager gameManager;
+                gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+                gameManager.DeathCounter();
                 isActive = false;
                 GameManager.ActivateMenu("DeathMenu");
             }

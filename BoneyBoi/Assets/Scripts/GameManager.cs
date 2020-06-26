@@ -10,12 +10,15 @@ public class GameManager : MonoBehaviour
 
     private float realStartTime = 0f;
     [SerializeField]
+    private float currentTimeAsChild = 0f;
     private float timeAsChild = 0f;
     private float timeSinceChild = 0f;
     [SerializeField]
+    private float currentTimeAsSkeleton = 0f;
     private float timeAsSkeleton = 0f;
     private float timeSinceSkeleton = 0f;
     [SerializeField]
+    private float currentTimeAsSoul = 0f;
     private float timeAsSoul = 0f;
     private float timeSinceSoul = 0f;
     [SerializeField]
@@ -49,37 +52,38 @@ public class GameManager : MonoBehaviour
 
     public void TimeAsChild()
     {
-        timeAsChild = (Time.timeSinceLevelLoad - realStartTime) - timeSinceChild;
+        currentTimeAsChild = (Time.timeSinceLevelLoad - realStartTime) - timeSinceChild;
     }
 
     public void TimeSinceChild()
     {
-        timeSinceChild = (Time.timeSinceLevelLoad - realStartTime) - timeAsChild;
+        timeSinceChild = (Time.timeSinceLevelLoad - realStartTime) - currentTimeAsChild;
     }
 
     public void TimeAsSkeleton()
     {
-        timeAsSkeleton = (Time.timeSinceLevelLoad - realStartTime) - timeSinceSkeleton;
+        currentTimeAsSkeleton = (Time.timeSinceLevelLoad - realStartTime) - timeSinceSkeleton;
     }
 
     public void TimeSinceSkeleton()
     {
-        timeSinceSkeleton = (Time.timeSinceLevelLoad - realStartTime) - timeAsSkeleton;
+        timeSinceSkeleton = (Time.timeSinceLevelLoad - realStartTime) - currentTimeAsSkeleton;
     }
 
     public void TimeAsSoul()
     {
-        timeAsSoul = (Time.timeSinceLevelLoad - realStartTime) - timeSinceSoul;
+        currentTimeAsSoul = (Time.timeSinceLevelLoad - realStartTime) - timeSinceSoul;
     }
 
     public void TimeSinceSoul()
     {
-        timeSinceSoul = (Time.timeSinceLevelLoad - realStartTime) - timeAsSoul;
+        timeSinceSoul = (Time.timeSinceLevelLoad - realStartTime) - currentTimeAsSoul;
     }
 
     public void DeathCounter()
     {
         deaths++;
+        Debug.Log(deaths);
     }
 
     private void OnApplicationQuit()    //This is for sending Analytics when quitting
@@ -119,10 +123,25 @@ public class GameManager : MonoBehaviour
                     break;
             }
         }
+
+        timeAsChild += currentTimeAsChild;
+        currentTimeAsChild = 0f;
+        timeSinceChild = 0f;
+        timeAsSkeleton += currentTimeAsSkeleton;
+        currentTimeAsSkeleton = 0f;
+        timeSinceSkeleton = 0f;
+        timeAsSoul += currentTimeAsSoul;
+        currentTimeAsSoul = 0f;
+        timeSinceSoul = 0f;
     }
     
     public void SendAnalytics()
     {
+        //Debug.Log("Child " + timeAsChild + " Skeleton " + timeAsSkeleton + " Soul " + timeAsSoul);
+        Mathf.Round(timeAsChild);
+        Mathf.Round(timeAsSkeleton);
+        Mathf.Round(timeAsSoul);
+
         AnalyticsEvent.Custom("TimeSpentAs", new Dictionary<string, object>
         {
             {"Child", timeAsChild},

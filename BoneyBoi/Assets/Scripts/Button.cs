@@ -26,7 +26,6 @@ public class Button : MonoBehaviour
             {
                 case "MainMenu":
                     gameManager.SaveAnalytics();
-                    Debug.Log("POG");
                     GameManager.ActivateMenu("MainMenu");
                     World.Remove();
                     Options.SaveData();
@@ -48,7 +47,7 @@ public class Button : MonoBehaviour
                 case "OptionsMenu": GameManager.ActivateMenu("OptionsMenu"); break;
                 case "Start": GameManager.ActivateMenu("ChapterMenu"); break;
                 case "Retry":
-                    Debug.Log("What do");
+                    gameManager.SaveAnalytics();
                     World.Restart();
                     GameManager.menu = null;
                     Destroy(transform.parent.gameObject);
@@ -62,7 +61,7 @@ public class Button : MonoBehaviour
                         Destroy(GameManager.menu);
                         Chunk.currentChunk = name;
                         World.Restart();
-                    }    
+                    }
                     break;
             }
         }
