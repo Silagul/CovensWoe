@@ -8,21 +8,25 @@ public class GameManager : MonoBehaviour
     public static GameObject menu;
     public static World world;
 
+
+    //These values are for Analytics
     private float realStartTime = 0f;
-    [SerializeField]
+    //[SerializeField]
     private float currentTimeAsChild = 0f;
     private float timeAsChild = 0f;
     private float timeSinceChild = 0f;
-    [SerializeField]
+    //[SerializeField]
     private float currentTimeAsSkeleton = 0f;
     private float timeAsSkeleton = 0f;
     private float timeSinceSkeleton = 0f;
-    [SerializeField]
+    //[SerializeField]
     private float currentTimeAsSoul = 0f;
     private float timeAsSoul = 0f;
     private float timeSinceSoul = 0f;
-    [SerializeField]
+    //[SerializeField]
     private int deaths = 0;
+
+
 
     void Start()
     {
@@ -45,10 +49,12 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
-    public void GetRealStartTime(float time)
+    public void GetRealStartTime(float time)    //This for getting the correct start time after main menu
     {
         realStartTime = time;
     }
+
+    //These functions bellow are for calculating Analytics play times
 
     public void TimeAsChild()
     {
@@ -83,7 +89,7 @@ public class GameManager : MonoBehaviour
     public void DeathCounter()
     {
         deaths++;
-        Debug.Log(deaths);
+        //Debug.Log(deaths);
     }
 
     private void OnApplicationQuit()    //This is for sending Analytics when quitting
@@ -92,7 +98,7 @@ public class GameManager : MonoBehaviour
         SendAnalytics();
     }
 
-    public void SaveAnalytics()
+    public void SaveAnalytics() //This is for saving and resetting Analytics values
     {
         if (GameObject.Find("Human") != null)
         {
@@ -135,7 +141,7 @@ public class GameManager : MonoBehaviour
         timeSinceSoul = 0f;
     }
     
-    public void SendAnalytics()
+    public void SendAnalytics() //This funcition sends all of the Analytics data, call this when quitting the game
     {
         //Debug.Log("Child " + timeAsChild + " Skeleton " + timeAsSkeleton + " Soul " + timeAsSoul);
         Mathf.Round(timeAsChild);
