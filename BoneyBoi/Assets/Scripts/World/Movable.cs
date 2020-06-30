@@ -41,7 +41,8 @@ public class Movable : Interactable
 
     public override void Interact(Creature creature)
     {
-        if (Input.GetKey(KeyCode.Q) && creature.CollidesWith("Floor")?.gameObject != null && GetComponentInParent<Platform>().floorCount != 0)
+        GameObject floor = creature.CollidesWith("Floor");
+        if (Input.GetKey(KeyCode.Q) && floor?.gameObject != transform.parent.gameObject && GetComponentInParent<Platform>().floorCount != 0)
         {
             offset.x = -creature.transform.localScale.x;
             Movement(creature.transform.position + offset);
