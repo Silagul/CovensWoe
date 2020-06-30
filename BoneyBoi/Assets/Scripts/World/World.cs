@@ -25,6 +25,8 @@ public class World : MonoBehaviour
 
     public static void Remove()
     {
+        Creature.dying = false;
+        Creature.visibleTime = 0.0f;
         foreach (Transform t in GameManager.world.transform)
             Destroy(t.gameObject);
         chunks.Clear();
