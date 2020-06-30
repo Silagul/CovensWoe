@@ -21,10 +21,10 @@ public class Human : Creature
         realStartTime = Time.timeSinceLevelLoad;
         gameManager.GetRealStartTime(realStartTime);
 
+        transform.parent = GameManager.world.transform;
         name = name.Substring(0, name.Length - 7);
         anim = GetComponent<Animator>();
         SetState("Default");
-        transform.parent = GameManager.world.transform;
     }
 
     void Movement()
@@ -37,6 +37,17 @@ public class Human : Creature
             if (Input.GetKey(KeyCode.A)) { horizontalGoal -= speed; }
         }
         horizontal = Mathf.Lerp(horizontal, horizontalGoal, (acceleration * Time.fixedDeltaTime) / Mathf.Abs(horizontal - horizontalGoal));
+        GameObject floor = CollidesWith("Floor");
+        if (floor != null)
+        {
+            if (Input.GetKeyDown(KeyCode.Space) && isActive) { vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f); SetState("Jump"); }
+            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
+            {
+                anim.SetBool("Foothold", true);
+                vertical = Mathf.Max(0.0f, vertical);
+            }
+        }
+        else { vertical = Mathf.Max(-53.0f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         anim.SetFloat("Horizontal", Mathf.Abs(horizontal));
@@ -64,18 +75,6 @@ public class Human : Creature
                 GameManager.ActivateMenu("GameMenu");
             }
         }
-
-        GameObject floor = CollidesWith("Floor");
-        if (floor != null)
-        {
-            if (Input.GetKeyDown(KeyCode.Space) && isActive) { vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f); SetState("Jump"); }
-            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
-            {
-                anim.SetBool("Foothold", true);
-                vertical = Mathf.Max(0.0f, vertical);
-            }
-        }
-        else { vertical = Mathf.Max(-53.0f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
     }
 
     void Arise()
