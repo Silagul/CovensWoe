@@ -17,7 +17,8 @@ public class Chunk : MonoBehaviour
             GameObject chunk = Resources.Load<GameObject>($"Prefabs/World/{user}/{name}");
             if (chunk != null)
                 foreach (Transform child in chunk.transform)
-                    Instantiate(chunk, transform);
+                    if (transform.Find(child.name) == null)
+                        Instantiate(child.gameObject, transform).name = child.name;
         }
     }
 
