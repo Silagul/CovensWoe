@@ -15,6 +15,11 @@ public class Human : Creature
     private GameManager gameManager;
     private float realStartTime = 0f;
 
+    //public AudioClip movementAudio;
+    public AudioClip[] movementAudioArray;
+    public AudioClip landingAudio;
+    public AudioClip landingDeathAudio;
+
     void Start()
     {
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
@@ -33,8 +38,10 @@ public class Human : Creature
         if (isActive)
         {
             Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
-            if (Input.GetKey(KeyCode.D)) { horizontalGoal += speed; }
-            if (Input.GetKey(KeyCode.A)) { horizontalGoal -= speed; }
+            //if (Input.GetKey(KeyCode.D)) { horizontalGoal += speed; AudioManager.CreateAudio(movementAudio, false, this.transform); }
+            //if (Input.GetKey(KeyCode.A)) { horizontalGoal -= speed; AudioManager.CreateAudio(movementAudio, false, this.transform); }
+            if (Input.GetKey(KeyCode.D)) { horizontalGoal += speed; AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, this.transform); }
+            if (Input.GetKey(KeyCode.A)) { horizontalGoal -= speed; AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, this.transform); }
         }
         horizontal = Mathf.Lerp(horizontal, horizontalGoal, (acceleration * Time.fixedDeltaTime) / Mathf.Abs(horizontal - horizontalGoal));
         GameObject floor = CollidesWith("Floor");
@@ -48,7 +55,7 @@ public class Human : Creature
             }
         }
         else { vertical = Mathf.Max(-53.0f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
-        transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
+            transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         anim.SetFloat("Horizontal", Mathf.Abs(horizontal));
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
@@ -117,6 +124,8 @@ public class Human : Creature
         float fallDistance = -9.81f * t * t * 0.5f;
         if (fallDistance < -6.0f)
         {
+            Debug.Log("PizzaTime");
+            AudioManager.CreateAudio(landingDeathAudio, false, this.transform);
             anim.SetBool("Foothold", true);
             SetState("Dead");
         }

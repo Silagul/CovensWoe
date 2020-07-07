@@ -6,6 +6,9 @@ public class Lever : Interactable
 {
     bool isActive = false;
     float time = 0.0f;
+
+    public AudioClip leverAudio;
+
     void Update()
     {
         time += Time.deltaTime;
@@ -19,6 +22,7 @@ public class Lever : Interactable
             {
                 time = 0.0f;
                 isActive = !isActive;
+                AudioManager.CreateAudio(leverAudio, false, this.transform);
                 if (isActive) transform.parent.Find("PlatformMoving")?.GetComponent<Backforth>().Activate(true);
                 else transform.parent.Find("PlatformMoving")?.GetComponent<Backforth>().Activate(false);
             }

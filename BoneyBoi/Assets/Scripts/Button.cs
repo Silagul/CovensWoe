@@ -6,9 +6,13 @@ public class Button : MonoBehaviour
 {
     private GameManager gameManager;
 
+    public AudioClip buttonPressAudio;
+    public AudioClip buttonHighlightAudio;
+
     void Start()
     {
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+        buttonPressAudio = Resources.Load<AudioClip>("Assets/Audio/Menu/MenuButtonPress");
 
         if (name.Substring(0, 5) == "Chunk")
             if (!Options.optionsData.availableChunks.Contains(name))
@@ -53,7 +57,11 @@ public class Button : MonoBehaviour
                     Destroy(transform.parent.gameObject);
                     break;
                 case "QuitGame":
-                    Application.Quit();
+                    #if UNITY_EDITOR
+                                        UnityEditor.EditorApplication.isPlaying = false;
+                    #else
+                              Application.Quit();
+                    #endif 
                     break;
                 default:
                     if (name.Substring(0, 5) == "Chunk")

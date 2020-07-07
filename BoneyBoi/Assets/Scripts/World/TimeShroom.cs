@@ -13,6 +13,10 @@ public class TimeShroom : Interactable
     public bool isActive = false;
     static float startTime = Mathf.NegativeInfinity;
     static float maxDuration = 10.0f;
+
+    public AudioClip[] mushroomAudioArray;
+    public AudioClip mushroomAudio;
+
     void Start()
     {
         timeShrooms[index] = this;
@@ -32,6 +36,7 @@ public class TimeShroom : Interactable
     public override void Interact(Creature creature)
     {
         isActive = true;
+        //AudioManager.CreateAudio(mushroomAudioArray[Random.Range(0, mushroomAudioArray.Length)], false, this.transform);
         GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
         if (Time.time > startTime + maxDuration)
             startTime = Time.time;
@@ -40,7 +45,12 @@ public class TimeShroom : Interactable
             bool hasDeactive = false;
             foreach (TimeShroom shroom in timeShrooms)
                 if (!shroom.isActive)
+                {
                     hasDeactive = true;
+                    //AudioManager.CreateAudio(mushroomAudio, false, this.transform);
+                    Debug.Log("whyy");
+                }
+
             if (!hasDeactive)
                 Debug.Log("Victory!");
         }
