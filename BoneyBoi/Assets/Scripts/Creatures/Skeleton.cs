@@ -14,13 +14,39 @@ public class Skeleton : Creature
     float duration = 0.0f;
 
     private GameManager gameManager;
-    
+    private Vector3 childPosition;
+    private float distanceX = 15f;
+    private float distanceY = 5f;
+
     void Start()
     {
         anim = GetComponent<Animator>();
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         transform.localScale = new Vector3(0.15f, 0.15f, 1);
         SetState("Hollow");
+    }
+
+    private void ClampMovement()
+    {
+        if (transform.position.x >= childPosition.x + distanceX)
+        {
+            transform.position = new Vector3(childPosition.x + distanceX, transform.position.y, 0f);
+        }
+
+        else if (transform.position.x <= childPosition.x - distanceX)
+        {
+            transform.position = new Vector3(childPosition.x - distanceX, transform.position.y, 0f);
+        }
+
+        if (transform.position.y >= childPosition.y + distanceY)
+        {
+            transform.position = new Vector3(transform.position.x, childPosition.y + distanceY, 0f);
+        }
+
+        else if (transform.position.y <= childPosition.y - distanceY)
+        {
+            transform.position = new Vector3(transform.position.x, childPosition.y - distanceY, 0f);
+        }
     }
 
     void Movement()
@@ -80,6 +106,7 @@ public class Skeleton : Creature
         {
             SetState("Default");
             gameManager.TimeSinceSkeleton();
+            childPosition = GameObject.Find("Human").transform.localPosition;
         }
 
     }
@@ -106,7 +133,7 @@ public class Skeleton : Creature
                 CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D" }); break;
             case "Dead": tag = "Corpse"; isActive = false; SetState("Hollow");
                 Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity); break;
-            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
+            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); updates.Add(ClampMovement);
                 CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Unseen" }); break;
         }
     }
