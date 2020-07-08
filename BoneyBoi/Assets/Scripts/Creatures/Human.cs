@@ -15,10 +15,10 @@ public class Human : Creature
     private GameManager gameManager;
     private float realStartTime = 0f;
 
-    //public AudioClip movementAudio;
     public AudioClip[] movementAudioArray;
     public AudioClip landingAudio;
     public AudioClip landingDeathAudio;
+    public AudioClip deathAudio;
 
     void Start()
     {
@@ -111,7 +111,7 @@ public class Human : Creature
         {
             case "Jump": anim.Play("Jump"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
             case "Arise": anim.SetBool("IsPossessed", true); tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
-            case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; break;
+            case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; AudioManager.CreateAudio(deathAudio, false, transform); break;
             case "Hollow": anim.SetBool("IsPossessed", false); tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
             default: anim.SetBool("IsPossessed", true); tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
         }
@@ -124,7 +124,6 @@ public class Human : Creature
         float fallDistance = -9.81f * t * t * 0.5f;
         if (fallDistance < -6.0f)
         {
-            Debug.Log("PizzaTime");
             AudioManager.CreateAudio(landingDeathAudio, false, this.transform);
             anim.SetBool("Foothold", true);
             SetState("Dead");

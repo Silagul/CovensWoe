@@ -5,7 +5,6 @@ using UnityEngine;
 
 public class TimeShroom : Interactable
 {
-    private void OnTriggerEnter2D(Collider2D collision) { if (collision.tag == "Player") Interact(collision.GetComponent<Creature>()); }
     private void OnTriggerStay2D(Collider2D collision) { }
 
     static TimeShroom[] timeShrooms = new TimeShroom[5];
@@ -15,7 +14,26 @@ public class TimeShroom : Interactable
     static float maxDuration = 10.0f;
 
     public AudioClip[] mushroomAudioArray;
-    public AudioClip mushroomAudio;
+    public AudioClip mushroomTimer;
+    public AudioClip hiddenMushroomAudio;
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        //if (collision.tag == "Player" && isActive == false)
+        if(collision.name == "Skeleton" && isActive == false)
+        {
+            Interact(collision.GetComponent<Creature>());
+            AudioManager.CreateAudio(mushroomTimer, true, this.transform);
+            AudioManager.CreateAudio(mushroomAudioArray[Random.Range(0, mushroomAudioArray.Length)], false, this.transform);
+        }
+
+        else if (collision.name == "Human")
+        {
+            AudioManager.CreateAudio(hiddenMushroomAudio, false, transform);
+        }
+    }
+
+
 
     void Start()
     {
@@ -30,13 +48,14 @@ public class TimeShroom : Interactable
             {
                 shroom.GetComponent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
                 shroom.isActive = false;
+                GameObject timerObject = GameObject.Find(mushroomTimer.name.Substring(0, mushroomTimer.name.Length - 1));
+                Destroy(timerObject);
             }
     }
 
     public override void Interact(Creature creature)
     {
         isActive = true;
-        //AudioManager.CreateAudio(mushroomAudioArray[Random.Range(0, mushroomAudioArray.Length)], false, this.transform);
         GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
         if (Time.time > startTime + maxDuration)
             startTime = Time.time;
@@ -47,12 +66,15 @@ public class TimeShroom : Interactable
                 if (!shroom.isActive)
                 {
                     hasDeactive = true;
-                    //AudioManager.CreateAudio(mushroomAudio, false, this.transform);
-                    Debug.Log("whyy");
                 }
 
             if (!hasDeactive)
+            {
                 Debug.Log("Victory!");
+                GameObject timerObject = GameObject.Find(mushroomTimer.name.Substring(0, mushroomTimer.name.Length - 1));
+                Destroy(timerObject);
+            }
+
         }
     }
 }
