@@ -33,15 +33,15 @@ public class Button : MonoBehaviour
                     GameManager.ActivateMenu("MainMenu");
                     World.Remove();
                     Options.SaveData();
-                    AudioManager.CreateAudio(buttonPressAudio, false, transform);
+                    AudioManager.CreateAudio(buttonPressAudio, false, true, transform);
                     break;
                 case "Continue":
                     GameManager.menu = null;
                     Destroy(transform.parent.gameObject);
-                    AudioManager.CreateAudio(buttonPressAudio, false, transform);
+                    AudioManager.CreateAudio(buttonPressAudio, false, true, transform);
                     break;
                 case "Return":
-                    AudioManager.CreateAudio(buttonPressAudio, false, transform);
+                    AudioManager.CreateAudio(buttonPressAudio, false, true, transform);
                     if (GameObject.Find("World").transform.childCount != 0)
                     {
                         GameManager.ActivateMenu("GameMenu");
@@ -51,17 +51,17 @@ public class Button : MonoBehaviour
                         GameManager.ActivateMenu("MainMenu");
                     }
                     break;
-                case "OptionsMenu": GameManager.ActivateMenu("OptionsMenu"); AudioManager.CreateAudio(buttonPressAudio, false, transform); break;
-                case "Start": GameManager.ActivateMenu("ChapterMenu"); AudioManager.CreateAudio(buttonPressAudio, false, transform); break;
+                case "OptionsMenu": GameManager.ActivateMenu("OptionsMenu"); AudioManager.CreateAudio(buttonPressAudio, false, true, transform); break;
+                case "Start": GameManager.ActivateMenu("ChapterMenu"); AudioManager.CreateAudio(buttonPressAudio, false, true, transform); break;
                 case "Retry":
                     gameManager.SaveAnalytics();
                     World.Restart();
                     GameManager.menu = null;
                     Destroy(transform.parent.gameObject);
-                    AudioManager.CreateAudio(buttonPressAudio, false, transform);
+                    AudioManager.CreateAudio(buttonPressAudio, false, true, transform);
                     break;
                 case "QuitGame":
-                    AudioManager.CreateAudio(buttonPressAudio, false, transform);
+                    AudioManager.CreateAudio(buttonPressAudio, false, true, transform);
                     #if UNITY_EDITOR
                             UnityEditor.EditorApplication.isPlaying = false;
                     #else

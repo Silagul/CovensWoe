@@ -57,7 +57,7 @@ public class AudioManager : MonoBehaviour
     }
 
     ///Global audio uses Camera.main.transform as target, localized audio uses... whatever transform it is located at.
-    public static AudioManager CreateAudio(AudioClip clip, bool loop, Transform target)
+    public static AudioManager CreateAudio(AudioClip clip, bool loop, bool usePitch, Transform target)
     {
         if (GameObject.Find(clip.name.Substring(0, clip.name.Length - 1)) == null)
         {
@@ -66,7 +66,10 @@ public class AudioManager : MonoBehaviour
             AudioSource audio = go.AddComponent<AudioSource>();
             AudioManager audioManager = go.AddComponent<AudioManager>();
             audio.clip = clip;
-            audio.pitch = Random.Range(0.75f, 1.25f);
+            if (usePitch)
+            {
+                audio.pitch = Random.Range(0.85f, 1.15f);
+            }
             audio.loop = loop;
             audio.Play();
 

@@ -16,16 +16,19 @@ public class EnemySight : MonoBehaviour
     private bool killingChild = false;
     //private bool calmingDown = false;
 
+    private Animator anim;
+    
     public float timeToDie;
     public float startingAngle;    //starting angle of the fov
     public float fov = 90f;    //the fov of the enemy
     public int rayCount = 50;  //the amount of rays, adding more makes the fov more rounded and more accurate
     public float viewDistance = 5f;    //length of the fov
-    public static bool shouldDie = false;
+    //public static bool shouldDie = false;
 
     void Start()
     {
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+        anim = transform.parent.GetComponentInChildren<Animator>();
         mesh = new Mesh();
         GetComponent<MeshFilter>().mesh = mesh;
         angleIncrease = fov / rayCount;   //this is used to count how much we need to increase the angle for the next ray
@@ -43,9 +46,10 @@ public class EnemySight : MonoBehaviour
 
         vertices[0] = Vector3.zero;
 
-        bool childVisible = false;
+        //bool childVisible = false;
         int vertexIndex = 1;
         int triangleIndex = 0;
+
         for (int i = 0; i <= rayCount; i++)
         {
             Vector3 vertex;
@@ -61,9 +65,15 @@ public class EnemySight : MonoBehaviour
                 vertex = transform.InverseTransformPoint(raycastHit2D.point);
                 if (raycastHit2D.collider.name == "Human")
                 {
-                    Debug.Log("Seeing Player");
+                    //Debug.Log("Seeing Player");
+
                     if (killingChild == false)
-                        childVisible = true;
+                    {
+                        anim.SetBool("playerSpotted", true);
+                        //childVisible = true;
+                        StartCoroutine(KillingChild());
+                    }
+                        
                 }
 
                 //else
@@ -90,13 +100,15 @@ public class EnemySight : MonoBehaviour
             angle -= angleIncrease;
         }
 
-        if (childVisible)
-            shouldDie = true;
-        else
-            shouldDie = false;
+        //if (childVisible)
+        //    shouldDie = true;
+        //else
+        //    shouldDie = false;
+
         mesh.vertices = vertices;
         mesh.uv = uv;
         mesh.triangles = triangles;
+
     }
 
     private void FixedUpdate()
@@ -120,7 +132,7 @@ public class EnemySight : MonoBehaviour
     private IEnumerator KillingChild()
     {
         killingChild = true;
-        Creature.dying = true;
+        //Creature.dying = true;
         if (timeInSight < timeToDie)
         {
             yield return new WaitForSeconds(1);
@@ -128,10 +140,15 @@ public class EnemySight : MonoBehaviour
         }
         else
         {
-            //Debug.Log("Wasted");
-            GameObject.Find("Player").GetComponent<PlayerTest>().Wasted(); //replace this with the players death function
+            anim.SetBool("playerKill", true);
+            anim.SetBool("playerSpotted", false);
+            yield return new WaitForSeconds(0.5f);
+            GameObject.Find("Human").GetComponent<Human>().Death();
+            yield return new WaitForSeconds(1);
+            anim.SetBool("playerKill", false);
         }
         killingChild = false;
+        anim.SetBool("playerSpotted", false);
     }
 
     //private IEnumerator CalmingDown()

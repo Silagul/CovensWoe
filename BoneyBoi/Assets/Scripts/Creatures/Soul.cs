@@ -30,8 +30,8 @@ public class Soul : Creature
         transform.parent = GameManager.world.transform;
         gameManager.TimeSinceSoul();
         childPosition = GameObject.Find("Human").transform.localPosition;
-        AudioManager.CreateAudio(possessOutAudio, false, this.transform);
-        AudioManager.CreateAudio(flyingAudio, true, this.transform);
+        AudioManager.CreateAudio(possessOutAudio, false, true, this.transform);
+        AudioManager.CreateAudio(flyingAudio, true, false, this.transform);
     }
 
     private void ClampMovement()
@@ -66,7 +66,7 @@ public class Soul : Creature
             if ((target = CollidesWith("Hollow")) != null)
                 if (target.GetComponent<Creature>().Possess())
                 {
-                    AudioManager.CreateAudio(possessInAudio, false, this.transform);
+                    AudioManager.CreateAudio(possessInAudio, false, true, this.transform);
                     SetState("Possession");
                 }
 
@@ -125,7 +125,8 @@ public class Soul : Creature
         {
             case "Possession": isActive = false; fixedUpdates.Add(Movement); updates.Add(Vanish); timer = 0.0f; break;
             case "Dead": SetState("default"); break;
-            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); updates.Add(ClampMovement); timer = 0.0f; break;
+            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); updates.Add(ClampMovement); timer = 0.0f;
+                CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" }); break;
         }
     }
 }
