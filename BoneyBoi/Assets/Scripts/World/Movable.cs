@@ -6,6 +6,10 @@ public class Movable : Interactable
 {
     public Vector3 offset;
     public float vertical = 0.0f;
+
+    public AudioClip boxMovingAudio;
+    public AudioClip boxFallingAudio;
+
     public void FixedUpdate()
     {
         if (GetComponentInParent<Platform>().floorCount == 0)
@@ -25,6 +29,11 @@ public class Movable : Interactable
     {
         if (vertical < 0.0f && collision.GetComponent<Creature>() != null && transform.position.y > collision.transform.position.y + 2.0f)
             collision.GetComponent<Creature>().SetState("Dead");
+
+        if (collision.tag == "Floor")
+        {
+            AudioManager.CreateAudio(boxFallingAudio, false, true, this.transform);
+        }
     }
 
     //Use to move boxes to avoid errors in movement.
@@ -46,6 +55,7 @@ public class Movable : Interactable
         {
             offset.x = -creature.transform.localScale.x;
             Movement(creature.transform.position + offset);
+            AudioManager.CreateAudio(boxMovingAudio, false, false, this.transform);
         }
     }
 }

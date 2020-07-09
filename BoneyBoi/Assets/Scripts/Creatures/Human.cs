@@ -15,6 +15,13 @@ public class Human : Creature
     private GameManager gameManager;
     private float realStartTime = 0f;
 
+    private bool hasLanded = false;
+
+    public AudioClip[] movementAudioArray;
+    public AudioClip landingAudio;
+    public AudioClip landingDeathAudio;
+    public AudioClip deathAudio;
+
     void Start()
     {
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
@@ -30,25 +37,54 @@ public class Human : Creature
     void Movement()
     {
         float horizontalGoal = 0.0f;
+        GameObject floor = CollidesWith("Floor");
         if (isActive)
         {
             Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
-            if (Input.GetKey(KeyCode.D)) { horizontalGoal += speed; }
-            if (Input.GetKey(KeyCode.A)) { horizontalGoal -= speed; }
+            if (Input.GetKey(KeyCode.D))
+            {
+                horizontalGoal += speed;
+
+                if (floor != null)
+                {
+                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, true, this.transform);
+                }
+            }
+
+            if (Input.GetKey(KeyCode.A))
+            {
+                horizontalGoal -= speed;
+
+                if(floor != null)
+                {
+                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, true, this.transform);
+                }
+            }
         }
         horizontal = Mathf.Lerp(horizontal, horizontalGoal, (acceleration * Time.fixedDeltaTime) / Mathf.Abs(horizontal - horizontalGoal));
-        GameObject floor = CollidesWith("Floor");
+        
         if (floor != null)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && isActive) { vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f); SetState("Jump"); }
+            if (Input.GetKeyDown(KeyCode.Space) && isActive)
+            {
+                hasLanded = false;
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f); SetState("Jump");
+            }
+
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
             {
                 anim.SetBool("Foothold", true);
                 vertical = Mathf.Max(0.0f, vertical);
             }
+
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Land") && hasLanded == false)
+            {
+                hasLanded = true;
+                AudioManager.CreateAudio(landingAudio, false, true, transform);
+            }
         }
         else { vertical = Mathf.Max(-53.0f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
-        transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
+            transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         anim.SetFloat("Horizontal", Mathf.Abs(horizontal));
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
@@ -104,9 +140,10 @@ public class Human : Creature
         {
             case "Jump": anim.Play("Jump"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
             case "Arise": anim.SetBool("IsPossessed", true); tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
-            case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; break;
+            case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; AudioManager.CreateAudio(deathAudio, false, false, transform); break;
             case "Hollow": anim.SetBool("IsPossessed", false); tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
-            default: anim.SetBool("IsPossessed", true); tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
+            default: anim.SetBool("IsPossessed", true); tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
+                CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" }); break;
         }
     }
 
@@ -117,8 +154,14 @@ public class Human : Creature
         float fallDistance = -9.81f * t * t * 0.5f;
         if (fallDistance < -6.0f)
         {
+            AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);
             anim.SetBool("Foothold", true);
             SetState("Dead");
         }
+    }
+
+    public void Death()
+    {
+        SetState("Dead");
     }
 }

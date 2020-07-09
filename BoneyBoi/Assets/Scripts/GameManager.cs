@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     private float timeSinceSoul = 0f;
     //[SerializeField]
     private int deaths = 0;
+    public bool analyticsEnabled = true;
 
 
 
@@ -143,27 +144,31 @@ public class GameManager : MonoBehaviour
     
     public void SendAnalytics() //This funcition sends all of the Analytics data, call this when quitting the game
     {
-        //Debug.Log("Child " + timeAsChild + " Skeleton " + timeAsSkeleton + " Soul " + timeAsSoul);
-        Mathf.Round(timeAsChild);
-        Mathf.Round(timeAsSkeleton);
-        Mathf.Round(timeAsSoul);
-
-        AnalyticsEvent.Custom("TimeSpentAs", new Dictionary<string, object>
+        if (analyticsEnabled == true)
         {
-            {"Child", timeAsChild},
-            {"Skeleton", timeAsSkeleton},
-            {"Soul", timeAsSoul}
-        });
+            //Debug.Log("Child " + timeAsChild + " Skeleton " + timeAsSkeleton + " Soul " + timeAsSoul);
+            Mathf.Round(timeAsChild);
+            Mathf.Round(timeAsSkeleton);
+            Mathf.Round(timeAsSoul);
 
-        AnalyticsEvent.Custom("Deaths", new Dictionary<string, object>
-        {
-            {"Deaths", deaths}
-        });
+            AnalyticsEvent.Custom("TimeSpentAs", new Dictionary<string, object>
+            {
+                {"Child", timeAsChild},
+                {"Skeleton", timeAsSkeleton},
+                {"Soul", timeAsSoul}
+            });
 
-        AnalyticsResult ar = AnalyticsEvent.Custom("TimeSpentAs");
-        Debug.Log("TimeSpentAs result is " + ar.ToString());
-        ar = AnalyticsEvent.Custom("Deaths");
-        Debug.Log("Deaths result is " + ar.ToString());
+            AnalyticsEvent.Custom("Deaths", new Dictionary<string, object>
+            {
+                {"Deaths", deaths}
+            });
+
+            AnalyticsResult ar = AnalyticsEvent.Custom("TimeSpentAs");
+            Debug.Log("TimeSpentAs result is " + ar.ToString());
+            ar = AnalyticsEvent.Custom("Deaths");
+            Debug.Log("Deaths result is " + ar.ToString());
+        }
+
     }
 
     public Vector3 GetVectorFromAngle(float angle)  //this is used to get vector3 form angle
