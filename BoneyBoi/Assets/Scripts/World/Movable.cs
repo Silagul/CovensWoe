@@ -32,7 +32,7 @@ public class Movable : Interactable
 
         if (collision.tag == "Floor")
         {
-            AudioManager.CreateAudio(boxFallingAudio, false, this.transform);
+            AudioManager.CreateAudio(boxFallingAudio, false, true, this.transform);
         }
     }
 
@@ -55,7 +55,7 @@ public class Movable : Interactable
         {
             offset.x = -creature.transform.localScale.x;
             Movement(creature.transform.position + offset);
-            AudioManager.CreateAudio(boxMovingAudio, false, this.transform);
+            AudioManager.CreateAudio(boxMovingAudio, false, false, this.transform);
         }
     }
 }

@@ -12,7 +12,7 @@ public class SpikePit : MonoBehaviour
         {
             collision.gameObject.GetComponent<Animator>().SetBool("Foothold", true);
             collision.gameObject.GetComponent<Human>().SetState("Dead");
-            AudioManager.CreateAudio(spikePit, false, this.transform);
+            AudioManager.CreateAudio(spikePit, false, true, this.transform);
         }
     }
 }

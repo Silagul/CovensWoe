@@ -47,7 +47,7 @@ public class Human : Creature
 
                 if (floor != null)
                 {
-                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, this.transform);
+                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, true, this.transform);
                 }
             }
 
@@ -57,7 +57,7 @@ public class Human : Creature
 
                 if(floor != null)
                 {
-                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, this.transform);
+                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, true, this.transform);
                 }
             }
         }
@@ -80,7 +80,7 @@ public class Human : Creature
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("Land") && hasLanded == false)
             {
                 hasLanded = true;
-                AudioManager.CreateAudio(landingAudio, false, transform);
+                AudioManager.CreateAudio(landingAudio, false, true, transform);
             }
         }
         else { vertical = Mathf.Max(-53.0f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
@@ -140,9 +140,10 @@ public class Human : Creature
         {
             case "Jump": anim.Play("Jump"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
             case "Arise": anim.SetBool("IsPossessed", true); tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
-            case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; AudioManager.CreateAudio(deathAudio, false, transform); break;
+            case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; AudioManager.CreateAudio(deathAudio, false, false, transform); break;
             case "Hollow": anim.SetBool("IsPossessed", false); tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
-            default: anim.SetBool("IsPossessed", true); tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); break;
+            default: anim.SetBool("IsPossessed", true); tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
+                CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" }); break;
         }
     }
 
@@ -153,9 +154,14 @@ public class Human : Creature
         float fallDistance = -9.81f * t * t * 0.5f;
         if (fallDistance < -6.0f)
         {
-            AudioManager.CreateAudio(landingDeathAudio, false, this.transform);
+            AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);
             anim.SetBool("Foothold", true);
             SetState("Dead");
         }
+    }
+
+    public void Death()
+    {
+        SetState("Dead");
     }
 }
