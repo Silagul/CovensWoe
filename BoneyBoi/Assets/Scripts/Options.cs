@@ -28,7 +28,7 @@ public static class Options
     public static void CreateData()
     {
         optionsData = new OptionsData();
-        optionsData.availableChunks.Add("Chunk_Start");
+        optionsData.availableChunks.Add("Chunk_Ch1_Part1");
         SaveData();
     }
 
