@@ -10,7 +10,16 @@ public class Soul : Creature
     float acceleration = 16.0f;
     float timer = 0.0f;
 
+    private Vector3 childPosition;
+    private float distanceX = 15f;
+    private float distanceY = 5f;
+
+
     private GameManager gameManager;
+
+    public AudioClip flyingAudio;
+    public AudioClip possessInAudio;
+    public AudioClip possessOutAudio;
 
     void Start()
     {
@@ -20,6 +29,32 @@ public class Soul : Creature
         GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
         transform.parent = GameManager.world.transform;
         gameManager.TimeSinceSoul();
+        childPosition = GameObject.Find("Human").transform.localPosition;
+        AudioManager.CreateAudio(possessOutAudio, false, this.transform);
+        AudioManager.CreateAudio(flyingAudio, true, this.transform);
+    }
+
+    private void ClampMovement()
+    {
+        if (transform.position.x >= childPosition.x + distanceX)
+        {
+            transform.position = new Vector3(childPosition.x + distanceX, transform.position.y, 0f);
+        }
+
+        else if (transform.position.x <= childPosition.x - distanceX)
+        {
+            transform.position = new Vector3(childPosition.x - distanceX, transform.position.y, 0f);
+        }
+
+        if (transform.position.y >= childPosition.y + distanceY)
+        {
+            transform.position = new Vector3(transform.position.x, childPosition.y + distanceY, 0f);
+        }
+
+        else if (transform.position.y <= childPosition.y - distanceY)
+        {
+            transform.position = new Vector3(transform.position.x, childPosition.y - distanceY, 0f);
+        }
     }
 
     void Interact()
@@ -30,7 +65,11 @@ public class Soul : Creature
             GameObject target;
             if ((target = CollidesWith("Hollow")) != null)
                 if (target.GetComponent<Creature>().Possess())
+                {
+                    AudioManager.CreateAudio(possessInAudio, false, this.transform);
                     SetState("Possession");
+                }
+
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -86,7 +125,7 @@ public class Soul : Creature
         {
             case "Possession": isActive = false; fixedUpdates.Add(Movement); updates.Add(Vanish); timer = 0.0f; break;
             case "Dead": SetState("default"); break;
-            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); timer = 0.0f; break;
+            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); updates.Add(ClampMovement); timer = 0.0f; break;
         }
     }
 }
