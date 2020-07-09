@@ -18,6 +18,13 @@ public class Skeleton : Creature
     private float distanceX = 15f;
     private float distanceY = 5f;
 
+    private bool hasLanded = false;
+
+    public AudioClip[] movementAudioArray;
+    public AudioClip[] collapseAudio;
+    public AudioClip buildAudio;
+    public AudioClip landingAudio;
+
     void Start()
     {
         anim = GetComponent<Animator>();
@@ -55,19 +62,31 @@ public class Skeleton : Creature
         if (isActive)
         {
             Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
-            if (Input.GetKey(KeyCode.D)) { horizontalGoal += speed; }
-            if (Input.GetKey(KeyCode.A)) { horizontalGoal -= speed; }
+            if (Input.GetKey(KeyCode.D)) { horizontalGoal += speed; AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, transform); }
+            if (Input.GetKey(KeyCode.A)) { horizontalGoal -= speed; AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, transform); }
         }
         horizontal = Mathf.Lerp(horizontal, horizontalGoal, (acceleration * Time.fixedDeltaTime) / Mathf.Abs(horizontal - horizontalGoal));
         GameObject floor = CollidesWith("Floor");
+
         if (floor != null)
         {
-            if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q)) { vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.2f); SetState("Jump"); }
+            if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q))
+            {
+                hasLanded = false;
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.2f); SetState("Jump");
+            }
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
             {
                 anim.SetBool("Foothold", true);
                 vertical = Mathf.Max(0.0f, vertical);
             }
+
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Land") && hasLanded == false)
+            {
+                hasLanded = true;
+                AudioManager.CreateAudio(landingAudio, false, transform);
+            }
+
         }
         else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime); anim.SetBool("Foothold", false); }
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
@@ -83,6 +102,7 @@ public class Skeleton : Creature
         {
             SetState("Hollow");
             gameManager.TimeAsSkeleton();
+            AudioManager.CreateAudio(collapseAudio[Random.Range(0, collapseAudio.Length)], false, transform);
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -106,6 +126,7 @@ public class Skeleton : Creature
         {
             SetState("Default");
             gameManager.TimeSinceSkeleton();
+            AudioManager.CreateAudio(buildAudio, false, transform);
             childPosition = GameObject.Find("Human").transform.localPosition;
         }
 
