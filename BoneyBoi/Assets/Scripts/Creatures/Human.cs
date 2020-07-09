@@ -68,7 +68,8 @@ public class Human : Creature
             if (Input.GetKeyDown(KeyCode.Space) && isActive)
             {
                 hasLanded = false;
-                vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f); SetState("Jump");
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f);
+                SetState("Jump");
             }
 
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))

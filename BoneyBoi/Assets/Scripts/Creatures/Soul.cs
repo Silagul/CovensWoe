@@ -24,6 +24,8 @@ public class Soul : Creature
     void Start()
     {
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+        distanceX = gameManager.soulDistanceX;
+        distanceY = gameManager.soulDistanceY;
         name = name.Substring(0, name.Length - 7);
         SetState("Default");
         GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);

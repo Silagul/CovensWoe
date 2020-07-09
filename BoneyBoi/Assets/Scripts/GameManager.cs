@@ -27,6 +27,10 @@ public class GameManager : MonoBehaviour
     private int deaths = 0;
     public bool analyticsEnabled = true;
 
+    //These determine how far the soul/skeleton can move from the player
+    public float soulDistanceX;
+    public float soulDistanceY;
+
 
 
     void Start()
