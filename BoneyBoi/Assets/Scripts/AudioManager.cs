@@ -59,26 +59,33 @@ public class AudioManager : MonoBehaviour
     ///Global audio uses Camera.main.transform as target, localized audio uses... whatever transform it is located at.
     public static AudioManager CreateAudio(AudioClip clip, bool loop, Transform target)
     {
-        GameObject go = new GameObject(clip.name);
-        go.transform.parent = Camera.main.transform;
-        AudioSource audio = go.AddComponent<AudioSource>();
-        AudioManager audioManager = go.AddComponent<AudioManager>();
-        audio.clip = clip;
-        audio.Play();
-        if (loop)
+        if (GameObject.Find(clip.name.Substring(0, clip.name.Length - 1)) == null)
         {
-            audioManager.fadeInOut = audioManager.FadeIn;
-            audioManager.duration = Mathf.Infinity;
+            GameObject go = new GameObject(clip.name.Substring(0, clip.name.Length - 1));
+            go.transform.parent = Camera.main.transform;
+            AudioSource audio = go.AddComponent<AudioSource>();
+            AudioManager audioManager = go.AddComponent<AudioManager>();
+            audio.clip = clip;
+            audio.pitch = Random.Range(0.75f, 1.25f);
+            audio.loop = loop;
+            audio.Play();
+
+            if (loop)
+            {
+                audioManager.fadeInOut = audioManager.FadeIn;
+                audioManager.duration = Mathf.Infinity;
+            }
+            else
+            {
+                audioManager.weight = 1.0f;
+                audioManager.duration = clip.length;
+            }
+            if (target != Camera.main.transform)
+                audioManager.fadeWhile = audioManager.FadeWhile;
+            audioManager.target = target;
+            return audioManager;
         }
-        else
-        {
-            audioManager.weight = 1.0f;
-            audioManager.duration = clip.length;
-        }
-        if (target != Camera.main.transform)
-            audioManager.fadeWhile = audioManager.FadeWhile;
-        audioManager.target = target;
-        return audioManager;
+        return null;
     }
 
     public static AudioManager SetAmbiance(AudioClip clip)
