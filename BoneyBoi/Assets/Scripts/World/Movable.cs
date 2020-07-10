@@ -51,11 +51,20 @@ public class Movable : Interactable
     public override void Interact(Creature creature)
     {
         GameObject floor = creature.CollidesWith("Floor");
+        Skeleton skeleton = creature.GetComponent<Skeleton>();
         if (Input.GetKey(KeyCode.Q) && floor?.gameObject != transform.parent.gameObject && GetComponentInParent<Platform>().floorCount != 0)
         {
-            offset.x = -creature.transform.localScale.x;
+            creature.GetComponent<Animator>().SetBool("Grappling", true);
+            skeleton.canRotate = false;
             Movement(creature.transform.position + offset);
-            AudioManager.CreateAudio(boxMovingAudio, false, false, this.transform);
+            if (skeleton.horizontal != 0)
+                AudioManager.CreateAudio(boxMovingAudio, false, false, this.transform);
+        }
+        else
+        {
+            creature.GetComponent<Animator>().SetBool("Grappling", false);
+            creature.GetComponent<Skeleton>().canRotate = true;
+            creature.GetComponent<Animator>().speed = 1.0f;
         }
     }
 }

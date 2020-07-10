@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class Human : Creature
 {
     Animator anim;
-    float speed = 4.0f;
+    float speed = 2.0f;
     public float vertical = 0.0f;
     public float horizontal = 0.0f;
     float acceleration = 16.0f;
@@ -86,9 +86,10 @@ public class Human : Creature
         else { vertical = Mathf.Max(-53.0f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
             transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        anim.SetFloat("Horizontal", Mathf.Abs(horizontal));
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
         else if (horizontal < 0.0f) transform.localScale = new Vector3(0.2f, 0.2f, 1);
+        if (transform.localScale.x > 0) anim.SetFloat("Horizontal", -horizontal);
+        else anim.SetFloat("Horizontal", horizontal);
     }
 
     void Interact()
@@ -121,7 +122,6 @@ public class Human : Creature
             SetState("Default");
             gameManager.TimeSinceChild();
         }
-
     }
 
     void Jump()
@@ -138,7 +138,7 @@ public class Human : Creature
         fixedUpdates.Clear();
         switch (stateName)
         {
-            case "Jump": anim.Play("Jump"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
+            case "Jump": anim.Play("Jump"); anim.SetBool("Foothold", false); isActive = false; updates.Add(Jump); timer = 0.0f; break;
             case "Arise": anim.SetBool("IsPossessed", true); tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
             case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; AudioManager.CreateAudio(deathAudio, false, false, transform); break;
             case "Hollow": anim.SetBool("IsPossessed", false); tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;

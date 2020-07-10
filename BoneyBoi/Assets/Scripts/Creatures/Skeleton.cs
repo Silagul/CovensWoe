@@ -6,12 +6,13 @@ using UnityEngine.UIElements;
 public class Skeleton : Creature
 {
     public Animator anim;
-    float speed = 4.0f;
+    public float speed = 4.0f;
     public float vertical = 0.0f;
     public float horizontal = 0.0f;
     float acceleration = 16.0f;
     float timer = 0.0f;
     float duration = 0.0f;
+    public bool canRotate = true;
 
     private GameManager gameManager;
     private Vector3 childPosition;
@@ -108,9 +109,13 @@ public class Skeleton : Creature
         else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime); anim.SetBool("Foothold", false); }
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        anim.SetFloat("Horizontal", Mathf.Abs(horizontal));
-        if (horizontal > 0.0f) transform.localScale = new Vector3(-0.15f, 0.15f, 1);
-        else if (horizontal < 0.0f) transform.localScale = new Vector3(0.15f, 0.15f, 1);
+        if (canRotate)
+        {
+            if (horizontal > 0.0f) transform.localScale = new Vector3(-0.15f, 0.15f, 1);
+            else if (horizontal < 0.0f) transform.localScale = new Vector3(0.15f, 0.15f, 1);
+        }
+        if (transform.localScale.x > 0) anim.SetFloat("Horizontal", -horizontal);
+        else anim.SetFloat("Horizontal", horizontal);
     }
 
     void Interact()
@@ -152,7 +157,7 @@ public class Skeleton : Creature
     void Jump()
     {
         timer += Time.deltaTime;
-        if (timer > 0.5f)
+        if (timer > 0.1f)
             SetState("Default");
     }
 
@@ -165,13 +170,13 @@ public class Skeleton : Creature
         switch (stateName)
         {
             case "Drag": break;
-            case "Jump": anim.Play("Jumping"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
+            case "Jump": anim.SetBool("Foothold", false); anim.Play("Jumping"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
             case "Arise": tag = "Player"; isActive = false; anim.SetBool("IsPossessed", true); updates.Add(Arise); timer = 0.0f; break;
             case "Hollow": tag = "Hollow"; anim.SetBool("IsPossessed", false); isActive = false; fixedUpdates.Add(Movement);
                 CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D" }); break;
             case "Dead": tag = "Corpse"; isActive = false; SetState("Hollow");
                 Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity); break;
-            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); updates.Add(ClampMovement);
+            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
                 CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Unseen", "Object" }); break;
         }
     }
