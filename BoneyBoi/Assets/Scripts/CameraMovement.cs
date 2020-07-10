@@ -25,12 +25,20 @@ public class CameraMovement : MonoBehaviour
     float cameraWeight = 0.0f;
     public void Darken()
     {
-        if (darken) { cameraWeight = Mathf.Min(cameraWeight + Time.deltaTime, 1.0f); }
-        else { cameraWeight = Mathf.Max(cameraWeight - Time.deltaTime, 0.0f); }
+        if (darken)
+        {
+            cameraWeight = Mathf.Min(cameraWeight + Time.deltaTime, 1.0f);
+            Time.timeScale = Mathf.Lerp(1.0f, 0.1f, cameraWeight);
+            Time.fixedDeltaTime = Mathf.Lerp(0.016667f, 0.001667f, cameraWeight);
+        }
+        else
+        {
+            cameraWeight = Mathf.Max(cameraWeight - Time.deltaTime, 0.0f);
+        }
         Camera.main.orthographicSize = Mathf.Lerp(5, 4, cameraWeight);
         Camera.main.GetComponentInChildren<SpriteRenderer>().color = new Color32(0, 0, 0, (byte)Mathf.Lerp(0, 255, cameraWeight));
-        Time.timeScale = Mathf.Lerp(1.0f, 0.1f, cameraWeight);
-        Time.fixedDeltaTime = Mathf.Lerp(0.016667f, 0.001667f, cameraWeight);
+        //Time.timeScale = Mathf.Lerp(1.0f, 0.1f, cameraWeight);
+        //Time.fixedDeltaTime = Mathf.Lerp(0.016667f, 0.001667f, cameraWeight);
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         player?.GetComponent<Creature>().IsVisible();
     }

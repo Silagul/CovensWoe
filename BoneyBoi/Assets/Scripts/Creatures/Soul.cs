@@ -73,18 +73,18 @@ public class Soul : Creature
                 }
 
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (GameManager.menu == null)
-                GameManager.ActivateMenu("GameMenu");
-            else if (GameManager.MenuActive("GameMenu"))
-                Destroy(GameManager.menu);
-            else if (GameManager.MenuActive("OptionsMenu"))
-            {
-                Options.SaveData();
-                GameManager.ActivateMenu("GameMenu");
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    if (GameManager.menu == null)
+        //        GameManager.ActivateMenu("GameMenu");
+        //    else if (GameManager.MenuActive("GameMenu"))
+        //        Destroy(GameManager.menu);
+        //    else if (GameManager.MenuActive("OptionsMenu"))
+        //    {
+        //        Options.SaveData();
+        //        GameManager.ActivateMenu("GameMenu");
+        //    }
+        //}
     }
 
     void Movement()

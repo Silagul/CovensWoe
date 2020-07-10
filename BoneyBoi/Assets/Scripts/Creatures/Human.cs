@@ -100,18 +100,18 @@ public class Human : Creature
             gameManager.TimeAsChild();
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (GameManager.menu == null)
-                GameManager.ActivateMenu("GameMenu");
-            else if (GameManager.MenuActive("GameMenu"))
-                Destroy(GameManager.menu);
-            else if (GameManager.MenuActive("OptionsMenu"))
-            {
-                Options.SaveData();
-                GameManager.ActivateMenu("GameMenu");
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    if (GameManager.menu == null)
+        //        GameManager.ActivateMenu("GameMenu");
+        //    else if (GameManager.MenuActive("GameMenu"))
+        //        Destroy(GameManager.menu);
+        //    else if (GameManager.MenuActive("OptionsMenu"))
+        //    {
+        //        Options.SaveData();
+        //        GameManager.ActivateMenu("GameMenu");
+        //    }
+        //}
     }
 
     void Arise()
