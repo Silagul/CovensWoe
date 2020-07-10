@@ -5,7 +5,7 @@ using UnityEngine;
 public class Chunk : MonoBehaviour
 {
     public Vector3 localSpawnPoint;
-    public static string currentChunk = "Chunk_Start";
+    public static string currentChunk;
     static string[] users = new string[6] { "Jukka", "Minttu", "Tarina", "Saku", "Petra", "Jordan" };
     public string[] neighbours = new string[] { };
 

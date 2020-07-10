@@ -23,13 +23,13 @@ public class TimeShroom : Interactable
         if(collision.name == "Skeleton" && isActive == false)
         {
             Interact(collision.GetComponent<Creature>());
-            AudioManager.CreateAudio(mushroomTimer, true, this.transform);
-            AudioManager.CreateAudio(mushroomAudioArray[Random.Range(0, mushroomAudioArray.Length)], false, this.transform);
+            AudioManager.CreateAudio(mushroomTimer, true, false, this.transform);
+            AudioManager.CreateAudio(mushroomAudioArray[Random.Range(0, mushroomAudioArray.Length)], false, true, this.transform);
         }
 
         else if (collision.name == "Human")
         {
-            AudioManager.CreateAudio(hiddenMushroomAudio, false, transform);
+            AudioManager.CreateAudio(hiddenMushroomAudio, false, true, transform);
         }
     }
 

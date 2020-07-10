@@ -22,7 +22,7 @@ public class Lever : Interactable
             {
                 time = 0.0f;
                 isActive = !isActive;
-                AudioManager.CreateAudio(leverAudio, false, this.transform);
+                AudioManager.CreateAudio(leverAudio, false, true, this.transform);
                 if (isActive) transform.parent.Find("PlatformMoving")?.GetComponent<Backforth>().Activate(true);
                 else transform.parent.Find("PlatformMoving")?.GetComponent<Backforth>().Activate(false);
             }
