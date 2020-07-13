@@ -155,14 +155,12 @@ public class GameManager : MonoBehaviour
 
     public void Continue()
     {
-        Debug.Log(deathMenu.activeSelf);
         if(deathMenu.activeSelf == true || toimiVittuSaatana == true)
         {
-            Debug.Log("MSAATTANMS");
-
             SaveAnalytics();
             World.Restart();
             toimiVittuSaatana = false;
+            AudioManager.SetAmbiance(test1);
         }
 
         Time.timeScale = 1;
@@ -172,11 +170,12 @@ public class GameManager : MonoBehaviour
     public void DeathMenu()
     {
         deathMenu.SetActive(true);
-        //toimiVittuSaatana = true;
+        toimiVittuSaatana = true;
+
         //placeholder/testing crap
-        //GameObject testi = GameObject.Find(test1.name);
-        //if (testi != null)
-        //Destroy(testi);
+        GameObject testi = GameObject.Find(test1.name);
+        if (testi != null)
+            Destroy(testi);
     }
 
     public void SetGameActive(bool isActive)

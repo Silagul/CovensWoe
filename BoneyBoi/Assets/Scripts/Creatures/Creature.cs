@@ -60,7 +60,6 @@ public class Creature : MonoBehaviour
             //if (GameManager.menu == null || !GameManager.MenuActive("DeathMenu"))
             if (gameManager.deathMenu.activeSelf == false)
             {
-                Debug.Log("kakakaa");
                 gameManager.DeathCounter();
                 isActive = false;
                 //GameManager.ActivateMenu("DeathMenu");
