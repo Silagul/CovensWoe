@@ -68,7 +68,8 @@ public class Human : Creature
             if (Input.GetKeyDown(KeyCode.Space) && isActive)
             {
                 hasLanded = false;
-                vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f); SetState("Jump");
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f);
+                SetState("Jump");
             }
 
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
@@ -100,18 +101,18 @@ public class Human : Creature
             gameManager.TimeAsChild();
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (GameManager.menu == null)
-                GameManager.ActivateMenu("GameMenu");
-            else if (GameManager.MenuActive("GameMenu"))
-                Destroy(GameManager.menu);
-            else if (GameManager.MenuActive("OptionsMenu"))
-            {
-                Options.SaveData();
-                GameManager.ActivateMenu("GameMenu");
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    if (GameManager.menu == null)
+        //        GameManager.ActivateMenu("GameMenu");
+        //    else if (GameManager.MenuActive("GameMenu"))
+        //        Destroy(GameManager.menu);
+        //    else if (GameManager.MenuActive("OptionsMenu"))
+        //    {
+        //        Options.SaveData();
+        //        GameManager.ActivateMenu("GameMenu");
+        //    }
+        //}
     }
 
     void Arise()

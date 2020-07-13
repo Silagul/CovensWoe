@@ -16,8 +16,8 @@ public class Skeleton : Creature
 
     private GameManager gameManager;
     private Vector3 childPosition;
-    private float distanceX = 15f;
-    private float distanceY = 5f;
+    private float distanceX = 25f;
+    private float distanceY = 10f;
 
     private bool hasLanded = false;
 
@@ -30,6 +30,8 @@ public class Skeleton : Creature
     {
         anim = GetComponent<Animator>();
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+        distanceX = gameManager.soulDistanceX;
+        distanceY = gameManager.soulDistanceY;
         transform.localScale = new Vector3(0.15f, 0.15f, 1);
         SetState("Hollow");
     }
@@ -91,7 +93,8 @@ public class Skeleton : Creature
             if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q))
             {
                 hasLanded = false;
-                vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.2f); SetState("Jump");
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.2f);
+                SetState("Jump");
             }
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
             {
@@ -127,18 +130,18 @@ public class Skeleton : Creature
             AudioManager.CreateAudio(collapseAudio[Random.Range(0, collapseAudio.Length)], false, true, transform);
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (GameManager.menu == null)
-                GameManager.ActivateMenu("GameMenu");
-            else if (GameManager.MenuActive("GameMenu"))
-                Destroy(GameManager.menu);
-            else if (GameManager.MenuActive("OptionsMenu"))
-            {
-                Options.SaveData();
-                GameManager.ActivateMenu("GameMenu");
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    if (GameManager.menu == null)
+        //        GameManager.ActivateMenu("GameMenu");
+        //    else if (GameManager.MenuActive("GameMenu"))
+        //        Destroy(GameManager.menu);
+        //    else if (GameManager.MenuActive("OptionsMenu"))
+        //    {
+        //        Options.SaveData();
+        //        GameManager.ActivateMenu("GameMenu");
+        //    }
+        //}
     }
     
     void Arise()
