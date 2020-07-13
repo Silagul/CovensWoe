@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         Options.Start();
-        //ActivateMenu("MainMenu");
+        ActivateMenu("MainMenu");
         world = Instantiate(Resources.Load<GameObject>("Prefabs/World/World"), transform).GetComponent<World>();
     }
 
