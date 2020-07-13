@@ -13,6 +13,8 @@ public class Creature : MonoBehaviour
     void OnCollisionExit2D(Collision2D collision) { collisions.Remove(collision.gameObject); }
     void OnTriggerEnter2D(Collider2D collider) { collisions.Add(collider.gameObject); }
     void OnTriggerExit2D(Collider2D collider) { collisions.Remove(collider.gameObject); }
+
+
     public GameObject CollidesWith(string tag)
     {
         foreach (GameObject go in collisions)
@@ -49,14 +51,16 @@ public class Creature : MonoBehaviour
     public static float visibleTime = 0.0f;
     public void IsVisible()
     {
+        GameManager gameManager;
+        gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         if (dying/* || EnemySight.shouldDie*/) { visibleTime = Mathf.Min(1.0f, visibleTime + (Time.deltaTime / Time.timeScale)); CameraMovement.darken = true; }
         else { visibleTime = Mathf.Max(0.0f, visibleTime - Time.deltaTime); }
         if (visibleTime == 1.0f)
         {
-            if (GameManager.menu == null || !GameManager.MenuActive("DeathMenu"))
+            //if (GameManager.menu == null || !GameManager.MenuActive("DeathMenu"))
+            if (gameManager.deathMenu.activeSelf == false)
             {
-                GameManager gameManager;
-                gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+                Debug.Log("kakakaa");
                 gameManager.DeathCounter();
                 isActive = false;
                 //GameManager.ActivateMenu("DeathMenu");

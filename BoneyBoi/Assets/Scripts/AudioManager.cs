@@ -107,6 +107,7 @@ public class AudioManager : MonoBehaviour
         AudioMixerGroup[] mixerGroup = mixer.FindMatchingGroups("Music");
         audio.outputAudioMixerGroup = mixerGroup[0];
         audio.clip = clip;
+        audio.loop = true;
         audio.Play();
         audioManager.fadeInOut = audioManager.FadeIn;
         foreach (AudioManager ambiant in ambiance)

@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private GameObject pauseQuitMenu;
     [SerializeField]
-    private GameObject deathMenu;
+    public GameObject deathMenu;
     [SerializeField]
     private GameObject mainMenu;
 
@@ -53,12 +53,14 @@ public class GameManager : MonoBehaviour
 
     public Slider brightnessSlider;
 
+    public AudioClip test1;
+    private bool toimiVittuSaatana = false;
 
 
     void Start()
     {
         Options.Start();
-        ActivateMenu("MainMenu");
+        //ActivateMenu("MainMenu");
         world = Instantiate(Resources.Load<GameObject>("Prefabs/World/World"), transform).GetComponent<World>();
 
         //placeholder values until saving is implemented for these
@@ -153,10 +155,14 @@ public class GameManager : MonoBehaviour
 
     public void Continue()
     {
-        if(deathMenu.activeSelf == true)
+        Debug.Log(deathMenu.activeSelf);
+        if(deathMenu.activeSelf == true || toimiVittuSaatana == true)
         {
+            Debug.Log("MSAATTANMS");
+
             SaveAnalytics();
             World.Restart();
+            toimiVittuSaatana = false;
         }
 
         Time.timeScale = 1;
@@ -166,10 +172,16 @@ public class GameManager : MonoBehaviour
     public void DeathMenu()
     {
         deathMenu.SetActive(true);
+        //toimiVittuSaatana = true;
+        //placeholder/testing crap
+        //GameObject testi = GameObject.Find(test1.name);
+        //if (testi != null)
+        //Destroy(testi);
     }
 
     public void SetGameActive(bool isActive)
     {
+        AudioManager.SetAmbiance(test1);
         Time.timeScale = 1;
         Time.fixedDeltaTime = 0.016667f;
         gameActive = isActive;
