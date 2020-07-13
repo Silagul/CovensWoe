@@ -11,7 +11,9 @@ public class Platform : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
-            if (player.transform.position.y + 0.05f < transform.position.y + offsetY || Input.GetKey(KeyCode.S))
+            Vector3 localPosition = transform.InverseTransformPoint(player.transform.position);
+            if (transform.parent.name == "Chunk_Ch1_Part1") Debug.Log(transform.position);
+            if (localPosition.y + 0.05f < offsetY || Input.GetKey(KeyCode.S))
                 Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>(), true);
             else
                 Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>(), false);

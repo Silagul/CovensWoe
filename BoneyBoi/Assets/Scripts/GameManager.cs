@@ -27,13 +27,43 @@ public class GameManager : MonoBehaviour
     private int deaths = 0;
     public bool analyticsEnabled = true;
 
+    //These determine how far the soul/skeleton can move from the player
+    public float soulDistanceX;
+    public float soulDistanceY;
+
+    private bool gameActive = false;
+    [SerializeField]
+    private GameObject pauseMenu;
+    [SerializeField]
+    private GameObject deathMenu;
+
 
 
     void Start()
     {
         Options.Start();
-        ActivateMenu("MainMenu");
+        //ActivateMenu("MainMenu");
         world = Instantiate(Resources.Load<GameObject>("Prefabs/World/World"), transform).GetComponent<World>();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape) && gameActive == true)
+        {
+            if (pauseMenu.activeSelf == true)
+            {
+                pauseMenu.SetActive(false);
+                Time.timeScale = 1;
+                Time.fixedDeltaTime = 0.016667f;
+            }
+
+            else
+            {
+                pauseMenu.SetActive(true);
+                Time.timeScale = 0;
+                Time.fixedDeltaTime = 0;
+            }
+        }
     }
 
     public static void ActivateMenu(string menuName)
@@ -48,6 +78,48 @@ public class GameManager : MonoBehaviour
         if (menu?.name == $"{menuName}(Clone)")
             return true;
         return false;
+    }
+
+    public void SaveOptions()
+    {
+        Options.SaveData();
+    }
+
+    public void QuitGame()
+    {
+        #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+        #else
+                Application.Quit();
+        #endif
+    }
+
+    public void SelectLevel(string chunk)
+    {
+        Chunk.currentChunk = chunk;
+        World.Restart();
+    }
+
+    public void Continue()
+    {
+        SaveAnalytics();
+        World.Restart();
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = 0.016667f;
+    }
+
+    public void DeathMenu()
+    {
+        deathMenu.SetActive(true);
+    }
+
+    public void SetGameActive(bool isActive)
+    {
+        gameActive = isActive;
+        if (gameActive == false)
+        {
+            World.Remove();
+        }
     }
 
     public void GetRealStartTime(float time)    //This for getting the correct start time after main menu
