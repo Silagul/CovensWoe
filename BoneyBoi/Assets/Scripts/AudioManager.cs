@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Net.Http;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class AudioManager : MonoBehaviour
 {
@@ -65,6 +66,11 @@ public class AudioManager : MonoBehaviour
             go.transform.parent = Camera.main.transform;
             AudioSource audio = go.AddComponent<AudioSource>();
             AudioManager audioManager = go.AddComponent<AudioManager>();
+
+            AudioMixer mixer = Resources.Load<AudioMixer>("Audio/Mixers/MasterMixer");
+            AudioMixerGroup[] mixerGroup = mixer.FindMatchingGroups("SFX");
+            audio.outputAudioMixerGroup = mixerGroup[0];
+
             audio.clip = clip;
             if (usePitch)
             {
@@ -97,6 +103,9 @@ public class AudioManager : MonoBehaviour
         go.transform.parent = Camera.main.transform;
         AudioSource audio = go.AddComponent<AudioSource>();
         AudioManager audioManager = go.AddComponent<AudioManager>();
+        AudioMixer mixer = Resources.Load<AudioMixer>("Audio/Mixers/MasterMixer");
+        AudioMixerGroup[] mixerGroup = mixer.FindMatchingGroups("Music");
+        audio.outputAudioMixerGroup = mixerGroup[0];
         audio.clip = clip;
         audio.Play();
         audioManager.fadeInOut = audioManager.FadeIn;

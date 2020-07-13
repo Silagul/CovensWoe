@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Analytics;
+using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,10 +34,24 @@ public class GameManager : MonoBehaviour
     public float soulDistanceY;
 
     private bool gameActive = false;
+    private bool gamePaused = false;
     [SerializeField]
     private GameObject pauseMenu;
     [SerializeField]
+    private GameObject optionsMenu;
+    [SerializeField]
+    private GameObject pauseQuitMenu;
+    [SerializeField]
     private GameObject deathMenu;
+    [SerializeField]
+    private GameObject mainMenu;
+
+    public AudioMixer masterMixer;
+    public Slider masterSlider;
+    public Slider musicSlider;
+    public Slider sfxSlider;
+
+    public Slider brightnessSlider;
 
 
 
@@ -44,15 +60,43 @@ public class GameManager : MonoBehaviour
         Options.Start();
         //ActivateMenu("MainMenu");
         world = Instantiate(Resources.Load<GameObject>("Prefabs/World/World"), transform).GetComponent<World>();
+
+        //placeholder values until saving is implemented for these
+        masterSlider.value = 0.5f;
+        musicSlider.value = 0.5f;
+        sfxSlider.value = 0.5f;
+        brightnessSlider.value = 0.5f;
     }
 
     private void Update()
     {
+        PauseMenu();
+        SetAudio(); //currently sets audio constantly, change later
+    }
+
+    public void OptionsMenu()
+    {
+        if (gameActive == true)
+        {
+            pauseMenu.SetActive(true);
+        }
+
+        else
+        {
+            mainMenu.SetActive(true);
+        }
+    }
+
+    private void PauseMenu()
+    {
         if (Input.GetKeyDown(KeyCode.Escape) && gameActive == true)
         {
-            if (pauseMenu.activeSelf == true)
+            if (pauseMenu.activeSelf == true || optionsMenu.activeSelf == true || pauseQuitMenu.activeSelf == true) //could add backing out feature later
             {
                 pauseMenu.SetActive(false);
+                optionsMenu.SetActive(false);
+                pauseQuitMenu.SetActive(false);
+                
                 Time.timeScale = 1;
                 Time.fixedDeltaTime = 0.016667f;
             }
@@ -64,6 +108,13 @@ public class GameManager : MonoBehaviour
                 Time.fixedDeltaTime = 0;
             }
         }
+    }
+
+    private void SetAudio()
+    {
+            masterMixer.SetFloat("MasterVol", Mathf.Log10(masterSlider.value) * 20);
+            masterMixer.SetFloat("MusicVol", Mathf.Log10(musicSlider.value) * 20);
+            masterMixer.SetFloat("SFXVol", Mathf.Log10(sfxSlider.value) * 20);
     }
 
     public static void ActivateMenu(string menuName)
@@ -102,8 +153,12 @@ public class GameManager : MonoBehaviour
 
     public void Continue()
     {
-        SaveAnalytics();
-        World.Restart();
+        if(deathMenu.activeSelf == true)
+        {
+            SaveAnalytics();
+            World.Restart();
+        }
+
         Time.timeScale = 1;
         Time.fixedDeltaTime = 0.016667f;
     }
@@ -115,6 +170,8 @@ public class GameManager : MonoBehaviour
 
     public void SetGameActive(bool isActive)
     {
+        Time.timeScale = 1;
+        Time.fixedDeltaTime = 0.016667f;
         gameActive = isActive;
         if (gameActive == false)
         {
