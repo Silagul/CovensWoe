@@ -154,7 +154,6 @@ public class Skeleton : Creature
             AudioManager.CreateAudio(buildAudio, false, true, transform);
             childPosition = GameObject.Find("Human").transform.localPosition;
         }
-
     }
 
     void Jump()
@@ -176,11 +175,18 @@ public class Skeleton : Creature
             case "Jump": anim.SetBool("Foothold", false); anim.Play("Jumping"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
             case "Arise": tag = "Player"; isActive = false; anim.SetBool("IsPossessed", true); updates.Add(Arise); timer = 0.0f; break;
             case "Hollow": tag = "Hollow"; anim.SetBool("IsPossessed", false); isActive = false; fixedUpdates.Add(Movement);
-                CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D" }); break;
+                CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D" }); break;
             case "Dead": tag = "Corpse"; isActive = false; SetState("Hollow");
                 Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity); break;
             default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
-                CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Unseen", "Object" }); break;
+                CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D", "Unseen", "Object" }); break;
         }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        Movable movable;
+        if ((movable = collision.GetComponent<Movable>()) != null)
+            movable.Interact(this);
     }
 }
