@@ -5,6 +5,8 @@ using UnityEngine.Analytics;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
+#pragma warning disable CS0649 //whining about not assigning menus
+
 public class GameManager : MonoBehaviour
 {
     public static GameObject menu;
@@ -34,7 +36,7 @@ public class GameManager : MonoBehaviour
     public float soulDistanceY;
 
     private bool gameActive = false;
-    private bool gamePaused = false;
+
     [SerializeField]
     private GameObject pauseMenu;
     [SerializeField]
@@ -56,18 +58,52 @@ public class GameManager : MonoBehaviour
     public AudioClip test1;
     private bool toimiVittuSaatana = false;
 
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+
+        masterSlider.value = PlayerPrefs.GetFloat("MasterVol");
+        musicSlider.value = PlayerPrefs.GetFloat("MusicVol");
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVol");
+        brightnessSlider.value = PlayerPrefs.GetFloat("Brightness");
+    }
 
     void Start()
     {
-        Options.Start();
+        //Options.Start();
         //ActivateMenu("MainMenu");
         world = Instantiate(Resources.Load<GameObject>("Prefabs/World/World"), transform).GetComponent<World>();
 
-        //placeholder values until saving is implemented for these
-        masterSlider.value = 0.5f;
-        musicSlider.value = 0.5f;
-        sfxSlider.value = 0.5f;
-        brightnessSlider.value = 0.5f;
+        if (PlayerPrefs.HasKey("FirstRun") == false)
+        {
+            PlayerPrefs.SetInt("FirstRun", 0);
+
+            PlayerPrefs.SetFloat("MasterVol", 0.5f);
+            PlayerPrefs.SetFloat("MusicVol", 0.5f);
+            PlayerPrefs.SetFloat("SFXVol", 0.5f);
+            PlayerPrefs.SetFloat("Brightness", 0.5f);
+            PlayerPrefs.SetString("Chunk_Ch1_Part1", "");
+            masterSlider.value = PlayerPrefs.GetFloat("MasterVol");
+            musicSlider.value = PlayerPrefs.GetFloat("MusicVol");
+            sfxSlider.value = PlayerPrefs.GetFloat("SFXVol");
+            brightnessSlider.value = PlayerPrefs.GetFloat("Brightness");
+            SetAudio();
+            PlayerPrefs.Save();
+        }
+
+        else
+        {
+            masterSlider.value = PlayerPrefs.GetFloat("MasterVol");
+            musicSlider.value = PlayerPrefs.GetFloat("MusicVol");
+            sfxSlider.value = PlayerPrefs.GetFloat("SFXVol");
+            brightnessSlider.value = PlayerPrefs.GetFloat("Brightness");
+            PlayerPrefs.SetFloat("MasterVol", masterSlider.value);
+            PlayerPrefs.SetFloat("MusicVol", musicSlider.value);
+            PlayerPrefs.SetFloat("SFXVol", sfxSlider.value);
+            PlayerPrefs.SetFloat("Brightness", brightnessSlider.value);
+            SetAudio();
+            PlayerPrefs.Save();
+        }
     }
 
     private void Update()
@@ -98,7 +134,6 @@ public class GameManager : MonoBehaviour
                 pauseMenu.SetActive(false);
                 optionsMenu.SetActive(false);
                 pauseQuitMenu.SetActive(false);
-                
                 Time.timeScale = 1;
                 Time.fixedDeltaTime = 0.016667f;
             }
@@ -112,11 +147,13 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void SetAudio()
+    public void SetAudio()
     {
-            masterMixer.SetFloat("MasterVol", Mathf.Log10(masterSlider.value) * 20);
-            masterMixer.SetFloat("MusicVol", Mathf.Log10(musicSlider.value) * 20);
-            masterMixer.SetFloat("SFXVol", Mathf.Log10(sfxSlider.value) * 20);
+        masterMixer.SetFloat("MasterVol", Mathf.Log10(masterSlider.value) * 20);
+        masterMixer.SetFloat("MusicVol", Mathf.Log10(musicSlider.value) * 20);
+        masterMixer.SetFloat("SFXVol", Mathf.Log10(sfxSlider.value) * 20);
+
+        RenderSettings.ambientLight = new Color(brightnessSlider.value, brightnessSlider.value, brightnessSlider.value, 1f);
     }
 
     public static void ActivateMenu(string menuName)
@@ -135,7 +172,12 @@ public class GameManager : MonoBehaviour
 
     public void SaveOptions()
     {
-        Options.SaveData();
+        //Options.SaveData();
+        PlayerPrefs.SetFloat("MasterVol", masterSlider.value);
+        PlayerPrefs.SetFloat("MusicVol", musicSlider.value);
+        PlayerPrefs.SetFloat("SFXVol", sfxSlider.value);
+        PlayerPrefs.SetFloat("Brightness", brightnessSlider.value);
+        PlayerPrefs.Save();
     }
 
     public void QuitGame()
@@ -150,6 +192,7 @@ public class GameManager : MonoBehaviour
     public void SelectLevel(string chunk)
     {
         Chunk.currentChunk = chunk;
+        Debug.Log(chunk);
         World.Restart();
     }
 
@@ -187,6 +230,19 @@ public class GameManager : MonoBehaviour
         if (gameActive == false)
         {
             World.Remove();
+        }
+    }
+
+    public void CheckAvailableLevels()
+    {
+        GameObject[] levelbuttons = GameObject.FindGameObjectsWithTag("levelButton");
+
+        foreach (GameObject button in levelbuttons)
+        {
+            if(PlayerPrefs.HasKey(button.name))
+            {
+                button.GetComponent<Button>().interactable = true;
+            }
         }
     }
 
