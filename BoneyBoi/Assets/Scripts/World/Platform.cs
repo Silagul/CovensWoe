@@ -11,8 +11,11 @@ public class Platform : MonoBehaviour
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null)
         {
+            bool isDragging = false;
+            Skeleton skel = player.GetComponent<Skeleton>();
+            if (skel != null) { if (skel.CollidesWith("Movable") != null && Input.GetKey(KeyCode.Q)) { isDragging = true; } }
             Vector3 localPosition = transform.InverseTransformPoint(player.transform.position);
-            if (localPosition.y + 0.05f < offsetY || Input.GetKey(KeyCode.S))
+            if (localPosition.y + 0.05f < offsetY || (Input.GetKey(KeyCode.S) && !isDragging))
                 Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>(), true);
             else
                 Physics2D.IgnoreCollision(player.GetComponent<Collider2D>(), GetComponent<Collider2D>(), false);

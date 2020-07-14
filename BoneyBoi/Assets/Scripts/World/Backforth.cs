@@ -4,19 +4,26 @@ using UnityEngine;
 
 public class Backforth : MonoBehaviour
 {
+    public List<Vector2> stops = new List<Vector2>();
+
     System.Action fadein;
     public bool isVisible = true;
     public bool isActive = false;
     float time = 0.0f;
     public float speed = 2.0f;
-    Vector2 startPoint;
-    public Vector2 endPoint;
-    public Vector2 nextPoint;
+    public bool isDirectionUP;
+    public int currentIndex;
+    Vector2 nextPoint;
 
     void Start()
     {
-        startPoint = transform.position;
-        nextPoint = endPoint;
+        nextPoint = stops[currentIndex];
+    }
+
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+            Activate(!isActive);
     }
 
     void FixedUpdate()
@@ -28,13 +35,10 @@ public class Backforth : MonoBehaviour
 
             Vector2 direction = (nextPoint - (Vector2)transform.position);
             Vector2 movement = direction.normalized * speed * Time.fixedDeltaTime;
-            if (movement.magnitude >= direction.magnitude - 0.01f)
+            if (movement.magnitude >= direction.magnitude)
             {
                 movement = direction.normalized * movement.magnitude;
-                {
-                    if (nextPoint == startPoint) { nextPoint = endPoint; }
-                    else { nextPoint = startPoint; }
-                }
+                isActive = false;
             }
             transform.position += (Vector3)movement;
         }
@@ -50,6 +54,22 @@ public class Backforth : MonoBehaviour
                 isVisible = true;
                 fadein = FadeIn;
             }
+            if (isDirectionUP)
+                if (currentIndex == stops.Count - 1)
+                {
+                    currentIndex--;
+                    isDirectionUP = false;
+                }
+                else
+                    currentIndex++;
+            else if (currentIndex == 0)
+            {
+                currentIndex++;
+                isDirectionUP = true;
+            }
+            else
+                currentIndex--;
+            nextPoint = stops[currentIndex];
         }
         else
         {

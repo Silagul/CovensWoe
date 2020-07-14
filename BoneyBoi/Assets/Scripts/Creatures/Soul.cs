@@ -23,6 +23,7 @@ public class Soul : Creature
 
     void Start()
     {
+        collisions.Add("Hollow", new List<GameObject>());
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         distanceX = gameManager.soulDistanceX;
         distanceY = gameManager.soulDistanceY;

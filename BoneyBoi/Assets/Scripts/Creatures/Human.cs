@@ -24,6 +24,7 @@ public class Human : Creature
 
     void Start()
     {
+        collisions.Add("Floor", new List<GameObject>());
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         realStartTime = Time.timeSinceLevelLoad;
         gameManager.GetRealStartTime(realStartTime);
@@ -150,7 +151,8 @@ public class Human : Creature
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        collisions.Add(collision.gameObject);
+        if (collisions.ContainsKey(collision.transform.tag))
+            collisions[collision.transform.tag].Add(collision.gameObject);
         float t = vertical / -9.81f;
         float fallDistance = -9.81f * t * t * 0.5f;
         if (fallDistance < -6.0f)

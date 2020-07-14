@@ -28,6 +28,8 @@ public class Skeleton : Creature
 
     void Start()
     {
+        collisions.Add("Floor", new List<GameObject>());
+        collisions.Add("Movable", new List<GameObject>());
         anim = GetComponent<Animator>();
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         distanceX = gameManager.soulDistanceX;
@@ -63,7 +65,6 @@ public class Skeleton : Creature
     {
         float horizontalGoal = 0.0f;
         GameObject floor = CollidesWith("Floor");
-
         if (isActive)
         {
             Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
@@ -119,6 +120,10 @@ public class Skeleton : Creature
         }
         if (transform.localScale.x > 0) anim.SetFloat("Horizontal", -horizontal);
         else anim.SetFloat("Horizontal", horizontal);
+
+        Movable movable;
+        if ((movable = CollidesWith("Movable", "Box")?.GetComponent<Movable>()) != null)
+            movable.Interact(this);
     }
 
     void Interact()
@@ -181,12 +186,5 @@ public class Skeleton : Creature
             default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
                 CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D", "Unseen", "Object" }); break;
         }
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        Movable movable;
-        if ((movable = collision.GetComponent<Movable>()) != null)
-            movable.Interact(this);
     }
 }
