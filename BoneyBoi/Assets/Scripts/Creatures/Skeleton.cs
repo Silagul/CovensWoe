@@ -26,6 +26,9 @@ public class Skeleton : Creature
     public AudioClip buildAudio;
     public AudioClip landingAudio;
 
+    public PolygonCollider2D defaultCollider;
+    public PolygonCollider2D hollowCollider;
+
     void Start()
     {
         collisions.Add("Floor", new List<GameObject>());
@@ -131,6 +134,8 @@ public class Skeleton : Creature
         if (Input.GetKeyDown(KeyCode.E))
         {
             SetState("Hollow");
+            defaultCollider.enabled = false;
+            hollowCollider.enabled = true;
             gameManager.TimeAsSkeleton();
             AudioManager.CreateAudio(collapseAudio[Random.Range(0, collapseAudio.Length)], false, true, transform);
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
@@ -155,6 +160,8 @@ public class Skeleton : Creature
         if (timer > 1.0f)
         {
             SetState("Default");
+            defaultCollider.enabled = true;
+            hollowCollider.enabled = false;
             gameManager.TimeSinceSkeleton();
             AudioManager.CreateAudio(buildAudio, false, true, transform);
             childPosition = GameObject.Find("Human").transform.localPosition;

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Slider : MonoBehaviour
+public class SliderScript : MonoBehaviour
 {
     bool isDragging = false;
     void Start()

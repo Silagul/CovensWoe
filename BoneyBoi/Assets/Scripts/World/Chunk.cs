@@ -47,8 +47,10 @@ public class Chunk : MonoBehaviour
 
     void Activate()
     {
-        if (!Options.optionsData.availableChunks.Contains(name))
-            Options.optionsData.availableChunks.Add(name);
+        //if (!Options.optionsData.availableChunks.Contains(name))
+        //    Options.optionsData.availableChunks.Add(name);
+
+
         foreach (string neighbour in neighbours)
             if (!World.ChunkExists(neighbour))
                 World.chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Master/Chunk_{neighbour}"), transform.parent).GetComponent<Chunk>());
@@ -64,7 +66,11 @@ public class Chunk : MonoBehaviour
         if (other.name == "Human")
         {
             currentChunk = name;
-            Options.SaveData();
+            //Options.SaveData();
+            if (!PlayerPrefs.HasKey(name))
+            {
+                PlayerPrefs.SetString(name, "");
+            }
             Reload();
             for (int i = World.chunks.Count - 1; i >= 0; i--)
                 if (World.chunks[i] != this)

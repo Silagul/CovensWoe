@@ -21,7 +21,7 @@ public static class Options
             LoadData();
         else
             CreateData();
-        AudioListener.volume = optionsData.volume;
+        //AudioListener.volume = optionsData.volume;
         RenderSettings.ambientLight = Color32.Lerp(Color.black, Color.white, optionsData.brightness);
     }
 

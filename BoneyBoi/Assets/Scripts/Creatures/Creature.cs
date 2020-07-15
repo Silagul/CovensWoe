@@ -30,6 +30,8 @@ public class Creature : MonoBehaviour
         if (collisions.ContainsKey(collider.tag))
             collisions[collider.tag].Remove(collider.gameObject);
     }
+
+
     public GameObject CollidesWith(string tag)
     {
         if (collisions.ContainsKey(tag))
@@ -97,14 +99,15 @@ public class Creature : MonoBehaviour
     public static float visibleTime = 0.0f;
     public void IsVisible()
     {
+        GameManager gameManager;
+        gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         if (dying/* || EnemySight.shouldDie*/) { visibleTime = Mathf.Min(1.0f, visibleTime + (Time.deltaTime / Time.timeScale)); CameraMovement.darken = true; }
         else { visibleTime = Mathf.Max(0.0f, visibleTime - Time.deltaTime); }
         if (visibleTime == 1.0f)
         {
-            if (GameManager.menu == null || !GameManager.MenuActive("DeathMenu"))
+            //if (GameManager.menu == null || !GameManager.MenuActive("DeathMenu"))
+            if (gameManager.deathMenu.activeSelf == false)
             {
-                GameManager gameManager;
-                gameManager = GameObject.Find("Game").GetComponent<GameManager>();
                 gameManager.DeathCounter();
                 isActive = false;
                 //GameManager.ActivateMenu("DeathMenu");
