@@ -192,7 +192,7 @@ public class GameManager : MonoBehaviour
     public void SelectLevel(string chunk)
     {
         Chunk.currentChunk = chunk;
-        Debug.Log(chunk);
+        //Debug.Log(chunk);
         World.Restart();
     }
 

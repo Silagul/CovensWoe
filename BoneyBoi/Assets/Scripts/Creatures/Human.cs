@@ -22,6 +22,9 @@ public class Human : Creature
     public AudioClip landingDeathAudio;
     public AudioClip deathAudio;
 
+    public BoxCollider2D defaultCollider;
+    public CapsuleCollider2D hollowCollider;
+
     void Start()
     {
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
@@ -98,6 +101,8 @@ public class Human : Creature
         if (isActive && Input.GetKeyDown(KeyCode.E) && visibleTime == 0.0f)
         {
             SetState("Hollow");
+            defaultCollider.enabled = false;
+            hollowCollider.enabled = true;
             gameManager.TimeAsChild();
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
@@ -121,6 +126,8 @@ public class Human : Creature
         if (timer > 1.0f)
         {
             SetState("Default");
+            defaultCollider.enabled = true;
+            hollowCollider.enabled = false;
             gameManager.TimeSinceChild();
         }
     }
