@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 
 public class Human : Creature
@@ -128,8 +129,17 @@ public class Human : Creature
 
     void Jump()
     {
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         timer += Time.deltaTime;
         if (timer > 0.5f)
+            SetState("Default");
+    }
+
+    void Land()
+    {
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        timer += Time.deltaTime;
+        if (timer > 0.75f)
             SetState("Default");
     }
 
@@ -140,7 +150,8 @@ public class Human : Creature
         fixedUpdates.Clear();
         switch (stateName)
         {
-            case "Jump": anim.Play("Jump"); anim.SetBool("Foothold", false); isActive = false; updates.Add(Jump); timer = 0.0f; break;
+            case "Land": if (tag != "Hollow") { isActive = false; updates.Add(Land); timer = 0.0f; } break;
+            case "Jump": anim.Play("Jump"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
             case "Arise": anim.SetBool("IsPossessed", true); tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
             case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; AudioManager.CreateAudio(deathAudio, false, false, transform); break;
             case "Hollow": anim.SetBool("IsPossessed", false); tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
@@ -151,16 +162,21 @@ public class Human : Creature
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        if (collision.transform.tag == "Floor" && !anim.GetBool("Foothold"))
+        {
+            float t = vertical / -9.81f;
+            float fallDistance = -9.81f * t * t * 0.5f;
+            if (fallDistance < -6.0f)
+            {
+                AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);
+                anim.SetBool("Foothold", true);
+                SetState("Dead");
+            }
+            else
+                anim.SetBool("Foothold", true);
+        }
         if (collisions.ContainsKey(collision.transform.tag))
             collisions[collision.transform.tag].Add(collision.gameObject);
-        float t = vertical / -9.81f;
-        float fallDistance = -9.81f * t * t * 0.5f;
-        if (fallDistance < -6.0f)
-        {
-            AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);
-            anim.SetBool("Foothold", true);
-            SetState("Dead");
-        }
     }
 
     public void Death()

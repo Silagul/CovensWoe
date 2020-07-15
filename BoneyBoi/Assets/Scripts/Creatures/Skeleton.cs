@@ -94,7 +94,7 @@ public class Skeleton : Creature
             if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q))
             {
                 hasLanded = false;
-                vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.2f);
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.4f);
                 SetState("Jump");
             }
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
@@ -122,7 +122,7 @@ public class Skeleton : Creature
         else anim.SetFloat("Horizontal", horizontal);
 
         Movable movable;
-        if ((movable = CollidesWith("Movable", "Box")?.GetComponent<Movable>()) != null)
+        if (floor != null && (movable = CollidesWith("Movable", "Box")?.GetComponent<Movable>()) != null)
             movable.Interact(this);
     }
 

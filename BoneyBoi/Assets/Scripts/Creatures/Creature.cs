@@ -49,7 +49,15 @@ public class Creature : MonoBehaviour
     {
         if (collisions.ContainsKey(tag))
             foreach (GameObject go in collisions[tag])
-                if (go == gameObject)
+                if (go != null && go == gameObject)
+                    return true;
+        return false;
+    }
+    public bool CollidesWithOtherThan(string tag, GameObject gameObject)
+    {
+        if (collisions.ContainsKey(tag))
+            foreach (GameObject go in collisions[tag])
+                if (go != null && go != gameObject)
                     return true;
         return false;
     }

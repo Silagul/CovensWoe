@@ -46,7 +46,7 @@ public class Backforth : MonoBehaviour
 
     public void Activate(bool active)
     {
-        if (active)
+        if (!isActive)
         {
             isActive = true;
             if (!isVisible)
@@ -70,10 +70,6 @@ public class Backforth : MonoBehaviour
             else
                 currentIndex--;
             nextPoint = stops[currentIndex];
-        }
-        else
-        {
-            isActive = false;
         }
     }
 

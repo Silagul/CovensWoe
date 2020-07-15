@@ -21,6 +21,21 @@ public class Movable : Interactable
         movables.Remove(this);
     }
 
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.tag == "Player")
+        {
+            Creature creature = other.GetComponent<Creature>();
+            if (isDragging)
+            {
+                isDragging = false;
+                creature.GetComponent<Animator>().SetBool("Grappling", false);
+                creature.GetComponent<Skeleton>().canRotate = true;
+                creature.GetComponent<Animator>().speed = 1.0f;
+            }
+        }
+    }
+
     //Use to move boxes to avoid errors in movement.
     public void Movement(Vector3 movement)
     {
@@ -30,8 +45,14 @@ public class Movable : Interactable
         Vector3 next = movement;
         transform.parent.gameObject.layer = LayerMask.GetMask("Ignore Raycast");
         LayerMask mask = LayerMask.GetMask("Default");
-        RaycastHit2D hit = Physics2D.Raycast(next, Vector2.down, 3.2f, mask);
-        if (hit) next = new Vector3(hit.point.x, hit.point.y + 1.0f, movement.z);
+        RaycastHit2D hit = Physics2D.Raycast(next + new Vector3(0, 0.5f), Vector2.down, 3.7f, mask);
+        if (hit)
+        {
+            next = new Vector3(hit.point.x, hit.point.y + 1.0f, movement.z);
+            GetComponentInParent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
+        }
+        else
+            GetComponentInParent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeRotation;
         transform.parent.gameObject.layer = LayerMask.GetMask("Default");
         transform.parent.position = next;
         for (int i = 0; i < childPositions.Count; i++)
@@ -42,31 +63,34 @@ public class Movable : Interactable
     public override void Interact(Creature creature)
     {
         GameObject floor = creature.CollidesWith("Floor");
-        Skeleton skeleton = creature.GetComponent<Skeleton>();
-        bool dragTest = false;
-        foreach (Movable movable in movables)
-            if (movable != this && movable.isDragging)
-                { dragTest = true; break; }
-        if (skeleton != null && !dragTest)
+        if (floor != transform.parent.gameObject)
         {
-            if (!dragTest && Input.GetKey(KeyCode.Q) && !creature.CollidesWith("Floor", transform.parent.gameObject) && GetComponentInParent<Platform>().floorCount != 0)
+            Skeleton skeleton = creature.GetComponent<Skeleton>();
+            bool dragTest = false;
+            foreach (Movable movable in movables)
+                if (movable != this && movable.isDragging)
+                { dragTest = true; break; }
+            if (skeleton != null && !dragTest)
             {
-                isDragging = true;
-                skeleton.canRotate = false;
-                if (lookRight) creature.transform.localScale = new Vector3(-0.15f, 0.15f, 1);
-                else creature.transform.localScale = new Vector3(0.15f, 0.15f, 1);
-                creature.GetComponent<Animator>().SetBool("Grappling", true);
-                Vector2 nextPosition = creature.transform.position + offset;
-                Movement(nextPosition);
-                if (skeleton.horizontal != 0)
-                    AudioManager.CreateAudio(boxMovingAudio, false, false, this.transform);
-            }
-            else
-            {
-                isDragging = false;
-                creature.GetComponent<Animator>().SetBool("Grappling", false);
-                creature.GetComponent<Skeleton>().canRotate = true;
-                creature.GetComponent<Animator>().speed = 1.0f;
+                if (Input.GetKey(KeyCode.Q) && GetComponentInParent<Platform>().floorCount != 0)
+                {
+                    isDragging = true;
+                    skeleton.canRotate = false;
+                    if (lookRight) creature.transform.localScale = new Vector3(-0.15f, 0.15f, 1);
+                    else creature.transform.localScale = new Vector3(0.15f, 0.15f, 1);
+                    creature.GetComponent<Animator>().SetBool("Grappling", true);
+                    Vector2 nextPosition = creature.transform.position + offset;
+                    Movement(nextPosition);
+                    if (skeleton.horizontal != 0)
+                        AudioManager.CreateAudio(boxMovingAudio, false, false, this.transform);
+                }
+                else
+                {
+                    isDragging = false;
+                    creature.GetComponent<Animator>().SetBool("Grappling", false);
+                    creature.GetComponent<Skeleton>().canRotate = true;
+                    creature.GetComponent<Animator>().speed = 1.0f;
+                }
             }
         }
     }
