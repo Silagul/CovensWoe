@@ -23,7 +23,10 @@ public class Soul : Creature
 
     void Start()
     {
+        collisions.Add("Hollow", new List<GameObject>());
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
+        distanceX = gameManager.soulDistanceX;
+        distanceY = gameManager.soulDistanceY;
         name = name.Substring(0, name.Length - 7);
         SetState("Default");
         GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
@@ -71,18 +74,18 @@ public class Soul : Creature
                 }
 
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (GameManager.menu == null)
-                GameManager.ActivateMenu("GameMenu");
-            else if (GameManager.MenuActive("GameMenu"))
-                Destroy(GameManager.menu);
-            else if (GameManager.MenuActive("OptionsMenu"))
-            {
-                Options.SaveData();
-                GameManager.ActivateMenu("GameMenu");
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    if (GameManager.menu == null)
+        //        GameManager.ActivateMenu("GameMenu");
+        //    else if (GameManager.MenuActive("GameMenu"))
+        //        Destroy(GameManager.menu);
+        //    else if (GameManager.MenuActive("OptionsMenu"))
+        //    {
+        //        Options.SaveData();
+        //        GameManager.ActivateMenu("GameMenu");
+        //    }
+        //}
     }
 
     void Movement()

@@ -9,7 +9,6 @@ public class Smoke : MonoBehaviour
     void Start()
     {
         duration = Random.Range(1.0f, 2.0f);
-        GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
     }
 
     void Update()

@@ -7,7 +7,7 @@ public class TimeShroom : Interactable
 {
     private void OnTriggerStay2D(Collider2D collision) { }
 
-    static TimeShroom[] timeShrooms = new TimeShroom[5];
+    static List<TimeShroom> timeShrooms = new List<TimeShroom>();
     public int index;
     public bool isActive = false;
     static float startTime = Mathf.NegativeInfinity;
@@ -37,8 +37,13 @@ public class TimeShroom : Interactable
 
     void Start()
     {
-        timeShrooms[index] = this;
+        timeShrooms.Add(this);
         GetComponent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
+    }
+
+    void OnDestroy()
+    {
+        timeShrooms.Remove(this);
     }
 
     void FixedUpdate()

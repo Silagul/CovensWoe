@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions.Must;
 using UnityEngine.UI;
 
 public class Human : Creature
@@ -22,8 +23,12 @@ public class Human : Creature
     public AudioClip landingDeathAudio;
     public AudioClip deathAudio;
 
+    public PolygonCollider2D defaultCollider;
+    public PolygonCollider2D hollowCollider;
+
     void Start()
     {
+        collisions.Add("Floor", new List<GameObject>());
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         realStartTime = Time.timeSinceLevelLoad;
         gameManager.GetRealStartTime(realStartTime);
@@ -68,7 +73,8 @@ public class Human : Creature
             if (Input.GetKeyDown(KeyCode.Space) && isActive)
             {
                 hasLanded = false;
-                vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f); SetState("Jump");
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f);
+                SetState("Jump");
             }
 
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
@@ -86,9 +92,10 @@ public class Human : Creature
         else { vertical = Mathf.Max(-53.0f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
             transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
-        anim.SetFloat("Horizontal", Mathf.Abs(horizontal));
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
         else if (horizontal < 0.0f) transform.localScale = new Vector3(0.2f, 0.2f, 1);
+        if (transform.localScale.x > 0) anim.SetFloat("Horizontal", -horizontal);
+        else anim.SetFloat("Horizontal", horizontal);
     }
 
     void Interact()
@@ -96,21 +103,23 @@ public class Human : Creature
         if (isActive && Input.GetKeyDown(KeyCode.E) && visibleTime == 0.0f)
         {
             SetState("Hollow");
+            defaultCollider.enabled = false;
+            hollowCollider.enabled = true;
             gameManager.TimeAsChild();
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            if (GameManager.menu == null)
-                GameManager.ActivateMenu("GameMenu");
-            else if (GameManager.MenuActive("GameMenu"))
-                Destroy(GameManager.menu);
-            else if (GameManager.MenuActive("OptionsMenu"))
-            {
-                Options.SaveData();
-                GameManager.ActivateMenu("GameMenu");
-            }
-        }
+        //if (Input.GetKeyDown(KeyCode.Escape))
+        //{
+        //    if (GameManager.menu == null)
+        //        GameManager.ActivateMenu("GameMenu");
+        //    else if (GameManager.MenuActive("GameMenu"))
+        //        Destroy(GameManager.menu);
+        //    else if (GameManager.MenuActive("OptionsMenu"))
+        //    {
+        //        Options.SaveData();
+        //        GameManager.ActivateMenu("GameMenu");
+        //    }
+        //}
     }
 
     void Arise()
@@ -119,15 +128,25 @@ public class Human : Creature
         if (timer > 1.0f)
         {
             SetState("Default");
+            defaultCollider.enabled = true;
+            hollowCollider.enabled = false;
             gameManager.TimeSinceChild();
         }
-
     }
 
     void Jump()
     {
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         timer += Time.deltaTime;
         if (timer > 0.5f)
+            SetState("Default");
+    }
+
+    void Land()
+    {
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
+        timer += Time.deltaTime;
+        if (timer > 0.75f)
             SetState("Default");
     }
 
@@ -138,6 +157,7 @@ public class Human : Creature
         fixedUpdates.Clear();
         switch (stateName)
         {
+            case "Land": if (tag != "Hollow") { isActive = false; updates.Add(Land); timer = 0.0f; } break;
             case "Jump": anim.Play("Jump"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
             case "Arise": anim.SetBool("IsPossessed", true); tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
             case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; AudioManager.CreateAudio(deathAudio, false, false, transform); break;
@@ -149,15 +169,21 @@ public class Human : Creature
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        collisions.Add(collision.gameObject);
-        float t = vertical / -9.81f;
-        float fallDistance = -9.81f * t * t * 0.5f;
-        if (fallDistance < -6.0f)
+        if (collision.transform.tag == "Floor" && !anim.GetBool("Foothold"))
         {
-            AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);
-            anim.SetBool("Foothold", true);
-            SetState("Dead");
+            float t = vertical / -9.81f;
+            float fallDistance = -9.81f * t * t * 0.5f;
+            if (fallDistance < -6.0f)
+            {
+                AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);
+                anim.SetBool("Foothold", true);
+                SetState("Dead");
+            }
+            else
+                anim.SetBool("Foothold", true);
         }
+        if (collisions.ContainsKey(collision.transform.tag))
+            collisions[collision.transform.tag].Add(collision.gameObject);
     }
 
     public void Death()
