@@ -127,6 +127,7 @@ public class Skeleton : Creature
         Movable movable;
         if (floor != null && (movable = CollidesWith("Movable", "Box")?.GetComponent<Movable>()) != null)
             movable.Interact(this);
+        //ClampMovement();
     }
 
     void Interact()
