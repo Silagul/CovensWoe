@@ -10,6 +10,8 @@ public class Soul : Creature
     float acceleration = 16.0f;
     float timer = 0.0f;
 
+    Vector3 prevPosition;
+    Vector3 nextPosition;
     private Vector3 childPosition;
     private float distanceX = 15f;
     private float distanceY = 5f;
@@ -69,6 +71,8 @@ public class Soul : Creature
             if ((target = CollidesWith("Hollow")) != null)
                 if (target.GetComponent<Creature>().Possess())
                 {
+                    prevPosition = transform.position;
+                    nextPosition = target.transform.position + Vector3.up;
                     AudioManager.CreateAudio(possessInAudio, false, true, this.transform);
                     SetState("Possession");
                 }
@@ -91,9 +95,9 @@ public class Soul : Creature
     void Movement()
     {
         Vector2 movementGoal = Vector2.zero;
+        Camera.main.GetComponent<CameraMovement>().lookat = transform.position;
         if (isActive)
         {
-            Camera.main.GetComponent<CameraMovement>().lookat = transform.position;
             if (Input.GetKey(KeyCode.W)) { movementGoal.y += 1.0f; }
             if (Input.GetKey(KeyCode.D)) { movementGoal.x += 1.0f; }
             if (Input.GetKey(KeyCode.S)) { movementGoal.y -= 1.0f; }
@@ -111,6 +115,7 @@ public class Soul : Creature
     {
         timer += Time.deltaTime;
         transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, timer);
+        transform.position = Vector3.Lerp(prevPosition, nextPosition, timer);
         if (timer > 1.0f)
         {
             gameManager.TimeAsSoul();
