@@ -32,7 +32,7 @@ public class Soul : Creature
         GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
         transform.parent = GameManager.world.transform;
         gameManager.TimeSinceSoul();
-        childPosition = GameObject.Find("Human").transform.localPosition;
+        childPosition = GameObject.Find("Human").transform.position;
         AudioManager.CreateAudio(possessOutAudio, false, true, this.transform);
         AudioManager.CreateAudio(flyingAudio, true, false, this.transform);
     }

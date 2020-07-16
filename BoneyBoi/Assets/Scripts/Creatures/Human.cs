@@ -37,6 +37,8 @@ public class Human : Creature
         name = name.Substring(0, name.Length - 7);
         anim = GetComponent<Animator>();
         SetState("Default");
+        defaultCollider.enabled = true;
+        hollowCollider.enabled = false;
     }
 
     void Movement()
