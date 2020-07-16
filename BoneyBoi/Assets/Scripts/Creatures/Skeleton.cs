@@ -41,6 +41,13 @@ public class Skeleton : Creature
         SetState("Hollow");
     }
 
+    private void UpdateChildPosition()
+    {
+        childPosition = GameObject.Find("Human").transform.position;
+        Debug.Log(childPosition);
+        Invoke("UpdateChildPosition", 10f);
+    }
+
     private void ClampMovement()
     {
         if (transform.position.x >= childPosition.x + distanceX)
@@ -164,7 +171,8 @@ public class Skeleton : Creature
             hollowCollider.enabled = false;
             gameManager.TimeSinceSkeleton();
             AudioManager.CreateAudio(buildAudio, false, true, transform);
-            childPosition = GameObject.Find("Human").transform.localPosition;
+            //childPosition = GameObject.Find("Human").transform.localPosition;
+            UpdateChildPosition();
         }
     }
 
@@ -190,7 +198,7 @@ public class Skeleton : Creature
                 CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D" }); break;
             case "Dead": tag = "Corpse"; isActive = false; SetState("Hollow");
                 Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity); break;
-            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
+            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); updates.Add(ClampMovement);
                 CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D", "Unseen", "Object" }); break;
         }
     }

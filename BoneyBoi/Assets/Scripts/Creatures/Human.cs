@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class Human : Creature
 {
     Animator anim;
-    float speed = 4.0f;
+    public float speed = 4.0f;
+    public float currentSpeed;
+
     public float vertical = 0.0f;
     public float horizontal = 0.0f;
     float acceleration = 16.0f;
@@ -39,6 +41,7 @@ public class Human : Creature
         SetState("Default");
         defaultCollider.enabled = true;
         hollowCollider.enabled = false;
+        currentSpeed = speed;
     }
 
     void Movement()
@@ -50,7 +53,7 @@ public class Human : Creature
             Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
             if (Input.GetKey(KeyCode.D))
             {
-                horizontalGoal += speed;
+                horizontalGoal += currentSpeed;
 
                 if (floor != null)
                 {
@@ -60,7 +63,7 @@ public class Human : Creature
 
             if (Input.GetKey(KeyCode.A))
             {
-                horizontalGoal -= speed;
+                horizontalGoal -= currentSpeed;
 
                 if(floor != null)
                 {
