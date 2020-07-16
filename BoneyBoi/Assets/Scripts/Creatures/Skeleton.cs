@@ -26,11 +26,13 @@ public class Skeleton : Creature
     public AudioClip buildAudio;
     public AudioClip landingAudio;
 
-    public BoxCollider2D defaultCollider;
-    public CapsuleCollider2D hollowCollider;
+    public PolygonCollider2D defaultCollider;
+    public PolygonCollider2D hollowCollider;
 
     void Start()
     {
+        collisions.Add("Floor", new List<GameObject>());
+        collisions.Add("Movable", new List<GameObject>());
         anim = GetComponent<Animator>();
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         distanceX = gameManager.soulDistanceX;
@@ -66,7 +68,6 @@ public class Skeleton : Creature
     {
         float horizontalGoal = 0.0f;
         GameObject floor = CollidesWith("Floor");
-
         if (isActive)
         {
             Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
@@ -96,7 +97,7 @@ public class Skeleton : Creature
             if (Input.GetKey(KeyCode.Space) && isActive && !Input.GetKey(KeyCode.Q))
             {
                 hasLanded = false;
-                vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.2f);
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.4f);
                 SetState("Jump");
             }
             else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
@@ -122,6 +123,10 @@ public class Skeleton : Creature
         }
         if (transform.localScale.x > 0) anim.SetFloat("Horizontal", -horizontal);
         else anim.SetFloat("Horizontal", horizontal);
+
+        Movable movable;
+        if (floor != null && (movable = CollidesWith("Movable", "Box")?.GetComponent<Movable>()) != null)
+            movable.Interact(this);
     }
 
     void Interact()
@@ -188,12 +193,5 @@ public class Skeleton : Creature
             default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
                 CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D", "Unseen", "Object" }); break;
         }
-    }
-
-    private void OnTriggerStay2D(Collider2D collision)
-    {
-        Movable movable;
-        if ((movable = collision.GetComponent<Movable>()) != null)
-            movable.Interact(this);
     }
 }

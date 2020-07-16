@@ -17,6 +17,6 @@ public class Background : MonoBehaviour
     void Update()
     {
         Vector2 localPosition = (worldPosition - Camera.main.transform.position) * movementWeight;
-        transform.position = worldPosition + (Vector3)localPosition;
+        transform.position = worldPosition + new Vector3(localPosition.x, 0, 0);
     }
 }

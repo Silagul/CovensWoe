@@ -17,7 +17,7 @@ public class FallOn : MonoBehaviour
     {
         Vector3 rotation = transform.parent.eulerAngles;
         if (rotation.z < 180) { if (rotation.z > 40.0f) rotation.z = 40.0f; }
-        else if (rotation.z < -280.0f) rotation.z = -280.0f;
+        else if (rotation.z < 320.0f) rotation.z = 320.0f;
         transform.parent.eulerAngles = rotation;
     }
 }
