@@ -51,7 +51,7 @@ public class Human : Creature
         if (isActive)
         {
             Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(InputManager.instance.right))
             {
                 horizontalGoal += currentSpeed;
 
@@ -61,7 +61,7 @@ public class Human : Creature
                 }
             }
 
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(InputManager.instance.left))
             {
                 horizontalGoal -= currentSpeed;
 
@@ -75,7 +75,7 @@ public class Human : Creature
         
         if (floor != null)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && isActive)
+            if (Input.GetKeyDown(InputManager.instance.jump) && isActive)
             {
                 hasLanded = false;
                 vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f);
@@ -105,7 +105,7 @@ public class Human : Creature
 
     void Interact()
     {
-        if (isActive && Input.GetKeyDown(KeyCode.E) && visibleTime == 0.0f)
+        if (isActive && Input.GetKeyDown(InputManager.instance.interact) && visibleTime == 0.0f)
         {
             SetState("Hollow");
             defaultCollider.enabled = false;
