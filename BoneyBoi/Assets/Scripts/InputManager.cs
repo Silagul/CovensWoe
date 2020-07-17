@@ -37,12 +37,4 @@ public class InputManager : MonoBehaviour
         menu = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("MenuKey", "Escape"));
         grab = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("GrabKey", "Q"));
     }
-
-    public void Update()
-    {
-        if (Input.GetKey(InputManager.instance.grab))
-        {
-            Debug.Log("Debug function, InputManager input");
-        }
-    }
 }

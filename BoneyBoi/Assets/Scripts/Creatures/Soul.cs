@@ -65,7 +65,7 @@ public class Soul : Creature
     void Interact()
     {
         timer += Time.deltaTime;
-        if (Input.GetKey(KeyCode.E) && timer > 1.0f)
+        if (Input.GetKey(InputManager.instance.interact) && timer > 1.0f)
         {
             GameObject target;
             if ((target = CollidesWith("Hollow")) != null)
@@ -98,10 +98,10 @@ public class Soul : Creature
         Camera.main.GetComponent<CameraMovement>().lookat = transform.position;
         if (isActive)
         {
-            if (Input.GetKey(KeyCode.W)) { movementGoal.y += 1.0f; }
-            if (Input.GetKey(KeyCode.D)) { movementGoal.x += 1.0f; }
-            if (Input.GetKey(KeyCode.S)) { movementGoal.y -= 1.0f; }
-            if (Input.GetKey(KeyCode.A)) { movementGoal.x -= 1.0f; }
+            if (Input.GetKey(InputManager.instance.up)) { movementGoal.y += 1.0f; }
+            if (Input.GetKey(InputManager.instance.right)) { movementGoal.x += 1.0f; }
+            if (Input.GetKey(InputManager.instance.down)) { movementGoal.y -= 1.0f; }
+            if (Input.GetKey(InputManager.instance.left)) { movementGoal.x -= 1.0f; }
             movementGoal = movementGoal.normalized * speed;
         }
         movement = Vector2.Lerp(movement, movementGoal,
