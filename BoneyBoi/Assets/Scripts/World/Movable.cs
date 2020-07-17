@@ -29,6 +29,7 @@ public class Movable : Interactable
             if (isDragging)
             {
                 isDragging = false;
+                creature.transform.GetChild(0).gameObject.SetActive(false);
                 creature.GetComponent<Animator>().SetBool("Grappling", false);
                 creature.GetComponent<Skeleton>().canRotate = true;
                 creature.GetComponent<Animator>().speed = 1.0f;
@@ -76,6 +77,7 @@ public class Movable : Interactable
                 {
                     isDragging = true;
                     skeleton.canRotate = false;
+                    creature.transform.GetChild(0).gameObject.SetActive(true);
                     if (lookRight) creature.transform.localScale = new Vector3(-0.15f, 0.15f, 1);
                     else creature.transform.localScale = new Vector3(0.15f, 0.15f, 1);
                     creature.GetComponent<Animator>().SetBool("Grappling", true);
@@ -87,6 +89,7 @@ public class Movable : Interactable
                 else
                 {
                     isDragging = false;
+                    creature.transform.GetChild(0).gameObject.SetActive(false);
                     creature.GetComponent<Animator>().SetBool("Grappling", false);
                     creature.GetComponent<Skeleton>().canRotate = true;
                     creature.GetComponent<Animator>().speed = 1.0f;

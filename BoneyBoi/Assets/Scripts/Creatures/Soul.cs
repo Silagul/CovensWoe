@@ -69,14 +69,19 @@ public class Soul : Creature
         {
             GameObject target;
             if ((target = CollidesWith("Hollow")) != null)
-                if (target.GetComponent<Creature>().Possess())
+            {
+                Creature creature;
+                if (target.TryGetComponent(out creature))
                 {
-                    prevPosition = transform.position;
-                    nextPosition = target.transform.position + Vector3.up;
-                    AudioManager.CreateAudio(possessInAudio, false, true, this.transform);
-                    SetState("Possession");
+                    if (creature.Possess())
+                    {
+                        prevPosition = transform.position;
+                        nextPosition = target.transform.position + Vector3.up;
+                        AudioManager.CreateAudio(possessInAudio, false, true, transform);
+                        SetState("Possession");
+                    }
                 }
-
+            }
         }
         //if (Input.GetKeyDown(KeyCode.Escape))
         //{

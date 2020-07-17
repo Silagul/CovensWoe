@@ -28,6 +28,7 @@ public class Human : Creature
 
     void Start()
     {
+        creatures.Add(this);
         collisions.Add("Floor", new List<GameObject>());
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         realStartTime = Time.timeSinceLevelLoad;
@@ -189,5 +190,10 @@ public class Human : Creature
     public void Death()
     {
         SetState("Dead");
+    }
+
+    void OnDestroy()
+    {
+        creatures.Remove(this);
     }
 }

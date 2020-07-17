@@ -31,6 +31,7 @@ public class Skeleton : Creature
 
     void Start()
     {
+        creatures.Add(this);
         collisions.Add("Floor", new List<GameObject>());
         collisions.Add("Movable", new List<GameObject>());
         anim = GetComponent<Animator>();
@@ -194,5 +195,10 @@ public class Skeleton : Creature
             default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
                 CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D", "Unseen", "Object" }); break;
         }
+    }
+
+    void OnDestroy()
+    {
+        creatures.Remove(this);
     }
 }
