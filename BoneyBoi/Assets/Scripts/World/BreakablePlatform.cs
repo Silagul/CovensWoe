@@ -6,7 +6,8 @@ public class BreakablePlatform : MonoBehaviour
 {
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.name == "Box" && collision.relativeVelocity.y < -0.2f)
+        Debug.Log(collision.relativeVelocity.y);
+        if (collision.transform.name == "Box" && collision.relativeVelocity.y < -1.0f)
             Break();
     }
 
