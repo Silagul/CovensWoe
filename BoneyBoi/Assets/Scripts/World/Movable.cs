@@ -5,10 +5,10 @@ using UnityEngine;
 public class Movable : Interactable
 {
     public static List<Movable> movables = new List<Movable>();
-    public bool lookRight;
+    public bool isOnRight;
     public Vector3 offset;
     public float vertical = 0.0f;
-    public bool isDragging = false;
+    public bool isHeld = false;
     public AudioClip boxMovingAudio;
 
     void Awake()
@@ -26,9 +26,9 @@ public class Movable : Interactable
         if (other.tag == "Player")
         {
             Creature creature = other.GetComponent<Creature>();
-            if (isDragging)
+            if (isHeld)
             {
-                isDragging = false;
+                isHeld = false;
                 creature.transform.GetChild(0).gameObject.SetActive(false);
                 creature.GetComponent<Animator>().SetBool("Grappling", false);
                 creature.GetComponent<Skeleton>().canRotate = true;
@@ -63,32 +63,28 @@ public class Movable : Interactable
 
     public override void Interact(Creature creature)
     {
-        GameObject floor = creature.CollidesWith("Floor");
-        if (floor != transform.parent.gameObject)
+        if (!creature.CollidesWith("Floor", transform.parent.gameObject))
         {
-            Skeleton skeleton = creature.GetComponent<Skeleton>();
-            bool dragTest = false;
-            foreach (Movable movable in movables)
-                if (movable != this && movable.isDragging)
-                { dragTest = true; break; }
-            if (skeleton != null && !dragTest)
+            Skeleton skeleton;
+            if (creature.TryGetComponent(out skeleton) && !HoldOtherThanThis())
             {
-                if (Input.GetKey(KeyCode.Q) && GetComponentInParent<Platform>().floorCount != 0)
+                int floorCount = GetComponentInParent<Platform>().floorCount;
+                if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(KeyCode.Q))
                 {
-                    isDragging = true;
+                    isHeld = true;
                     skeleton.canRotate = false;
                     creature.transform.GetChild(0).gameObject.SetActive(true);
-                    if (lookRight) creature.transform.localScale = new Vector3(-0.15f, 0.15f, 1);
-                    else creature.transform.localScale = new Vector3(0.15f, 0.15f, 1);
+                    if (isOnRight) creature.transform.localScale = new Vector3(0.15f, 0.15f, 1);
+                    else creature.transform.localScale = new Vector3(-0.15f, 0.15f, 1);
                     creature.GetComponent<Animator>().SetBool("Grappling", true);
                     Vector2 nextPosition = creature.transform.position + offset;
                     Movement(nextPosition);
                     if (skeleton.horizontal != 0)
-                        AudioManager.CreateAudio(boxMovingAudio, false, false, this.transform);
+                        AudioManager.CreateAudio(boxMovingAudio, false, false, transform);
                 }
                 else
                 {
-                    isDragging = false;
+                    isHeld = false;
                     creature.transform.GetChild(0).gameObject.SetActive(false);
                     creature.GetComponent<Animator>().SetBool("Grappling", false);
                     creature.GetComponent<Skeleton>().canRotate = true;
@@ -96,5 +92,20 @@ public class Movable : Interactable
                 }
             }
         }
+    }
+
+    bool HoldOtherThanThis()
+    {
+        foreach (Movable movable in movables)
+            if (movable != this && movable.isHeld)
+                return true;
+        return false;
+    }
+
+    bool LookAtThis(Creature creature)
+    {
+        if (creature.transform.localScale.x > 0) { if (isOnRight) { return true; } }
+        else if (!isOnRight) { return true; }
+        return false;
     }
 }

@@ -31,7 +31,6 @@ public class Creature : MonoBehaviour
             collisions[collider.tag].Remove(collider.gameObject);
     }
 
-
     public GameObject CollidesWith(string tag)
     {
         if (collisions.ContainsKey(tag))

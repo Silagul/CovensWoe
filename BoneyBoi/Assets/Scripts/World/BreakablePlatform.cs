@@ -12,7 +12,7 @@ public class BreakablePlatform : MonoBehaviour
 
     void Break()
     {
-        Destroy(GetComponent<Collider2D>());
+        GetComponent<Collider2D>().enabled = false;
         foreach (Transform child in transform)
             if (child.name != "bace")
             {
