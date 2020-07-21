@@ -6,6 +6,7 @@ using UnityEngine.PlayerLoop;
 
 public class Creature : MonoBehaviour
 {
+    public bool isActive;
     protected List<System.Action> updates = new List<System.Action>();
     protected List<System.Action> fixedUpdates = new List<System.Action>();
     public static List<Creature> creatures = new List<Creature>();
@@ -62,7 +63,21 @@ public class Creature : MonoBehaviour
                     return true;
         return false;
     }
-    public bool isActive;
+
+    public static float minimumX;
+    public static float maximumX;
+    public static float minimumY;
+    public static float maximumY;
+    protected void ClampMovement()
+    {
+        float x = transform.position.x;
+        float y = transform.position.y;
+        if (transform.position.x > maximumX) x = maximumX;
+        else if (transform.position.x < minimumX) x = minimumX;
+        if (transform.position.y > maximumY) y = maximumY;
+        else if (transform.position.y < minimumY) y = minimumY;
+        transform.position = new Vector3(x, y);
+    }
 
     void Start()
     {

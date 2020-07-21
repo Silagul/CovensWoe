@@ -8,6 +8,10 @@ public class Chunk : MonoBehaviour
     public static string currentChunk;
     static string[] users = new string[6] { "Jukka", "Minttu", "Tarina", "Saku", "Petra", "Jordan" };
     public string[] neighbours = new string[] { };
+    public float minimumX;
+    public float maximumX;
+    public float minimumY;
+    public float maximumY;
 
     void Awake()
     {
@@ -66,6 +70,10 @@ public class Chunk : MonoBehaviour
         if (other.name == "Human")
         {
             currentChunk = name;
+            Creature.minimumX = minimumX;
+            Creature.maximumX = maximumX;
+            Creature.minimumY = minimumY;
+            Creature.maximumY = maximumY;
             //Options.SaveData();
             if (!PlayerPrefs.HasKey(name))
             {
