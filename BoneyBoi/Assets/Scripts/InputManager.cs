@@ -21,11 +21,6 @@ public class InputManager : MonoBehaviour
         if (instance == null)
         {            
             instance = this;
-            DontDestroyOnLoad(this);
-        }
-        else if (instance != this)
-        {
-            Destroy(this);
         }
 
         jump = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("JumpKey", "Space"));
