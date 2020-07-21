@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class FallOn : MonoBehaviour
 {
+    Vector3 originPosition;
+    void Start()
+    {
+        originPosition = transform.parent.position;
+    }
+
     public AudioClip boxFallingAudio;
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -15,7 +21,9 @@ public class FallOn : MonoBehaviour
                     human.SetState("Dead");
         }
         else if (collision.tag == "Floor")
-            AudioManager.CreateAudio(boxFallingAudio, false, true, this.transform);
+            AudioManager.CreateAudio(boxFallingAudio, false, true, transform);
+        else if (collision.name == "BoxResetZone")
+            transform.parent.position = originPosition;
     }
 
     public void FixedUpdate()

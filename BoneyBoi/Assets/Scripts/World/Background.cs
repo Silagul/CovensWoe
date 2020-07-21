@@ -5,18 +5,19 @@ using UnityEngine;
 public class Background : MonoBehaviour
 {
     Vector3 worldPosition;
-    [Range(-100.0f, 100.0f)]
+    [Range(-10.0f, 10.0f)]
     public float distance = 0.0f;
     float movementWeight;
+
     void Start()
     {
         worldPosition = transform.position;
-        movementWeight = 1.0f - (distance / 100.0f);
+        movementWeight = (distance / 10.0f);
     }
 
     void Update()
     {
-        Vector2 localPosition = (worldPosition - Camera.main.transform.position) * movementWeight;
-        transform.position = worldPosition + new Vector3(localPosition.x, 0, 0);
+        float localX = (Camera.main.transform.position.x - worldPosition.x) * movementWeight;
+        transform.position = worldPosition + new Vector3(localX, 0);
     }
 }
