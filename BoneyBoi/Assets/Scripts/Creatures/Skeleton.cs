@@ -17,7 +17,6 @@ public class Skeleton : Creature
 
     private GameManager gameManager;
     private Vector3 childPosition;
-    private float distanceX = 25f;
 
     private bool hasLanded = false;
 
@@ -37,7 +36,6 @@ public class Skeleton : Creature
         collisions.Add("Slowdown", new List<GameObject>());
         anim = GetComponent<Animator>();
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
-        distanceX = gameManager.soulDistanceX;
         transform.localScale = new Vector3(0.15f, 0.15f, 1);
         currentSpeed = speed;
         SetState("Hollow");
@@ -47,19 +45,6 @@ public class Skeleton : Creature
     {
         childPosition = GameObject.Find("Human").transform.position;
         Invoke("UpdateChildPosition", 10f);
-    }
-
-    private void ClampMovement()
-    {
-        if (transform.position.x >= childPosition.x + distanceX)
-        {
-            transform.position = new Vector3(childPosition.x + distanceX, transform.position.y, 0f);
-        }
-
-        else if (transform.position.x <= childPosition.x - distanceX)
-        {
-            transform.position = new Vector3(childPosition.x - distanceX, transform.position.y, 0f);
-        }
     }
 
     void Movement()
