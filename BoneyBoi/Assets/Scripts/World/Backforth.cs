@@ -22,6 +22,10 @@ public class Backforth : MonoBehaviour
 
     void Update()
     {
+        Transform t = transform.GetChild(0);
+        float distance = Mathf.Abs(transform.position.y - stops[stops.Count - 1].y);
+        t.position = new Vector3(t.position.x, Mathf.Lerp(transform.position.y, stops[stops.Count - 1].y, 0.5f) + 5.0f);
+        t.GetComponent<SpriteRenderer>().size = new Vector2(0.245f, distance);
         if (Input.GetKeyDown(KeyCode.P))
             Activate(!isActive);
     }

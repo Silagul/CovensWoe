@@ -65,18 +65,23 @@ public class Soul : Creature
     void Interact()
     {
         timer += Time.deltaTime;
-        if (Input.GetKey(KeyCode.E) && timer > 1.0f)
+        if (Input.GetKey(InputManager.instance.interact) && timer > 1.0f)
         {
             GameObject target;
             if ((target = CollidesWith("Hollow")) != null)
-                if (target.GetComponent<Creature>().Possess())
+            {
+                Creature creature;
+                if (target.TryGetComponent(out creature))
                 {
-                    prevPosition = transform.position;
-                    nextPosition = target.transform.position + Vector3.up;
-                    AudioManager.CreateAudio(possessInAudio, false, true, this.transform);
-                    SetState("Possession");
+                    if (creature.Possess())
+                    {
+                        prevPosition = transform.position;
+                        nextPosition = target.transform.position + Vector3.up;
+                        AudioManager.CreateAudio(possessInAudio, false, true, transform);
+                        SetState("Possession");
+                    }
                 }
-
+            }
         }
         //if (Input.GetKeyDown(KeyCode.Escape))
         //{
@@ -98,10 +103,10 @@ public class Soul : Creature
         Camera.main.GetComponent<CameraMovement>().lookat = transform.position;
         if (isActive)
         {
-            if (Input.GetKey(KeyCode.W)) { movementGoal.y += 1.0f; }
-            if (Input.GetKey(KeyCode.D)) { movementGoal.x += 1.0f; }
-            if (Input.GetKey(KeyCode.S)) { movementGoal.y -= 1.0f; }
-            if (Input.GetKey(KeyCode.A)) { movementGoal.x -= 1.0f; }
+            if (Input.GetKey(InputManager.instance.up)) { movementGoal.y += 1.0f; }
+            if (Input.GetKey(InputManager.instance.right)) { movementGoal.x += 1.0f; }
+            if (Input.GetKey(InputManager.instance.down)) { movementGoal.y -= 1.0f; }
+            if (Input.GetKey(InputManager.instance.left)) { movementGoal.x -= 1.0f; }
             movementGoal = movementGoal.normalized * speed;
         }
         movement = Vector2.Lerp(movement, movementGoal,
@@ -134,7 +139,8 @@ public class Soul : Creature
             case "Possession": isActive = false; fixedUpdates.Add(Movement); updates.Add(Vanish); timer = 0.0f; break;
             case "Dead": SetState("default"); break;
             default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); updates.Add(ClampMovement); timer = 0.0f;
-                CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" }); break;
+                //CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" });
+                break;
         }
     }
 }

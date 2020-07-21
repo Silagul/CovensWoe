@@ -30,7 +30,9 @@ public class Human : Creature
 
     void Start()
     {
+        creatures.Add(this);
         collisions.Add("Floor", new List<GameObject>());
+        collisions.Add("Slowdown", new List<GameObject>());
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
         realStartTime = Time.timeSinceLevelLoad;
         gameManager.GetRealStartTime(realStartTime);
@@ -48,10 +50,14 @@ public class Human : Creature
     {
         float horizontalGoal = 0.0f;
         GameObject floor = CollidesWith("Floor");
+        if (CollidesWith("Slowdown") == null)
+            currentSpeed = speed;
+        else
+            currentSpeed = speed * 0.5f;
         if (isActive)
         {
             Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetKey(InputManager.instance.right))
             {
                 horizontalGoal += currentSpeed;
 
@@ -61,7 +67,7 @@ public class Human : Creature
                 }
             }
 
-            if (Input.GetKey(KeyCode.A))
+            if (Input.GetKey(InputManager.instance.left))
             {
                 horizontalGoal -= currentSpeed;
 
@@ -75,7 +81,7 @@ public class Human : Creature
         
         if (floor != null)
         {
-            if (Input.GetKeyDown(KeyCode.Space) && isActive)
+            if (Input.GetKeyDown(InputManager.instance.jump) && isActive)
             {
                 hasLanded = false;
                 vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f);
@@ -105,7 +111,7 @@ public class Human : Creature
 
     void Interact()
     {
-        if (isActive && Input.GetKeyDown(KeyCode.E) && visibleTime == 0.0f)
+        if (isActive && Input.GetKeyDown(InputManager.instance.interact) && visibleTime == 0.0f)
         {
             SetState("Hollow");
             defaultCollider.enabled = false;
@@ -162,13 +168,47 @@ public class Human : Creature
         fixedUpdates.Clear();
         switch (stateName)
         {
-            case "Land": if (tag != "Hollow") { isActive = false; updates.Add(Land); timer = 0.0f; } break;
-            case "Jump": anim.Play("Jump"); isActive = false; updates.Add(Jump); timer = 0.0f; break;
-            case "Arise": anim.SetBool("IsPossessed", true); tag = "Player"; isActive = false; updates.Add(Arise); timer = 0.0f; break;
-            case "Dead": dying = true; anim.SetBool("IsPossessed", false); isActive = false; AudioManager.CreateAudio(deathAudio, false, false, transform); break;
-            case "Hollow": anim.SetBool("IsPossessed", false); tag = "Hollow"; isActive = false; fixedUpdates.Add(Movement); break;
-            default: anim.SetBool("IsPossessed", true); tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact);
-                CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" }); break;
+            case "Land":
+                if (tag != "Hollow")
+                {
+                    isActive = false;
+                    updates.Add(Land);
+                    timer = 0.0f;
+                }
+                break;
+            case "Jump":
+                isActive = false;
+                anim.Play("Jump");
+                updates.Add(Jump);
+                timer = 0.0f;
+                break;
+            case "Arise":
+                isActive = false;
+                tag = "Player";
+                anim.SetBool("IsPossessed", true);
+                updates.Add(Arise);
+                timer = 0.0f;
+                break;
+            case "Dead":
+                isActive = false;
+                dying = true;
+                anim.SetBool("IsPossessed", false);
+                AudioManager.CreateAudio(deathAudio, false, false, transform);
+                break;
+            case "Hollow":
+                isActive = false;
+                tag = "Hollow";
+                anim.SetBool("IsPossessed", false);
+                fixedUpdates.Add(Movement);
+                break;
+            default:
+                tag = "Player";
+                isActive = true;
+                updates.Add(Interact);
+                fixedUpdates.Add(Movement);
+                anim.SetBool("IsPossessed", true);
+                //CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" });
+                break;
         }
     }
 
@@ -194,5 +234,10 @@ public class Human : Creature
     public void Death()
     {
         SetState("Dead");
+    }
+
+    void OnDestroy()
+    {
+        creatures.Remove(this);
     }
 }

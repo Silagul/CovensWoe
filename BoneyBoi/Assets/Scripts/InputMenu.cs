@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,40 +11,34 @@ public class InputMenu : MonoBehaviour
     Text buttonText;
     KeyCode newKey;
 
-    public bool waitingForKey;
+    bool waitingForKey;
 
     // Start is called before the first frame update
     void Start()
     {
         inputPanel = transform.Find("InputMenu");
-        //inputPanel.gameObject.SetActive(false);
+        inputPanel.gameObject.SetActive(false);
         waitingForKey = false;
 
         for (int i = 0; i < inputPanel.childCount; i++)
         {
             if (inputPanel.GetChild(i).name == "JumpKey")
-            { inputPanel.GetChild(i).GetComponentInChildren<Text>().text = InputManager.instance.jump.ToString(); }
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.jump.ToString(); }
             if (inputPanel.GetChild(i).name == "UpKey")
-            { inputPanel.GetChild(i).GetComponentInChildren<Text>().text = InputManager.instance.up.ToString(); }
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.up.ToString(); }
             if (inputPanel.GetChild(i).name == "DownKey")
-            { inputPanel.GetChild(i).GetComponentInChildren<Text>().text = InputManager.instance.down.ToString(); }
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.down.ToString(); }
             if (inputPanel.GetChild(i).name == "LeftKey")
-            { inputPanel.GetChild(i).GetComponentInChildren<Text>().text = InputManager.instance.left.ToString(); }
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.left.ToString(); }
             if (inputPanel.GetChild(i).name == "RightKey")
-            { inputPanel.GetChild(i).GetComponentInChildren<Text>().text = InputManager.instance.right.ToString(); }
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.right.ToString(); }
             if (inputPanel.GetChild(i).name == "InteractKey")
-            { inputPanel.GetChild(i).GetComponentInChildren<Text>().text = InputManager.instance.interact.ToString(); }
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.interact.ToString(); }
             if (inputPanel.GetChild(i).name == "MenuKey")
-            { inputPanel.GetChild(i).GetComponentInChildren<Text>().text = InputManager.instance.menu.ToString(); }
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.menu.ToString(); }
             if (inputPanel.GetChild(i).name == "GrabKey")
-            { inputPanel.GetChild(i).GetComponentInChildren<Text>().text = InputManager.instance.grab.ToString(); }
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.grab.ToString(); }
         }
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //if(Input.GetKey(InputManager.instance.jump) { movement })
     }
 
     void OnGUI()
@@ -133,4 +128,5 @@ public class InputMenu : MonoBehaviour
                 break;
         }
     }
+
 }
