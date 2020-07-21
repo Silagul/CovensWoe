@@ -69,14 +69,19 @@ public class Soul : Creature
         {
             GameObject target;
             if ((target = CollidesWith("Hollow")) != null)
-                if (target.GetComponent<Creature>().Possess())
+            {
+                Creature creature;
+                if (target.TryGetComponent(out creature))
                 {
-                    prevPosition = transform.position;
-                    nextPosition = target.transform.position + Vector3.up;
-                    AudioManager.CreateAudio(possessInAudio, false, true, this.transform);
-                    SetState("Possession");
+                    if (creature.Possess())
+                    {
+                        prevPosition = transform.position;
+                        nextPosition = target.transform.position + Vector3.up;
+                        AudioManager.CreateAudio(possessInAudio, false, true, transform);
+                        SetState("Possession");
+                    }
                 }
-
+            }
         }
         //if (Input.GetKeyDown(KeyCode.Escape))
         //{
@@ -134,7 +139,8 @@ public class Soul : Creature
             case "Possession": isActive = false; fixedUpdates.Add(Movement); updates.Add(Vanish); timer = 0.0f; break;
             case "Dead": SetState("default"); break;
             default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); updates.Add(ClampMovement); timer = 0.0f;
-                CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" }); break;
+                //CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" });
+                break;
         }
     }
 }

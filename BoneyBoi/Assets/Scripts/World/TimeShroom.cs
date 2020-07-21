@@ -7,11 +7,11 @@ public class TimeShroom : Interactable
 {
     private void OnTriggerStay2D(Collider2D collision) { }
 
-    static List<TimeShroom> timeShrooms = new List<TimeShroom>();
-    public int index;
+    public List<TimeShroom> timeShrooms = new List<TimeShroom>();
     public bool isActive = false;
     static float startTime = Mathf.NegativeInfinity;
     static float maxDuration = 10.0f;
+    public Interactable interactable;
 
     public AudioClip[] mushroomAudioArray;
     public AudioClip mushroomTimer;
@@ -33,17 +33,10 @@ public class TimeShroom : Interactable
         }
     }
 
-
-
     void Start()
     {
-        timeShrooms.Add(this);
         GetComponent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
-    }
-
-    void OnDestroy()
-    {
-        timeShrooms.Remove(this);
+        GetComponentInParent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
     }
 
     void FixedUpdate()
@@ -52,6 +45,7 @@ public class TimeShroom : Interactable
             foreach (TimeShroom shroom in timeShrooms)
             {
                 shroom.GetComponent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
+                GetComponentInParent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
                 shroom.isActive = false;
                 GameObject timerObject = GameObject.Find(mushroomTimer.name.Substring(0, mushroomTimer.name.Length - 1));
                 Destroy(timerObject);
@@ -62,24 +56,23 @@ public class TimeShroom : Interactable
     {
         isActive = true;
         GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+        GetComponentInParent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
         if (Time.time > startTime + maxDuration)
             startTime = Time.time;
-        else
-        {
-            bool hasDeactive = false;
-            foreach (TimeShroom shroom in timeShrooms)
-                if (!shroom.isActive)
-                {
-                    hasDeactive = true;
-                }
-
-            if (!hasDeactive)
+        bool hasDeactive = false;
+        foreach (TimeShroom shroom in timeShrooms)
+            if (!shroom.isActive)
             {
-                Debug.Log("Victory!");
-                GameObject timerObject = GameObject.Find(mushroomTimer.name.Substring(0, mushroomTimer.name.Length - 1));
-                Destroy(timerObject);
+                hasDeactive = true;
+                break;
             }
 
+        if (!hasDeactive)
+        {
+            Debug.Log("Victory!");
+            interactable.Interact(null);
+            GameObject timerObject = GameObject.Find(mushroomTimer.name.Substring(0, mushroomTimer.name.Length - 1));
+            Destroy(timerObject);
         }
     }
 }
