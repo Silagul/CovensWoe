@@ -8,7 +8,7 @@ public class Creature : MonoBehaviour
 {
     protected List<System.Action> updates = new List<System.Action>();
     protected List<System.Action> fixedUpdates = new List<System.Action>();
-
+    public static List<Creature> creatures = new List<Creature>();
     protected Dictionary<string, List<GameObject>> collisions = new Dictionary<string, List<GameObject>>();
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -30,7 +30,6 @@ public class Creature : MonoBehaviour
         if (collisions.ContainsKey(collider.tag))
             collisions[collider.tag].Remove(collider.gameObject);
     }
-
 
     public GameObject CollidesWith(string tag)
     {

@@ -2,21 +2,24 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Fallover : MonoBehaviour
+public class Fallover : Interactable
 {
     bool active = false;
     float time = 0.0f;
     float minRotation;
     public float maxRotation;
     void Start() { minRotation = transform.eulerAngles.z; }
-    public void Fall()
+    public override void Interact(Creature creature)
     {
+        tag = "Floor";
+        gameObject.layer = LayerMask.NameToLayer("Default");
         active = true;
+        GetComponent<Platform>().enabled = true;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.O)) active = true;
+        if (Input.GetKeyDown(KeyCode.O)) Interact(null);
         if (active)
         {
             time += Time.deltaTime;
