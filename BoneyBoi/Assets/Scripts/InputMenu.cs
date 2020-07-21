@@ -8,7 +8,7 @@ public class InputMenu : MonoBehaviour
 {
     Transform inputPanel;
     Event keyEvent;
-    Text buttonText;
+    TextMeshProUGUI buttonText;
     KeyCode newKey;
 
     bool waitingForKey;
@@ -60,7 +60,7 @@ public class InputMenu : MonoBehaviour
         }
     }
 
-    public void SendText(Text text)
+    public void SendText(TextMeshProUGUI text)
     {
         buttonText = text;
     }
