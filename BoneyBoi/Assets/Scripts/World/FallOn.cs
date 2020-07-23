@@ -22,8 +22,6 @@ public class FallOn : MonoBehaviour
         }
         else if (collision.tag == "Floor")
             AudioManager.CreateAudio(boxFallingAudio, false, true, transform);
-        else if (collision.name == "BoxResetZone")
-            transform.parent.position = originPosition;
     }
 
     public void FixedUpdate()
@@ -32,5 +30,8 @@ public class FallOn : MonoBehaviour
         if (rotation.z < 180) { if (rotation.z > 40.0f) rotation.z = 40.0f; }
         else if (rotation.z < 320.0f) rotation.z = 320.0f;
         transform.parent.eulerAngles = rotation;
+
+        if (transform.position.y < GameManager.world.transform.Find(Chunk.currentChunk).GetComponent<Chunk>().minimumY)
+            transform.parent.position = originPosition;
     }
 }

@@ -18,6 +18,7 @@ public class Chunk : MonoBehaviour
         name = name.Substring(0, name.Length - 7);
         foreach (string user in users)
         {
+            World.chunks.Add(this);
             GameObject chunk = Resources.Load<GameObject>($"Prefabs/World/{user}/{name}");
             if (chunk != null)
                 foreach (Transform child in chunk.transform)
@@ -54,7 +55,10 @@ public class Chunk : MonoBehaviour
         //if (!Options.optionsData.availableChunks.Contains(name))
         //    Options.optionsData.availableChunks.Add(name);
 
-
+        Creature.minimumX = minimumX;
+        Creature.maximumX = maximumX;
+        Creature.minimumY = minimumY;
+        Creature.maximumY = maximumY;
         foreach (string neighbour in neighbours)
             if (!World.ChunkExists(neighbour))
                 World.chunks.Add(Instantiate(Resources.Load<GameObject>($"Prefabs/World/Master/Chunk_{neighbour}"), transform.parent).GetComponent<Chunk>());
@@ -70,10 +74,6 @@ public class Chunk : MonoBehaviour
         if (other.name == "Human")
         {
             currentChunk = name;
-            Creature.minimumX = minimumX;
-            Creature.maximumX = maximumX;
-            Creature.minimumY = minimumY;
-            Creature.maximumY = maximumY;
             //Options.SaveData();
             if (!PlayerPrefs.HasKey(name))
             {
@@ -84,5 +84,10 @@ public class Chunk : MonoBehaviour
                 if (World.chunks[i] != this)
                     World.chunks[i].Reload();
         }
+    }
+
+    void OnDestroy()
+    {
+        World.chunks.Remove(this);
     }
 }

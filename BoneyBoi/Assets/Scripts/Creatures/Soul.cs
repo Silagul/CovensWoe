@@ -37,13 +37,13 @@ public class Soul : Creature
     void Interact()
     {
         timer += Time.deltaTime;
-        if (Input.GetKey(InputManager.instance.interact) && timer > 1.0f)
+        if (Input.GetKey(InputManager.instance.possess) && timer > 1.0f)
         {
             GameObject target;
             if ((target = CollidesWith("Hollow")) != null)
             {
                 Creature creature;
-                if (target.TryGetComponent(out creature))
+                if (target.transform.parent.TryGetComponent(out creature))
                 {
                     if (creature.Possess())
                     {

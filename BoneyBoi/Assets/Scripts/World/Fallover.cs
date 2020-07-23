@@ -14,7 +14,9 @@ public class Fallover : Interactable
         tag = "Floor";
         gameObject.layer = LayerMask.NameToLayer("Default");
         active = true;
-        GetComponent<Platform>().enabled = true;
+        Platform platform;
+        if (TryGetComponent(out platform))
+            platform.enabled = true;
     }
 
     void Update()
