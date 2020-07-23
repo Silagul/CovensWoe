@@ -9,6 +9,6 @@ public class Interactable : MonoBehaviour
     void OnTriggerStay2D(Collider2D other)
     {
         if (other.tag == "Player")
-            Interact(other.GetComponent<Creature>());
+            Interact(other.GetComponentInParent<Creature>());
     }
 }

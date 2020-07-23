@@ -88,7 +88,7 @@ public class Human : Creature
                 SetState("Jump");
             }
 
-            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
+            else
             {
                 anim.SetBool("Foothold", true);
                 vertical = Mathf.Max(0.0f, vertical);
@@ -111,7 +111,7 @@ public class Human : Creature
 
     void Interact()
     {
-        if (isActive && Input.GetKeyDown(InputManager.instance.interact) && visibleTime == 0.0f)
+        if (isActive && Input.GetKeyDown(InputManager.instance.possess) && visibleTime == 0.0f)
         {
             SetState("Hollow");
             defaultCollider.enabled = false;
@@ -185,6 +185,8 @@ public class Human : Creature
             case "Arise":
                 isActive = false;
                 tag = "Player";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", true);
                 updates.Add(Arise);
                 timer = 0.0f;
@@ -198,11 +200,15 @@ public class Human : Creature
             case "Hollow":
                 isActive = false;
                 tag = "Hollow";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", false);
                 fixedUpdates.Add(Movement);
                 break;
             default:
                 tag = "Player";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 isActive = true;
                 updates.Add(Interact);
                 fixedUpdates.Add(Movement);

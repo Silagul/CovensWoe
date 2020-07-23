@@ -29,7 +29,7 @@ public class Movable : Interactable
             if (isHeld)
             {
                 isHeld = false;
-                creature.transform.GetChild(0).gameObject.SetActive(false);
+                creature.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = false;
                 creature.GetComponent<Animator>().SetBool("Grappling", false);
                 creature.GetComponent<Skeleton>().canRotate = true;
                 creature.GetComponent<Animator>().speed = 1.0f;
@@ -57,7 +57,7 @@ public class Movable : Interactable
         transform.parent.gameObject.layer = LayerMask.GetMask("Default");
         transform.parent.position = next;
         for (int i = 0; i < childPositions.Count; i++)
-            if (transform.parent.GetChild(i).tag == "Player" && Input.GetKey(KeyCode.Q))
+            if (transform.parent.GetChild(i).tag == "Player" && Input.GetKey(InputManager.instance.interact))
                 transform.parent.GetChild(i).position = childPositions[i];
     }
 
@@ -69,11 +69,11 @@ public class Movable : Interactable
             if (creature.TryGetComponent(out skeleton) && !HoldOtherThanThis())
             {
                 int floorCount = GetComponentInParent<Platform>().floorCount;
-                if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(KeyCode.Q))
+                if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(InputManager.instance.interact))
                 {
                     isHeld = true;
                     skeleton.canRotate = false;
-                    creature.transform.GetChild(0).gameObject.SetActive(true);
+                    creature.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = true;
                     if (isOnRight) creature.transform.localScale = new Vector3(0.15f, 0.15f, 1);
                     else creature.transform.localScale = new Vector3(-0.15f, 0.15f, 1);
                     creature.GetComponent<Animator>().SetBool("Grappling", true);
@@ -85,7 +85,7 @@ public class Movable : Interactable
                 else
                 {
                     isHeld = false;
-                    creature.transform.GetChild(0).gameObject.SetActive(false);
+                    creature.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = false;
                     creature.GetComponent<Animator>().SetBool("Grappling", false);
                     creature.GetComponent<Skeleton>().canRotate = true;
                     creature.GetComponent<Animator>().speed = 1.0f;
