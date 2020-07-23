@@ -54,9 +54,9 @@ public class Skeleton : Creature
             currentSpeed = speed;
         else
             currentSpeed = speed * 0.5f;
+        if (tag == "Player") Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
         if (isActive)
         {
-            Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
             if (Input.GetKey(InputManager.instance.right))
             {
                 horizontalGoal += currentSpeed;

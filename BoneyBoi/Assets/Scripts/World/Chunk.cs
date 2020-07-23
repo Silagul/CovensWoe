@@ -71,7 +71,7 @@ public class Chunk : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.name == "Human")
+        if (other.transform.parent.name == "Human")
         {
             currentChunk = name;
             //Options.SaveData();

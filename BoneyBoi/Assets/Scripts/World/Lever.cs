@@ -13,7 +13,7 @@ public class Lever : Interactable
 
     public AudioClip leverAudio;
     public GameObject target;
-    public Skeleton user;
+    Skeleton user;
     System.Action leverAction;
     Vector3 startPosition;
     float offset;
@@ -78,9 +78,20 @@ public class Lever : Interactable
         transform.eulerAngles = Vector3.Lerp(startRotation, endRotation, weight);
         if (time > duration)
         {
+            time -= duration;
+            duration = 0.517f;
             Backforth backforth;
             if (target.TryGetComponent(out backforth))
                 backforth.Activate();
+            leverAction = AwaitUserReset;
+        }
+    }
+
+    void AwaitUserReset()
+    {
+        time += Time.deltaTime;
+        if (time > duration)
+        {
             user.isActive = true;
             leverAction = null;
         }
