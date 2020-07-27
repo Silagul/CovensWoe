@@ -78,7 +78,7 @@ public class Human : Creature
             }
         }
         horizontal = Mathf.Lerp(horizontal, horizontalGoal, (acceleration * Time.fixedDeltaTime) / Mathf.Abs(horizontal - horizontalGoal));
-        
+
         if (floor != null)
         {
             if (Input.GetKeyDown(InputManager.instance.jump) && isActive)
@@ -169,12 +169,10 @@ public class Human : Creature
         switch (stateName)
         {
             case "Land":
-                if (tag != "Hollow")
-                {
-                    isActive = false;
-                    updates.Add(Land);
-                    timer = 0.0f;
-                }
+                isActive = false;
+                updates.Add(Land);
+                fixedUpdates.Add(Movement);
+                timer = 0.0f;
                 break;
             case "Jump":
                 isActive = false;
@@ -205,7 +203,7 @@ public class Human : Creature
                 anim.SetBool("IsPossessed", false);
                 fixedUpdates.Add(Movement);
                 break;
-            default:
+            case "Default":
                 tag = "Player";
                 defaultCollider.tag = tag;
                 hollowCollider.tag = tag;
@@ -224,14 +222,12 @@ public class Human : Creature
         {
             float t = vertical / -9.81f;
             float fallDistance = -9.81f * t * t * 0.5f;
+            anim.SetBool("Foothold", true);
             if (fallDistance < -6.0f)
             {
                 AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);
-                anim.SetBool("Foothold", true);
                 SetState("Dead");
             }
-            else
-                anim.SetBool("Foothold", true);
         }
         if (collisions.ContainsKey(collision.transform.tag))
             collisions[collision.transform.tag].Add(collision.gameObject);

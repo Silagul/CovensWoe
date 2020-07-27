@@ -20,14 +20,14 @@ public class TimeShroom : Interactable
     private void OnTriggerEnter2D(Collider2D collision)
     {
         //if (collision.tag == "Player" && isActive == false)
-        if(collision.name == "Skeleton" && isActive == false)
+        if(collision.transform.parent.name == "Skeleton" && isActive == false)
         {
             Interact(collision.GetComponent<Creature>());
             AudioManager.CreateAudio(mushroomTimer, true, false, transform);
             AudioManager.CreateAudio(mushroomAudioArray[Random.Range(0, mushroomAudioArray.Length)], false, true, transform);
         }
 
-        else if (collision.name == "Human")
+        else if (collision.transform.parent.name == "Human")
         {
             AudioManager.CreateAudio(hiddenMushroomAudio, false, true, transform);
         }

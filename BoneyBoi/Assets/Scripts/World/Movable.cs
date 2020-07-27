@@ -94,6 +94,14 @@ public class Movable : Interactable
         }
     }
 
+    public static bool IsHolding()
+    {
+        foreach (Movable movable in movables)
+            if (movable.isHeld)
+                return true;
+        return false;
+    }
+
     bool HoldOtherThanThis()
     {
         foreach (Movable movable in movables)

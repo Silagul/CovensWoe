@@ -28,7 +28,7 @@ public class Lever : Interactable
         Skeleton skeleton;
         if (creature.TryGetComponent(out skeleton))
         {
-            if (skeleton.isActive && Input.GetKey(InputManager.instance.interact) && leverAction == null)
+            if (skeleton.isActive && !Movable.IsHolding() && Input.GetKey(InputManager.instance.interact) && leverAction == null)
             {
                 time = 0.0f;
                 duration = 0.25f;
