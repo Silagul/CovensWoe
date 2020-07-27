@@ -209,7 +209,7 @@ public class Skeleton : Creature
                 anim.SetBool("IsPossessed", false);
                 ReleasePossession();
                 break;
-            default:
+            case "Default":
                 tag = "Player";
                 defaultCollider.tag = tag;
                 hollowCollider.tag = tag;
