@@ -54,9 +54,9 @@ public class Human : Creature
             currentSpeed = speed;
         else
             currentSpeed = speed * 0.5f;
+        if (tag == "Player") Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
         if (isActive)
         {
-            Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
             if (Input.GetKey(InputManager.instance.right))
             {
                 horizontalGoal += currentSpeed;
@@ -78,7 +78,7 @@ public class Human : Creature
             }
         }
         horizontal = Mathf.Lerp(horizontal, horizontalGoal, (acceleration * Time.fixedDeltaTime) / Mathf.Abs(horizontal - horizontalGoal));
-        
+
         if (floor != null)
         {
             if (Input.GetKeyDown(InputManager.instance.jump) && isActive)
@@ -88,7 +88,7 @@ public class Human : Creature
                 SetState("Jump");
             }
 
-            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
+            else
             {
                 anim.SetBool("Foothold", true);
                 vertical = Mathf.Max(0.0f, vertical);
@@ -111,7 +111,7 @@ public class Human : Creature
 
     void Interact()
     {
-        if (isActive && Input.GetKeyDown(InputManager.instance.interact) && visibleTime == 0.0f)
+        if (isActive && Input.GetKeyDown(InputManager.instance.possess) && visibleTime == 0.0f)
         {
             SetState("Hollow");
             defaultCollider.enabled = false;
@@ -169,12 +169,10 @@ public class Human : Creature
         switch (stateName)
         {
             case "Land":
-                if (tag != "Hollow")
-                {
-                    isActive = false;
-                    updates.Add(Land);
-                    timer = 0.0f;
-                }
+                isActive = false;
+                updates.Add(Land);
+                fixedUpdates.Add(Movement);
+                timer = 0.0f;
                 break;
             case "Jump":
                 isActive = false;
@@ -185,6 +183,8 @@ public class Human : Creature
             case "Arise":
                 isActive = false;
                 tag = "Player";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", true);
                 updates.Add(Arise);
                 timer = 0.0f;
@@ -198,11 +198,15 @@ public class Human : Creature
             case "Hollow":
                 isActive = false;
                 tag = "Hollow";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", false);
                 fixedUpdates.Add(Movement);
                 break;
-            default:
+            case "Default":
                 tag = "Player";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 isActive = true;
                 updates.Add(Interact);
                 fixedUpdates.Add(Movement);
@@ -218,14 +222,12 @@ public class Human : Creature
         {
             float t = vertical / -9.81f;
             float fallDistance = -9.81f * t * t * 0.5f;
+            anim.SetBool("Foothold", true);
             if (fallDistance < -6.0f)
             {
                 AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);
-                anim.SetBool("Foothold", true);
                 SetState("Dead");
             }
-            else
-                anim.SetBool("Foothold", true);
         }
         if (collisions.ContainsKey(collision.transform.tag))
             collisions[collision.transform.tag].Add(collision.gameObject);

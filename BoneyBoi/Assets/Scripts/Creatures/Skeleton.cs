@@ -12,12 +12,10 @@ public class Skeleton : Creature
     public float horizontal = 0.0f;
     float acceleration = 16.0f;
     float timer = 0.0f;
-    float duration = 0.0f;
     public bool canRotate = true;
 
     private GameManager gameManager;
     private Vector3 childPosition;
-    private float distanceX = 25f;
 
     private bool hasLanded = false;
 
@@ -37,7 +35,6 @@ public class Skeleton : Creature
         collisions.Add("Slowdown", new List<GameObject>());
         anim = GetComponent<Animator>();
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
-        distanceX = gameManager.soulDistanceX;
         transform.localScale = new Vector3(0.15f, 0.15f, 1);
         currentSpeed = speed;
         SetState("Hollow");
@@ -49,19 +46,6 @@ public class Skeleton : Creature
         Invoke("UpdateChildPosition", 10f);
     }
 
-    private void ClampMovement()
-    {
-        if (transform.position.x >= childPosition.x + distanceX)
-        {
-            transform.position = new Vector3(childPosition.x + distanceX, transform.position.y, 0f);
-        }
-
-        else if (transform.position.x <= childPosition.x - distanceX)
-        {
-            transform.position = new Vector3(childPosition.x - distanceX, transform.position.y, 0f);
-        }
-    }
-
     void Movement()
     {
         float horizontalGoal = 0.0f;
@@ -70,9 +54,9 @@ public class Skeleton : Creature
             currentSpeed = speed;
         else
             currentSpeed = speed * 0.5f;
+        if (tag == "Player") Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
         if (isActive)
         {
-            Camera.main.GetComponent<CameraMovement>().lookat = transform.position + Vector3.up;
             if (Input.GetKey(InputManager.instance.right))
             {
                 horizontalGoal += currentSpeed;
@@ -96,13 +80,13 @@ public class Skeleton : Creature
 
         if (floor != null)
         {
-            if (Input.GetKey(InputManager.instance.jump) && isActive && !Input.GetKey(InputManager.instance.grab))
+            if (Input.GetKey(InputManager.instance.jump) && isActive && !Input.GetKey(InputManager.instance.possess))
             {
                 hasLanded = false;
                 vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.4f);
                 SetState("Jump");
             }
-            else if (!Physics2D.GetIgnoreCollision(GetComponent<Collider2D>(), floor.GetComponent<Collider2D>()))
+            else
             {
                 anim.SetBool("Foothold", true);
                 vertical = Mathf.Max(0.0f, vertical);
@@ -134,7 +118,7 @@ public class Skeleton : Creature
 
     void Interact()
     {
-        if (Input.GetKeyDown(InputManager.instance.interact))
+        if (Input.GetKeyDown(InputManager.instance.possess))
         {
             SetState("Hollow");
             ReleasePossession();
@@ -168,8 +152,8 @@ public class Skeleton : Creature
         if (timer > 1.0f)
         {
             SetState("Default");
-            defaultCollider.enabled = true;
             hollowCollider.enabled = false;
+            defaultCollider.enabled = true;
             gameManager.TimeSinceSkeleton();
             AudioManager.CreateAudio(buildAudio, false, true, transform);
             //childPosition = GameObject.Find("Human").transform.localPosition;
@@ -203,12 +187,16 @@ public class Skeleton : Creature
                 isActive = false;
                 anim.SetBool("IsPossessed", true);
                 tag = "Player";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 updates.Add(Arise);
                 timer = 0.0f;
                 break;
             case "Hollow":
                 isActive = false;
                 tag = "Hollow";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", false);
                 fixedUpdates.Add(Movement);
                 //CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D" });
@@ -216,11 +204,15 @@ public class Skeleton : Creature
             case "Dead":
                 isActive = false;
                 tag = "Corpse";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", false);
                 ReleasePossession();
                 break;
-            default:
+            case "Default":
                 tag = "Player";
+                defaultCollider.tag = tag;
+                hollowCollider.tag = tag;
                 isActive = true;
                 fixedUpdates.Add(Movement);
                 updates.Add(Interact);

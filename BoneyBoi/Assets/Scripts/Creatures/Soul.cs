@@ -13,8 +13,6 @@ public class Soul : Creature
     Vector3 prevPosition;
     Vector3 nextPosition;
     private Vector3 childPosition;
-    private float distanceX = 15f;
-    private float distanceY = 5f;
 
 
     private GameManager gameManager;
@@ -27,11 +25,8 @@ public class Soul : Creature
     {
         collisions.Add("Hollow", new List<GameObject>());
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
-        distanceX = gameManager.soulDistanceX;
-        distanceY = gameManager.soulDistanceY;
         name = name.Substring(0, name.Length - 7);
         SetState("Default");
-        GetComponent<MeshRenderer>().material.color = new Color32(255, 255, 255, 255);
         transform.parent = GameManager.world.transform;
         gameManager.TimeSinceSoul();
         childPosition = GameObject.Find("Human").transform.position;
@@ -39,39 +34,16 @@ public class Soul : Creature
         AudioManager.CreateAudio(flyingAudio, true, false, this.transform);
     }
 
-    private void ClampMovement()
-    {
-        if (transform.position.x >= childPosition.x + distanceX)
-        {
-            transform.position = new Vector3(childPosition.x + distanceX, transform.position.y, 0f);
-        }
-
-        else if (transform.position.x <= childPosition.x - distanceX)
-        {
-            transform.position = new Vector3(childPosition.x - distanceX, transform.position.y, 0f);
-        }
-
-        if (transform.position.y >= childPosition.y + distanceY)
-        {
-            transform.position = new Vector3(transform.position.x, childPosition.y + distanceY, 0f);
-        }
-
-        else if (transform.position.y <= childPosition.y - distanceY)
-        {
-            transform.position = new Vector3(transform.position.x, childPosition.y - distanceY, 0f);
-        }
-    }
-
     void Interact()
     {
         timer += Time.deltaTime;
-        if (Input.GetKey(InputManager.instance.interact) && timer > 1.0f)
+        if (Input.GetKey(InputManager.instance.possess) && timer > 1.0f)
         {
             GameObject target;
             if ((target = CollidesWith("Hollow")) != null)
             {
                 Creature creature;
-                if (target.TryGetComponent(out creature))
+                if (target.transform.parent.TryGetComponent(out creature))
                 {
                     if (creature.Possess())
                     {
@@ -112,8 +84,6 @@ public class Soul : Creature
         movement = Vector2.Lerp(movement, movementGoal,
             (acceleration * Time.fixedDeltaTime) / Vector2.Distance(movement, movementGoal));
         GetComponent<Rigidbody2D>().velocity = movement;
-        GameObject go = Instantiate(Resources.Load<GameObject>("Prefabs/Ectoplasm"), transform.position + Random.insideUnitSphere * 0.5f, Quaternion.identity);
-        go.transform.parent = transform.parent;
     }
 
     void Vanish()
