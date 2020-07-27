@@ -51,8 +51,16 @@ public class DeathBox : MonoBehaviour
                 {
                     collision.gameObject.GetComponent<Animator>().SetBool("Foothold", true);
                     collision.gameObject.GetComponent<Human>().SetState("Dead");
-                    //do particle effect here
                     //AudioManager.CreateAudio(fire, false, true, this.transform);
+
+                    //do particle effect here
+                    GameObject ash = Resources.Load<GameObject>("Prefabs/Ash2");
+                    //Instantiate(ash, collision.gameObject.transform);
+                    Instantiate(ash, collision.gameObject.transform.parent.gameObject.transform);
+                    //SpriteRenderer[] sprites;
+                    //sprites = collision.gameObject.GetComponentInChildren<SpriteRenderer>();
+                    //foreach (SpriteRenderer sprite in sprites)
+                    //    sprite.enabled = false;
                 }
                 break;
         }
