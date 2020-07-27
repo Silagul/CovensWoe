@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public float soulDistanceY;
 
     private bool gameActive = false;
+    public bool isPaused = false;
 
     [SerializeField]
     private GameObject pauseMenu;
@@ -57,6 +58,8 @@ public class GameManager : MonoBehaviour
 
     public AudioClip test1;
     private bool toimiVittuSaatana = false;
+
+    private Human human;
 
     private void Awake()
     {
@@ -128,7 +131,7 @@ public class GameManager : MonoBehaviour
 
     private void PauseMenu()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && gameActive == true)
+        if (Input.GetKeyDown(InputManager.instance.menu) && gameActive == true && human.state != "Dead")
         {
             if (pauseMenu.activeSelf == true || optionsMenu.activeSelf == true || pauseQuitMenu.activeSelf == true) //could add backing out feature later
             {
@@ -137,6 +140,7 @@ public class GameManager : MonoBehaviour
                 pauseQuitMenu.SetActive(false);
                 Time.timeScale = 1;
                 Time.fixedDeltaTime = 0.016667f;
+                isPaused = false;
             }
 
             else
@@ -144,6 +148,7 @@ public class GameManager : MonoBehaviour
                 pauseMenu.SetActive(true);
                 Time.timeScale = 0;
                 Time.fixedDeltaTime = 0;
+                isPaused = true;
             }
         }
     }
@@ -252,6 +257,7 @@ public class GameManager : MonoBehaviour
     public void GetRealStartTime(float time)    //This for getting the correct start time after main menu
     {
         realStartTime = time;
+        human = GameObject.Find("Human(Clone)").GetComponent<Human>();
     }
 
     //These functions bellow are for calculating Analytics play times

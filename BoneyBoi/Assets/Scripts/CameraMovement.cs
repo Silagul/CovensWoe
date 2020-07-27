@@ -6,9 +6,13 @@ public class CameraMovement : MonoBehaviour
 {
     public Vector2 lookat = Vector2.zero;
     public float minX, minY, maxX, maxY;
+
+    private GameManager gameManager;
+
     void Start()
     {
         transform.GetChild(0).localScale = new Vector3(Screen.width / 64.0f, Screen.height / 64.0f, 1);
+        gameManager = GameObject.Find("Game").GetComponent<GameManager>();
     }
 
     void Update()
@@ -37,8 +41,12 @@ public class CameraMovement : MonoBehaviour
         if (darken)
         {
             cameraWeight = Mathf.Min(cameraWeight + Time.deltaTime, 1.0f);
-            Time.timeScale = Mathf.Lerp(1.0f, 0.1f, cameraWeight);
-            Time.fixedDeltaTime = Mathf.Lerp(0.016667f, 0.001667f, cameraWeight);
+            if (gameManager.isPaused == false)
+            {
+                Time.timeScale = Mathf.Lerp(1.0f, 0.1f, cameraWeight);
+                Time.fixedDeltaTime = Mathf.Lerp(0.016667f, 0.001667f, cameraWeight);
+            }
+
         }
         else
         {
@@ -46,8 +54,14 @@ public class CameraMovement : MonoBehaviour
         }
         Camera.main.orthographicSize = Mathf.Lerp(5, 4, cameraWeight);
         Camera.main.GetComponentInChildren<SpriteRenderer>().color = new Color32(0, 0, 0, (byte)Mathf.Lerp(0, 255, cameraWeight));
-        Time.timeScale = Mathf.Lerp(1.0f, 0.1f, cameraWeight);
-        Time.fixedDeltaTime = Mathf.Lerp(0.016667f, 0.001667f, cameraWeight);
+
+        if(gameManager.isPaused == false)
+        {
+            Time.timeScale = Mathf.Lerp(1.0f, 0.1f, cameraWeight);
+            Time.fixedDeltaTime = Mathf.Lerp(0.016667f, 0.001667f, cameraWeight);
+        }
+
+        Debug.Log(Time.timeScale);   
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         player?.GetComponent<Creature>().IsVisible();
     }

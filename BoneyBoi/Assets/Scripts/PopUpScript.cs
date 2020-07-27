@@ -33,15 +33,18 @@ public class PopUpScript : MonoBehaviour
             switch(message)
             {
                 case messageEnum.Movement:
-                    messageText.text = "Press A & D to move around & Space to jump.";
+                    messageText.text = "Press " + InputManager.instance.left +  " & " + InputManager.instance.right
+                        + " to move around & " + InputManager.instance.jump + " to jump.";
                     break;
 
                 case messageEnum.Possess:
-                    messageText.text = "Press E to Possess";
+                    messageText.text = "Press " + InputManager.instance.interact + " to release your Soul. As Soul you can move around with "
+                        + InputManager.instance.up + InputManager.instance.left + InputManager.instance.down + InputManager.instance.right
+                        + " & " + InputManager.instance.interact + " to Possess a body";
                     break;
 
                 case messageEnum.Interact:
-                    messageText.text = "Press Q to Interact with levers & hold to move boxes";
+                    messageText.text = "Press " + InputManager.instance.interact + " to Interact with levers & hold to move boxes";
                     break;
             }
         }
