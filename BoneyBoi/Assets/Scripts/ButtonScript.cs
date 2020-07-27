@@ -30,7 +30,7 @@ public class ButtonScript : MonoBehaviour
             {
                 case "MainMenu":
                     gameManager.SaveAnalytics();
-                    GameManager.ActivateMenu("MainMenu");
+                    //GameManager.ActivateMenu("MainMenu");
                     World.Remove();
                     Options.SaveData();
                     AudioManager.CreateAudio(buttonPressAudio, false, true, transform);
@@ -44,15 +44,15 @@ public class ButtonScript : MonoBehaviour
                     AudioManager.CreateAudio(buttonPressAudio, false, true, transform);
                     if (GameObject.Find("World").transform.childCount != 0)
                     {
-                        GameManager.ActivateMenu("GameMenu");
+                        //GameManager.ActivateMenu("GameMenu");
                     }
                     else
                     {
-                        GameManager.ActivateMenu("MainMenu");
+                        //GameManager.ActivateMenu("MainMenu");
                     }
                     break;
-                case "OptionsMenu": GameManager.ActivateMenu("OptionsMenu"); AudioManager.CreateAudio(buttonPressAudio, false, true, transform); break;
-                case "Start": GameManager.ActivateMenu("ChapterMenu"); AudioManager.CreateAudio(buttonPressAudio, false, true, transform); break;
+                case "OptionsMenu": //GameManager.ActivateMenu("OptionsMenu"); AudioManager.CreateAudio(buttonPressAudio, false, true, transform); break;
+                case "Start": //GameManager.ActivateMenu("ChapterMenu"); AudioManager.CreateAudio(buttonPressAudio, false, true, transform); break;
                 case "Retry":
                     gameManager.SaveAnalytics();
                     World.Restart();
