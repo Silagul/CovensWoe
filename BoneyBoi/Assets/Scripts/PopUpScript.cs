@@ -44,7 +44,7 @@ public class PopUpScript : MonoBehaviour
                     break;
 
                 case messageEnum.Interact:
-                    messageText.text = "Press " + InputManager.instance.grab + " to Interact with levers & hold to move boxes";
+                    messageText.text = "Press " + InputManager.instance.interact + " to Interact with levers & hold to move boxes";
                     break;
             }
         }
