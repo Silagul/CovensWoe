@@ -12,10 +12,13 @@ public class TimeShroom : Interactable
     static float startTime = Mathf.NegativeInfinity;
     static float maxDuration = 10.0f;
     public Interactable interactable;
+    static Color32 activeColor = new Color32(200, 150, 150, 255);
+    static Color32 deactiveColor = new Color32(100, 100, 100, 255);
 
     public AudioClip[] mushroomAudioArray;
     public AudioClip mushroomTimer;
     public AudioClip hiddenMushroomAudio;
+    public SpriteRenderer mushroomPatch;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -35,8 +38,9 @@ public class TimeShroom : Interactable
 
     void Start()
     {
-        GetComponent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
-        GetComponentInParent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
+        GetComponent<SpriteRenderer>().color = deactiveColor;
+        GetComponentInParent<SpriteRenderer>().color = deactiveColor;
+        mushroomPatch.color = deactiveColor;
     }
 
     void FixedUpdate()
@@ -44,8 +48,9 @@ public class TimeShroom : Interactable
         if (isActive && Time.time > startTime + maxDuration)
             foreach (TimeShroom shroom in timeShrooms)
             {
-                shroom.GetComponent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
-                GetComponentInParent<SpriteRenderer>().color = new Color32(127, 127, 127, 255);
+                shroom.GetComponent<SpriteRenderer>().color = deactiveColor;
+                GetComponentInParent<SpriteRenderer>().color = deactiveColor;
+                mushroomPatch.color = deactiveColor;
                 shroom.isActive = false;
                 GameObject timerObject = GameObject.Find(mushroomTimer.name.Substring(0, mushroomTimer.name.Length - 1));
                 Destroy(timerObject);
@@ -55,8 +60,9 @@ public class TimeShroom : Interactable
     public override void Interact(Creature creature)
     {
         isActive = true;
-        GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
-        GetComponentInParent<SpriteRenderer>().color = new Color32(255, 255, 255, 255);
+        GetComponent<SpriteRenderer>().color = activeColor;
+        GetComponentInParent<SpriteRenderer>().color = activeColor;
+        mushroomPatch.color = deactiveColor;
         if (Time.time > startTime + maxDuration)
             startTime = Time.time;
         bool hasDeactive = false;
