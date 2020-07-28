@@ -12,7 +12,7 @@ public class TimeShroom : Interactable
     static float startTime = Mathf.NegativeInfinity;
     static float maxDuration = 10.0f;
     public Interactable interactable;
-    static Color32 activeColor = new Color32(200, 150, 150, 255);
+    static Color32 activeColor = new Color32(255, 100, 100, 255);
     static Color32 deactiveColor = new Color32(100, 100, 100, 255);
 
     public AudioClip[] mushroomAudioArray;
@@ -62,7 +62,7 @@ public class TimeShroom : Interactable
         isActive = true;
         GetComponent<SpriteRenderer>().color = activeColor;
         GetComponentInParent<SpriteRenderer>().color = activeColor;
-        mushroomPatch.color = deactiveColor;
+        mushroomPatch.color = activeColor;
         if (Time.time > startTime + maxDuration)
             startTime = Time.time;
         bool hasDeactive = false;

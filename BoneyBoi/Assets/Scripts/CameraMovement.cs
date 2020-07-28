@@ -61,7 +61,6 @@ public class CameraMovement : MonoBehaviour
             Time.fixedDeltaTime = Mathf.Lerp(0.016667f, 0.001667f, cameraWeight);
         }
 
-        Debug.Log(Time.timeScale);   
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         player?.GetComponent<Creature>().IsVisible();
     }
