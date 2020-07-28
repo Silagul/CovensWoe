@@ -14,12 +14,12 @@ public class Soul : Creature
     Vector3 nextPosition;
     private Vector3 childPosition;
 
-
     private GameManager gameManager;
 
     public AudioClip flyingAudio;
     public AudioClip possessInAudio;
     public AudioClip possessOutAudio;
+    public Collider2D defaultCollider;
 
     void Start()
     {
@@ -106,9 +106,22 @@ public class Soul : Creature
         fixedUpdates.Clear();
         switch (stateName)
         {
-            case "Possession": isActive = false; fixedUpdates.Add(Movement); updates.Add(Vanish); timer = 0.0f; break;
-            case "Dead": SetState("default"); break;
-            default: tag = "Player"; isActive = true; fixedUpdates.Add(Movement); updates.Add(Interact); updates.Add(ClampMovement); timer = 0.0f;
+            case "Possession":
+                isActive = false;
+                updates.Add(Vanish);
+                fixedUpdates.Add(Movement);
+                timer = 0.0f;
+                break;
+            case "Dead":
+                break;
+            case "Default":
+                isActive = true;
+                tag = "Player";
+                defaultCollider.tag = tag;
+                updates.Add(Interact);
+                updates.Add(ClampMovement);
+                fixedUpdates.Add(Movement);
+                timer = 0.0f;
                 //CameraMovement.SetCameraMask(new string[] { "Default", "Creature", "Player", "Physics2D", "Object" });
                 break;
         }
