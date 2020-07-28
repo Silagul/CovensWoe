@@ -87,15 +87,15 @@ ScriptedImporter:
     uvTransform: {x: 0, y: 0}
   mosaicSpriteImportData: []
   rigSpriteImportData:
-  - name: Layer 3
+  - name: sienet1
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
     border: {x: 0, y: 0, z: 0, w: 0}
     rect:
       serializedVersion: 2
-      x: 4
-      y: 2334
+      x: 630
+      y: 4
       width: 530
       height: 1533
     spriteID: 6281d4c906dcc2047b200617450f1f61
@@ -108,8 +108,8 @@ ScriptedImporter:
     edges: []
     tessellationDetail: 0
     parentGroupIndex: -1
-    uvTransform: {x: -10, y: 1944}
-  - name: Layer 1
+    uvTransform: {x: 252, y: -713}
+  - name: three_w_mushrooms
     originalName: 
     pivot: {x: 0.5, y: 0.5}
     alignment: 0
@@ -131,6 +131,50 @@ ScriptedImporter:
     tessellationDetail: 0
     parentGroupIndex: -1
     uvTransform: {x: 4, y: 4}
+  - name: sienet3
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 328
+      y: 2334
+      width: 271
+      height: 1023
+    spriteID: 2842858dbb214a44394caa9d0328b61c
+    internalID: 0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    parentGroupIndex: -1
+    uvTransform: {x: 314, y: 1944}
+  - name: sienet2
+    originalName: 
+    pivot: {x: 0.5, y: 0.5}
+    alignment: 0
+    border: {x: 0, y: 0, z: 0, w: 0}
+    rect:
+      serializedVersion: 2
+      x: 4
+      y: 2334
+      width: 316
+      height: 1130
+    spriteID: 1fad5b3a9d5df39498f3d240c5e1d59a
+    internalID: 0
+    spriteBone: []
+    spriteOutline: []
+    vertices: []
+    spritePhysicsOutline: []
+    indices: 
+    edges: []
+    tessellationDetail: 0
+    parentGroupIndex: -1
+    uvTransform: {x: -173, y: 1849}
   platformSettings: []
   mosaicLayers: 1
   documentPivot: {x: 0, y: 0}
@@ -150,15 +194,29 @@ ScriptedImporter:
   characterMode: 1
   mosaicPSDLayers: []
   rigPSDLayers:
-  - name: Layer 3
-    spriteName: Layer 3
+  - name: sienet3
+    spriteName: sienet3
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 2842858dbb214a44394caa9d0328b61c
+    layerID: 9
+    mosaicPosition: {x: 328, y: 2334}
+  - name: sienet2
+    spriteName: sienet2
+    isGroup: 0
+    parentIndex: -1
+    spriteID: 1fad5b3a9d5df39498f3d240c5e1d59a
+    layerID: 8
+    mosaicPosition: {x: 4, y: 2334}
+  - name: sienet1
+    spriteName: sienet1
     isGroup: 0
     parentIndex: -1
     spriteID: 6281d4c906dcc2047b200617450f1f61
     layerID: 7
-    mosaicPosition: {x: 4, y: 2334}
-  - name: Layer 1
-    spriteName: Layer 1
+    mosaicPosition: {x: 630, y: 4}
+  - name: three_w_mushrooms
+    spriteName: three_w_mushrooms
     isGroup: 0
     parentIndex: -1
     spriteID: bcca1de8bbc532a43aa39186f61780da
