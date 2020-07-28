@@ -199,6 +199,7 @@ public class Skeleton : Creature
                 hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", false);
                 fixedUpdates.Add(Movement);
+                Prompt.interactKey.SetActive(false);
                 //CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D" });
                 break;
             case "Dead":

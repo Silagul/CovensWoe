@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameObject menu;
     public static World world;
-
+    public static GameManager instance;
 
     //These values are for Analytics
     private float realStartTime = 0f;
@@ -75,6 +75,7 @@ public class GameManager : MonoBehaviour
     {
         //Options.Start();
         //ActivateMenu("MainMenu");
+        instance = this;
         world = Instantiate(Resources.Load<GameObject>("Prefabs/World/World"), transform).GetComponent<World>();
 
         if (PlayerPrefs.HasKey("FirstRun") == false)
@@ -161,11 +162,13 @@ public class GameManager : MonoBehaviour
         RenderSettings.ambientLight = new Color(brightnessSlider.value, brightnessSlider.value, brightnessSlider.value, 1f);
     }
 
-    public static void ActivateMenu(string menuName)
+    public GameObject GetMenu(string menuName)
     {
-        if (menu != null)
-            Destroy(menu);
-        menu = Instantiate(Resources.Load<GameObject>($"Prefabs/UI/{menuName}"), Camera.main.transform);
+        switch (menuName)
+        {
+            case "MainMenu": return mainMenu;
+            default: return null;
+        }
     }
 
     public static bool MenuActive(string menuName)
