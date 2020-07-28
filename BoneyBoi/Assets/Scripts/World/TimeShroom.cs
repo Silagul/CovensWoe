@@ -18,7 +18,7 @@ public class TimeShroom : Interactable
     public AudioClip[] mushroomAudioArray;
     public AudioClip mushroomTimer;
     public AudioClip hiddenMushroomAudio;
-    public SpriteRenderer mushroomPatch;
+    public List<SpriteRenderer> mushroomPatches;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
@@ -40,7 +40,8 @@ public class TimeShroom : Interactable
     {
         GetComponent<SpriteRenderer>().color = deactiveColor;
         GetComponentInParent<SpriteRenderer>().color = deactiveColor;
-        mushroomPatch.color = deactiveColor;
+        foreach (SpriteRenderer mushroomPatch in mushroomPatches)
+            mushroomPatch.color = deactiveColor;
     }
 
     void FixedUpdate()
@@ -50,7 +51,8 @@ public class TimeShroom : Interactable
             {
                 shroom.GetComponent<SpriteRenderer>().color = deactiveColor;
                 GetComponentInParent<SpriteRenderer>().color = deactiveColor;
-                mushroomPatch.color = deactiveColor;
+                foreach (SpriteRenderer mushroomPatch in mushroomPatches)
+                    mushroomPatch.color = deactiveColor;
                 shroom.isActive = false;
                 GameObject timerObject = GameObject.Find(mushroomTimer.name.Substring(0, mushroomTimer.name.Length - 1));
                 Destroy(timerObject);
@@ -62,7 +64,8 @@ public class TimeShroom : Interactable
         isActive = true;
         GetComponent<SpriteRenderer>().color = activeColor;
         GetComponentInParent<SpriteRenderer>().color = activeColor;
-        mushroomPatch.color = activeColor;
+        foreach (SpriteRenderer mushroomPatch in mushroomPatches)
+            mushroomPatch.color = activeColor;
         if (Time.time > startTime + maxDuration)
             startTime = Time.time;
         bool hasDeactive = false;

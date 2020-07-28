@@ -18,8 +18,6 @@ public class Human : Creature
     private GameManager gameManager;
     private float realStartTime = 0f;
 
-    private bool hasLanded = false;
-
     public AudioClip[] movementAudioArray;
     public AudioClip landingAudio;
     public AudioClip landingDeathAudio;
@@ -83,25 +81,17 @@ public class Human : Creature
         {
             if (Input.GetKeyDown(InputManager.instance.jump) && isActive)
             {
-                hasLanded = false;
                 vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f);
                 SetState("Jump");
             }
-
             else
             {
                 anim.SetBool("Foothold", true);
                 vertical = Mathf.Max(0.0f, vertical);
             }
-
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Land") && hasLanded == false)
-            {
-                hasLanded = true;
-                AudioManager.CreateAudio(landingAudio, false, true, transform);
-            }
         }
-        else { vertical = Mathf.Max(-53.0f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
-            transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
+        else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
+        transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
         else if (horizontal < 0.0f) transform.localScale = new Vector3(0.2f, 0.2f, 1);
@@ -223,6 +213,7 @@ public class Human : Creature
             float t = vertical / -9.81f;
             float fallDistance = -9.81f * t * t * 0.5f;
             anim.SetBool("Foothold", true);
+            AudioManager.CreateAudio(landingAudio, false, true, transform);
             if (fallDistance < -6.0f)
             {
                 AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);

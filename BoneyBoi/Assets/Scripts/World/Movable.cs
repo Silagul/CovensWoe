@@ -25,15 +25,16 @@ public class Movable : Interactable
     {
         if (other.tag == "Player")
         {
-            Creature creature = other.GetComponent<Creature>();
-            if (isHeld)
-            {
-                isHeld = false;
-                creature.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = false;
-                creature.GetComponent<Animator>().SetBool("Grappling", false);
-                creature.GetComponent<Skeleton>().canRotate = true;
-                creature.GetComponent<Animator>().speed = 1.0f;
-            }
+            Skeleton skeleton;
+            if (other.TryGetComponent(out skeleton))
+                if (isHeld)
+                {
+                    isHeld = false;
+                    skeleton.transform.GetChild(0).GetComponent<Collider2D>().enabled = false;
+                    skeleton.GetComponent<Animator>().SetBool("Grappling", false);
+                    skeleton.GetComponent<Skeleton>().canRotate = true;
+                    skeleton.GetComponent<Animator>().speed = 1.0f;
+                }
         }
     }
 
