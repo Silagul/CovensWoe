@@ -14,7 +14,7 @@ public class FallOn : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         Human human;
-        if (collision.TryGetComponent(out human))
+        if (collision.transform.parent.TryGetComponent(out human))
         {
             if (GetComponentInParent<Rigidbody2D>().velocity.y < 0.0f && transform.position.y > collision.transform.position.y + (human.tag == "Hollow" ? 1.0f : 2.75f))
                 if (GetComponentInParent<Platform>().floorCount == 0)
