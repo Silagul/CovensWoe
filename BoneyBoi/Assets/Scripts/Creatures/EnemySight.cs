@@ -54,7 +54,6 @@ public class EnemySight : MonoBehaviour
         {
             Vector3 vertex;
             RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, gameManager.GetVectorFromAngle(angle), viewDistance, layerMask);
-
             if (raycastHit2D.collider == null)  //no hit
             {
                 vertex = gameManager.GetVectorFromAngle(angle) * viewDistance;
@@ -63,7 +62,7 @@ public class EnemySight : MonoBehaviour
             else   //hit
             {
                 vertex = transform.InverseTransformPoint(raycastHit2D.point);
-                if (raycastHit2D.collider.name == "Human")
+                if (raycastHit2D.collider.transform.parent.name == "Human")
                 {
                     //Debug.Log("Seeing Player");
 
