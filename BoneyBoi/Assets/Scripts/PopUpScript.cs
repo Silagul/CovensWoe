@@ -8,20 +8,22 @@ public class PopUpScript : MonoBehaviour
 {
     public enum messageEnum
     {
-        Movement,
+        Box,
         Possess,
-        Interact
+        Lever
     };
 
     public messageEnum message;
     private GameObject canvasPopUp;
     private TextMeshProUGUI messageText;
+    private TextMeshProUGUI buttonText;
 
 
     private void Start()
     {
         canvasPopUp = GameObject.Find("CanvasPopUp");
-        messageText = canvasPopUp.GetComponentInChildren<TextMeshProUGUI>();
+        messageText = canvasPopUp.transform.GetChild(0).GetComponentInChildren<TextMeshProUGUI>();
+        buttonText = canvasPopUp.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
         canvasPopUp.SetActive(false);
     }
 
@@ -32,19 +34,19 @@ public class PopUpScript : MonoBehaviour
             canvasPopUp.SetActive(true);
             switch(message)
             {
-                case messageEnum.Movement:
-                    messageText.text = "Press " + InputManager.instance.left +  " & " + InputManager.instance.right
-                        + " to move around & " + InputManager.instance.jump + " to jump.";
+                case messageEnum.Box:
+                    messageText.text = "Hold";
+                    buttonText.text = InputManager.instance.interact.ToString();
                     break;
 
                 case messageEnum.Possess:
-                    messageText.text = "Press " + InputManager.instance.interact + " to release your Soul. As Soul you can move around with "
-                        + InputManager.instance.up + InputManager.instance.left + InputManager.instance.down + InputManager.instance.right
-                        + " & " + InputManager.instance.interact + " to Possess a body";
+                    messageText.text = "Possess";
+                    buttonText.text = InputManager.instance.possess.ToString();
                     break;
 
-                case messageEnum.Interact:
-                    messageText.text = "Press " + InputManager.instance.interact + " to Interact with levers & hold to move boxes";
+                case messageEnum.Lever:
+                    messageText.text = "Interact";
+                    buttonText.text = InputManager.instance.interact.ToString();
                     break;
             }
         }
