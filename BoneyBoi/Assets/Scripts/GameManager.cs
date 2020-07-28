@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
 {
     public static GameObject menu;
     public static World world;
-
+    public static GameManager instance;
 
     //These values are for Analytics
     private float realStartTime = 0f;
@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     public float soulDistanceY;
 
     private bool gameActive = false;
+    public bool isPaused = false;
 
     [SerializeField]
     private GameObject pauseMenu;
@@ -47,6 +48,8 @@ public class GameManager : MonoBehaviour
     public GameObject deathMenu;
     [SerializeField]
     private GameObject mainMenu;
+    [SerializeField]
+    private GameObject inputMenu;
 
     public AudioMixer masterMixer;
     public Slider masterSlider;
@@ -57,6 +60,8 @@ public class GameManager : MonoBehaviour
 
     public AudioClip test1;
     private bool toimiVittuSaatana = false;
+
+    private Human human;
 
     private void Awake()
     {
@@ -72,6 +77,7 @@ public class GameManager : MonoBehaviour
     {
         //Options.Start();
         //ActivateMenu("MainMenu");
+        instance = this;
         world = Instantiate(Resources.Load<GameObject>("Prefabs/World/World"), transform).GetComponent<World>();
 
         if (PlayerPrefs.HasKey("FirstRun") == false)
@@ -127,15 +133,17 @@ public class GameManager : MonoBehaviour
 
     private void PauseMenu()
     {
-        if (Input.GetKeyDown(KeyCode.Escape) && gameActive == true)
+        if (Input.GetKeyDown(InputManager.instance.menu) && gameActive == true && human.state != "Dead")
         {
-            if (pauseMenu.activeSelf == true || optionsMenu.activeSelf == true || pauseQuitMenu.activeSelf == true) //could add backing out feature later
+            if (pauseMenu.activeSelf == true || optionsMenu.activeSelf == true || pauseQuitMenu.activeSelf == true || inputMenu.activeSelf == true) //could add backing out feature later
             {
                 pauseMenu.SetActive(false);
                 optionsMenu.SetActive(false);
                 pauseQuitMenu.SetActive(false);
+                inputMenu.SetActive(false);
                 Time.timeScale = 1;
                 Time.fixedDeltaTime = 0.016667f;
+                isPaused = false;
             }
 
             else
@@ -143,6 +151,7 @@ public class GameManager : MonoBehaviour
                 pauseMenu.SetActive(true);
                 Time.timeScale = 0;
                 Time.fixedDeltaTime = 0;
+                isPaused = true;
             }
         }
     }
@@ -156,11 +165,13 @@ public class GameManager : MonoBehaviour
         RenderSettings.ambientLight = new Color(brightnessSlider.value, brightnessSlider.value, brightnessSlider.value, 1f);
     }
 
-    public static void ActivateMenu(string menuName)
+    public GameObject GetMenu(string menuName)
     {
-        if (menu != null)
-            Destroy(menu);
-        menu = Instantiate(Resources.Load<GameObject>($"Prefabs/UI/{menuName}"), Camera.main.transform);
+        switch (menuName)
+        {
+            case "MainMenu": return mainMenu;
+            default: return null;
+        }
     }
 
     public static bool MenuActive(string menuName)
@@ -249,6 +260,7 @@ public class GameManager : MonoBehaviour
     public void GetRealStartTime(float time)    //This for getting the correct start time after main menu
     {
         realStartTime = time;
+        human = GameObject.Find("Human(Clone)").GetComponent<Human>();
     }
 
     //These functions bellow are for calculating Analytics play times

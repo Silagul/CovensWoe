@@ -27,7 +27,7 @@ public class Backforth : MonoBehaviour
         t.position = new Vector3(t.position.x, Mathf.Lerp(transform.position.y, stops[stops.Count - 1].y, 0.5f) + 5.0f);
         t.GetComponent<SpriteRenderer>().size = new Vector2(0.245f, distance);
         if (Input.GetKeyDown(KeyCode.P))
-            Activate(!isActive);
+            Activate();
     }
 
     void FixedUpdate()
@@ -48,7 +48,7 @@ public class Backforth : MonoBehaviour
         }
     }
 
-    public void Activate(bool active)
+    public void Activate()
     {
         if (!isActive)
         {
@@ -82,5 +82,17 @@ public class Backforth : MonoBehaviour
         GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, (byte)(Mathf.Min(time, 1.0f) * 255.0f));
         if (time > 1.0f)
             fadein = null;
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        Debug.Log(collision.transform.name);
+        if (collision.transform.name == "FallingTree")
+            if (isActive)
+            {
+                isDirectionUP = !isDirectionUP;
+                currentIndex += isDirectionUP ? 1 : -1;
+                nextPoint = stops[currentIndex];
+            }
     }
 }

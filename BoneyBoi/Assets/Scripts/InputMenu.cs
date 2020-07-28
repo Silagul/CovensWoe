@@ -8,8 +8,9 @@ public class InputMenu : MonoBehaviour
 {
     Transform inputPanel;
     Event keyEvent;
-    Text buttonText;
+    TextMeshProUGUI buttonText;
     KeyCode newKey;
+    string previousText;
 
     bool waitingForKey;
 
@@ -36,15 +37,14 @@ public class InputMenu : MonoBehaviour
             { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.interact.ToString(); }
             if (inputPanel.GetChild(i).name == "MenuKey")
             { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.menu.ToString(); }
-            if (inputPanel.GetChild(i).name == "GrabKey")
-            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.grab.ToString(); }
+            if (inputPanel.GetChild(i).name == "PossessKey")
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.possess.ToString(); }
         }
     }
 
     void OnGUI()
     {
         keyEvent = Event.current;
-
         if(keyEvent.isKey && waitingForKey)
         {
             newKey = keyEvent.keyCode;
@@ -60,15 +60,25 @@ public class InputMenu : MonoBehaviour
         }
     }
 
-    public void SendText(Text text)
+    public void SendText(TextMeshProUGUI text)  //puts the correct text for the buttons
     {
-        buttonText = text;
+        if (buttonText != null)
+        {
+            buttonText.text = previousText;
+        }
+
+        buttonText = text;  //determines which text to update
+        previousText = buttonText.text;
     }
 
     IEnumerator WaitForKey()
     {
         while (!keyEvent.isKey)
+        {
+            buttonText.text = "?"; //changes button text while rebinding
             yield return null;
+
+        }
     }
 
     public IEnumerator AssingKey(string keyName)
@@ -76,7 +86,7 @@ public class InputMenu : MonoBehaviour
         waitingForKey = true;
 
         yield return WaitForKey();
-
+        previousText = newKey.ToString();   //puts the correct text after rebinding
         switch(keyName)
         {
             case "jump":
@@ -121,10 +131,10 @@ public class InputMenu : MonoBehaviour
                 PlayerPrefs.SetString("MenuKey", InputManager.instance.menu.ToString());
                 break;
 
-            case "grab":
-                InputManager.instance.grab = newKey;
-                buttonText.text = InputManager.instance.grab.ToString();
-                PlayerPrefs.SetString("GrabKey", InputManager.instance.grab.ToString());
+            case "possess":
+                InputManager.instance.possess = newKey;
+                buttonText.text = InputManager.instance.possess.ToString();
+                PlayerPrefs.SetString("PossessKey", InputManager.instance.possess.ToString());
                 break;
         }
     }
