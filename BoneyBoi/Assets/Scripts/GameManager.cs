@@ -48,6 +48,8 @@ public class GameManager : MonoBehaviour
     public GameObject deathMenu;
     [SerializeField]
     private GameObject mainMenu;
+    [SerializeField]
+    private GameObject inputMenu;
 
     public AudioMixer masterMixer;
     public Slider masterSlider;
@@ -132,11 +134,12 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetKeyDown(InputManager.instance.menu) && gameActive == true && human.state != "Dead")
         {
-            if (pauseMenu.activeSelf == true || optionsMenu.activeSelf == true || pauseQuitMenu.activeSelf == true) //could add backing out feature later
+            if (pauseMenu.activeSelf == true || optionsMenu.activeSelf == true || pauseQuitMenu.activeSelf == true || inputMenu.activeSelf == true) //could add backing out feature later
             {
                 pauseMenu.SetActive(false);
                 optionsMenu.SetActive(false);
                 pauseQuitMenu.SetActive(false);
+                inputMenu.SetActive(false);
                 Time.timeScale = 1;
                 Time.fixedDeltaTime = 0.016667f;
                 isPaused = false;
