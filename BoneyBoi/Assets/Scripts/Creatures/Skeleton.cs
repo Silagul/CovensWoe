@@ -17,8 +17,6 @@ public class Skeleton : Creature
     private GameManager gameManager;
     private Vector3 childPosition;
 
-    private bool hasLanded = false;
-
     public AudioClip[] movementAudioArray;
     public AudioClip[] collapseAudio;
     public AudioClip buildAudio;
@@ -82,7 +80,6 @@ public class Skeleton : Creature
         {
             if (Input.GetKey(InputManager.instance.jump) && isActive && !Input.GetKey(InputManager.instance.possess))
             {
-                hasLanded = false;
                 vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.4f);
                 SetState("Jump");
             }
@@ -90,12 +87,6 @@ public class Skeleton : Creature
             {
                 anim.SetBool("Foothold", true);
                 vertical = Mathf.Max(0.0f, vertical);
-            }
-
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Land") && hasLanded == false)
-            {
-                hasLanded = true;
-                AudioManager.CreateAudio(landingAudio, false, true, transform);
             }
 
         }
@@ -226,5 +217,16 @@ public class Skeleton : Creature
     void OnDestroy()
     {
         creatures.Remove(this);
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Floor" && !anim.GetBool("Foothold"))
+        {
+            anim.SetBool("Foothold", true);
+            AudioManager.CreateAudio(landingAudio, false, true, transform);
+        }
+        if (collisions.ContainsKey(collision.transform.tag))
+            collisions[collision.transform.tag].Add(collision.gameObject);
     }
 }

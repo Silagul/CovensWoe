@@ -47,7 +47,6 @@ public class InputMenu : MonoBehaviour
         keyEvent = Event.current;
         if(keyEvent.isKey && waitingForKey)
         {
-            Debug.Log("wat");
             newKey = keyEvent.keyCode;
             waitingForKey = false;
         }
