@@ -14,18 +14,20 @@ public class DeathBox : MonoBehaviour
     public deathBoxEnum deathBoxType;
     public AudioClip spikePit;
     //public AudioClip fire;
+    private GameObject player;
 
     private void Start()
     {
-        switch(deathBoxType)
-        {
-            case deathBoxEnum.OutOfBounds:
-                GetComponent<SpriteRenderer>().enabled = false;
-                break;
+         player = GameObject.Find("Human");
+    }
 
-            default:
-                break;
+    private void LateUpdate()
+    {
+        if(deathBoxType == deathBoxEnum.OutOfBounds)
+        {
+            transform.position = new Vector3(player.transform.position.x, -5f);
         }
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
