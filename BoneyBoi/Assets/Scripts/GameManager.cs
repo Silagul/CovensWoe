@@ -63,6 +63,9 @@ public class GameManager : MonoBehaviour
 
     private Human human;
 
+    public GameObject deathBox;
+
+
     private void Awake()
     {
         Application.targetFrameRate = 60;
@@ -116,6 +119,11 @@ public class GameManager : MonoBehaviour
     {
         PauseMenu();
         SetAudio(); //currently sets audio constantly, change later
+    }
+
+    private void CreateOutOfBoundsBox()
+    {
+        Instantiate(deathBox);
     }
 
     public void OptionsMenu()
