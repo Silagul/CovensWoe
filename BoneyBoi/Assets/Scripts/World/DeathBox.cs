@@ -25,7 +25,7 @@ public class DeathBox : MonoBehaviour
     {
         if(deathBoxType == deathBoxEnum.OutOfBounds)
         {
-            transform.position = new Vector3(player.transform.position.x, -5f);
+            transform.position = new Vector3(player.transform.position.x, -10f);
         }
 
     }
@@ -35,24 +35,24 @@ public class DeathBox : MonoBehaviour
         switch(deathBoxType)
         {
             case deathBoxEnum.SpikePit:
-                if (collision.gameObject.name == "Human")
+                if (collision.gameObject.transform.parent.name == "Human")
                 {
-                    collision.gameObject.GetComponent<Animator>().SetBool("Foothold", true);
-                    collision.gameObject.GetComponent<Human>().SetState("Dead");
+                    collision.gameObject.transform.parent.GetComponent<Animator>().SetBool("Foothold", true);
+                    collision.gameObject.transform.parent.GetComponent<Human>().SetState("Dead");
                     AudioManager.CreateAudio(spikePit, false, true, this.transform);
                 }
                 break;
             case deathBoxEnum.OutOfBounds:
-                if(collision.tag == "Player" || collision.gameObject.name == "Human")
+                if(collision.tag == "Player" || collision.gameObject.transform.parent.name == "Human")
                 {
                     GameObject.Find("Human").GetComponent<Human>().SetState("Dead");
                 }
                 break;
             case deathBoxEnum.Fire:
-                if (collision.gameObject.name == "Human")
+                if (collision.gameObject.transform.parent.name == "Human")
                 {
-                    collision.gameObject.GetComponent<Animator>().SetBool("Foothold", true);
-                    collision.gameObject.GetComponent<Human>().SetState("Dead");
+                    collision.gameObject.transform.parent.GetComponent<Animator>().SetBool("Foothold", true);
+                    collision.gameObject.transform.parent.GetComponent<Human>().SetState("Dead");
                     //AudioManager.CreateAudio(fire, false, true, this.transform);
 
                     GameObject ash = Resources.Load<GameObject>("Prefabs/Ash2");

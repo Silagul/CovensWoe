@@ -6,7 +6,7 @@ using UnityEngine;
 public class Soul : Creature
 {
     Vector2 movement = Vector2.zero;
-    float speed = 4.0f;
+    float speed = 8.0f;
     float acceleration = 16.0f;
     float timer = 0.0f;
 
