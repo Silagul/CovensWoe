@@ -24,29 +24,40 @@ public class PopUpScript : MonoBehaviour
         canvasPopUp = GameObject.Find("CanvasPopUp");
         messageText = canvasPopUp.transform.GetChild(0).GetComponentInChildren<TextMeshProUGUI>();
         buttonText = canvasPopUp.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
-        canvasPopUp.SetActive(false);
+        //canvasPopUp.SetActive(false);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.tag == "Player")
         {
-            canvasPopUp.SetActive(true);
-            switch(message)
+            switch (message)
             {
                 case messageEnum.Box:
-                    messageText.text = "Hold";
-                    buttonText.text = InputManager.instance.interact.ToString();
+                    if(collision.transform.parent.name == "Skeleton")
+                    {
+                        canvasPopUp.transform.GetChild(0).gameObject.SetActive(true);
+                        canvasPopUp.transform.GetChild(1).gameObject.SetActive(true);
+                        messageText.text = "Hold";
+                        buttonText.text = InputManager.instance.interact.ToString();
+                    }
                     break;
 
                 case messageEnum.Possess:
+                    canvasPopUp.transform.GetChild(0).gameObject.SetActive(true);
+                    canvasPopUp.transform.GetChild(1).gameObject.SetActive(true);
                     messageText.text = "Possess";
                     buttonText.text = InputManager.instance.possess.ToString();
                     break;
 
                 case messageEnum.Lever:
-                    messageText.text = "Interact";
-                    buttonText.text = InputManager.instance.interact.ToString();
+                    if (collision.transform.parent.name == "Skeleton" || collision.transform.parent.name == "Human")
+                    {
+                        canvasPopUp.transform.GetChild(0).gameObject.SetActive(true);
+                        canvasPopUp.transform.GetChild(1).gameObject.SetActive(true);
+                        messageText.text = "Interact";
+                        buttonText.text = InputManager.instance.interact.ToString();
+                    }
                     break;
             }
         }
@@ -56,7 +67,9 @@ public class PopUpScript : MonoBehaviour
     {
         if (collision.tag == "Player")
         {
-            canvasPopUp.SetActive(false);
+            //canvasPopUp.SetActive(false);
+            canvasPopUp.transform.GetChild(0).gameObject.SetActive(false);
+            canvasPopUp.transform.GetChild(1).gameObject.SetActive(false);
         }
     }
 }
