@@ -59,7 +59,7 @@ public class Movable : Interactable
         transform.parent.gameObject.layer = LayerMask.GetMask("Default");
         transform.parent.position = next;
         for (int i = 0; i < childPositions.Count; i++)
-            if (transform.parent.GetChild(i).tag == "Player" && Input.GetKey(InputManager.instance.interact))
+            if (transform.parent.GetChild(i).tag == "Player" && Input.GetKey(InputManager.instance.grab))
                 transform.parent.GetChild(i).position = childPositions[i];
     }
 
@@ -71,7 +71,7 @@ public class Movable : Interactable
             if (creature.TryGetComponent(out skeleton) && !HoldOtherThanThis())
             {
                 int floorCount = GetComponentInParent<Platform>().floorCount;
-                if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(InputManager.instance.interact))
+                if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(InputManager.instance.grab))
                 {
                     isHeld = true;
                     skeleton.canRotate = false;
