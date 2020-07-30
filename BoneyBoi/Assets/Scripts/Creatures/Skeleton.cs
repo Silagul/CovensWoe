@@ -58,39 +58,29 @@ public class Skeleton : Creature
             if (Input.GetKey(InputManager.instance.right))
             {
                 horizontalGoal += currentSpeed;
-
                 if (floor != null)
-                {
-                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, true, this.transform);
-                }
+                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, true, transform);
             }
             if (Input.GetKey(InputManager.instance.left))
             {
                 horizontalGoal -= currentSpeed;
-
                 if (floor != null)
-                {
-                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, true, this.transform);
-                }
+                    AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, true, transform);
             }
         }
         horizontal = Mathf.Lerp(horizontal, horizontalGoal, (acceleration * Time.fixedDeltaTime) / Mathf.Abs(horizontal - horizontalGoal));
 
         if (floor != null)
         {
-            if (Input.GetKey(InputManager.instance.jump) && isActive && !Input.GetKey(InputManager.instance.possess))
+            if (Input.GetKey(InputManager.instance.jump) && isActive)
             {
                 vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.4f);
                 SetState("Jump");
             }
             else
-            {
-                anim.SetBool("Foothold", true);
                 vertical = Mathf.Max(0.0f, vertical);
-            }
-
         }
-        else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime); anim.SetBool("Foothold", false); }
+        else vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime);
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         if (canRotate)
@@ -228,5 +218,13 @@ public class Skeleton : Creature
         }
         if (collisions.ContainsKey(collision.transform.tag))
             collisions[collision.transform.tag].Add(collision.gameObject);
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Floor" && !CollidesWithOtherThan("Floor", collision.gameObject))
+            anim.SetBool("Foothold", false);
+        if (collisions.ContainsKey(collision.transform.tag))
+            collisions[collision.transform.tag].Remove(collision.gameObject);
     }
 }

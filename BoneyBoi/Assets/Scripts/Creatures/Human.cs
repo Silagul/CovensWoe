@@ -86,11 +86,10 @@ public class Human : Creature
             }
             else
             {
-                anim.SetBool("Foothold", true);
                 vertical = Mathf.Max(0.0f, vertical);
             }
         }
-        else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.deltaTime); anim.SetBool("Foothold", false); }
+        else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.deltaTime); }
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
@@ -125,6 +124,7 @@ public class Human : Creature
 
     void Arise()
     {
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         timer += Time.deltaTime;
         if (timer > 1.0f)
         {
@@ -214,14 +214,22 @@ public class Human : Creature
             float fallDistance = -9.81f * t * t * 0.5f;
             anim.SetBool("Foothold", true);
             AudioManager.CreateAudio(landingAudio, false, true, transform);
-            if (fallDistance < -6.0f)
+            if (fallDistance < -6.4f)
             {
-                AudioManager.CreateAudio(landingDeathAudio, false, true, this.transform);
+                AudioManager.CreateAudio(landingDeathAudio, false, true, transform);
                 SetState("Dead");
             }
         }
         if (collisions.ContainsKey(collision.transform.tag))
             collisions[collision.transform.tag].Add(collision.gameObject);
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Floor" && !CollidesWithOtherThan("Floor", collision.gameObject))
+            anim.SetBool("Foothold", false);
+        if (collisions.ContainsKey(collision.transform.tag))
+            collisions[collision.transform.tag].Remove(collision.gameObject);
     }
 
     public void Death()
