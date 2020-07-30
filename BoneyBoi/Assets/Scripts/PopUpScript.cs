@@ -39,7 +39,7 @@ public class PopUpScript : MonoBehaviour
                         canvasPopUp.transform.GetChild(0).gameObject.SetActive(true);
                         canvasPopUp.transform.GetChild(1).gameObject.SetActive(true);
                         messageText.text = "Hold";
-                        buttonText.text = InputManager.instance.interact.ToString();
+                        buttonText.text = InputManager.instance.grab.ToString();
                     }
                     break;
 
