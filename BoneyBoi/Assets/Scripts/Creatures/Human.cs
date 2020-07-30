@@ -77,7 +77,7 @@ public class Human : Creature
                 }
             }
 
-            if (Input.GetKey(InputManager.instance.down) && anim.GetFloat("Horizontal") == 0f)
+            if (Input.GetKey(InputManager.instance.down) && horizontalGoal == 0f)
             {
                 defaultCollider.size = new Vector2(4f, 6f);
                 defaultCollider.offset = new Vector2(0f, 3f);
@@ -139,7 +139,6 @@ public class Human : Creature
 
     void Arise()
     {
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         timer += Time.deltaTime;
         if (timer > 1.0f)
         {

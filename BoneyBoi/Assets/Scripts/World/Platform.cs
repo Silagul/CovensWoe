@@ -16,9 +16,9 @@ public class Platform : MonoBehaviour
                 if (creature.TryGetComponent(out skeleton))
                 {
                     bool isDragging = false;
-                    if (skeleton.CollidesWith("Movable") != null && Input.GetKey(KeyCode.Q)) isDragging = true;
+                    if (skeleton.CollidesWith("Movable") != null && Input.GetKey(InputManager.instance.interact)) isDragging = true;
                     Vector3 localPosition = transform.InverseTransformPoint(creature.transform.position);
-                    if (localPosition.y + 0.1f < offsetY || (creature.isActive && Input.GetKey(KeyCode.S) && !isDragging))
+                    if (localPosition.y + 0.1f < offsetY || (creature.isActive && Input.GetKey(InputManager.instance.down) && !isDragging))
                     {
                         Physics2D.IgnoreCollision(skeleton.defaultCollider, GetComponent<Collider2D>(), true);
                         Physics2D.IgnoreCollision(skeleton.hollowCollider, GetComponent<Collider2D>(), true);

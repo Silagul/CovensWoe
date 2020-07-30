@@ -94,12 +94,14 @@ public class Skeleton : Creature
         Movable movable;
         if (floor != null && (movable = CollidesWith("Movable", "Box")?.GetComponent<Movable>()) != null)
             movable.Interact(this);
+        if (anim.GetBool("Grappling"))
+            if (!Movable.IsHolding()) anim.SetBool("Grappling", false);
         //ClampMovement();
     }
 
     void Interact()
     {
-        if (Input.GetKeyDown(InputManager.instance.possess))
+        if (Input.GetKeyDown(InputManager.instance.possess) && isActive)
         {
             SetState("Hollow");
             ReleasePossession();
