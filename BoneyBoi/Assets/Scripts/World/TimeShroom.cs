@@ -31,15 +31,12 @@ public class TimeShroom : Interactable
         }
 
         else if (collision.transform.parent.name == "Human")
-        {
             AudioManager.CreateAudio(hiddenMushroomAudio, false, true, transform);
-        }
     }
 
     void Start()
     {
         GetComponent<SpriteRenderer>().color = deactiveColor;
-        GetComponentInParent<SpriteRenderer>().color = deactiveColor;
         foreach (SpriteRenderer mushroomPatch in mushroomPatches)
             mushroomPatch.color = deactiveColor;
     }
@@ -50,7 +47,6 @@ public class TimeShroom : Interactable
             foreach (TimeShroom shroom in timeShrooms)
             {
                 shroom.GetComponent<SpriteRenderer>().color = deactiveColor;
-                GetComponentInParent<SpriteRenderer>().color = deactiveColor;
                 foreach (SpriteRenderer mushroomPatch in mushroomPatches)
                     mushroomPatch.color = deactiveColor;
                 shroom.isActive = false;
@@ -63,7 +59,6 @@ public class TimeShroom : Interactable
     {
         isActive = true;
         GetComponent<SpriteRenderer>().color = activeColor;
-        GetComponentInParent<SpriteRenderer>().color = activeColor;
         foreach (SpriteRenderer mushroomPatch in mushroomPatches)
             mushroomPatch.color = activeColor;
         if (Time.time > startTime + maxDuration)
