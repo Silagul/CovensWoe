@@ -77,7 +77,7 @@ public class Human : Creature
                 }
             }
 
-            if (Input.GetKey(InputManager.instance.down) && anim.GetFloat("Horizontal") == 0f)
+            if (Input.GetKey(InputManager.instance.crouch) && anim.GetFloat("Horizontal") == 0f)
             {
                 defaultCollider.size = new Vector2(4f, 6f);
                 defaultCollider.offset = new Vector2(0f, 3f);

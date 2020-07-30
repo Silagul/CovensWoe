@@ -58,9 +58,10 @@ public class GameManager : MonoBehaviour
 
     public Slider brightnessSlider;
 
-    public AudioClip test1;
+    public AudioClip gameMusic;
+    public AudioClip menuMusic;
     private bool toimiVittuSaatana = false;
-
+    
     private Human human;
 
     public GameObject deathBox;
@@ -113,6 +114,8 @@ public class GameManager : MonoBehaviour
             SetAudio();
             PlayerPrefs.Save();
         }
+
+        AudioManager.SetAmbiance(menuMusic);
     }
 
     private void Update()
@@ -222,7 +225,7 @@ public class GameManager : MonoBehaviour
             SaveAnalytics();
             World.Restart();
             toimiVittuSaatana = false;
-            AudioManager.SetAmbiance(test1);
+            AudioManager.SetAmbiance(gameMusic);
         }
 
         Time.timeScale = 1;
@@ -235,19 +238,20 @@ public class GameManager : MonoBehaviour
         toimiVittuSaatana = true;
 
         //placeholder/testing crap
-        GameObject testi = GameObject.Find(test1.name);
+        GameObject testi = GameObject.Find(gameMusic.name);
         if (testi != null)
             Destroy(testi);
     }
 
     public void SetGameActive(bool isActive)
     {
-        AudioManager.SetAmbiance(test1);
+        AudioManager.SetAmbiance(gameMusic);
         Time.timeScale = 1;
         Time.fixedDeltaTime = 0.016667f;
         gameActive = isActive;
         if (gameActive == false)
         {
+            AudioManager.SetAmbiance(menuMusic);
             World.Remove();
         }
     }
