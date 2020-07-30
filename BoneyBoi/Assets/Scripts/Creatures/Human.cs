@@ -23,7 +23,8 @@ public class Human : Creature
     public AudioClip landingDeathAudio;
     public AudioClip deathAudio;
 
-    public PolygonCollider2D defaultCollider;
+    //public PolygonCollider2D defaultCollider;
+    public CapsuleCollider2D defaultCollider;
     public PolygonCollider2D hollowCollider;
 
     void Start()
@@ -42,6 +43,7 @@ public class Human : Creature
         defaultCollider.enabled = true;
         hollowCollider.enabled = false;
         currentSpeed = speed;
+        Instantiate(Resources.Load<GameObject>("Prefabs/DeathBox"),GameManager.world.transform);
     }
 
     void Movement()
@@ -73,6 +75,19 @@ public class Human : Creature
                 {
                     AudioManager.CreateAudio(movementAudioArray[Random.Range(0, movementAudioArray.Length)], false, true, this.transform);
                 }
+            }
+
+            if (Input.GetKey(InputManager.instance.down) && anim.GetFloat("Horizontal") == 0f)
+            {
+                defaultCollider.size = new Vector2(4f, 6f);
+                defaultCollider.offset = new Vector2(0f, 3f);
+                anim.SetBool("IsCrouching", true);
+            }
+            else
+            {
+                defaultCollider.size = new Vector2(4f, 12f);
+                defaultCollider.offset = new Vector2(0f, 6f);
+                anim.SetBool("IsCrouching", false);
             }
         }
         horizontal = Mathf.Lerp(horizontal, horizontalGoal, (acceleration * Time.fixedDeltaTime) / Mathf.Abs(horizontal - horizontalGoal));

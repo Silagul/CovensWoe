@@ -39,6 +39,8 @@ public class InputMenu : MonoBehaviour
             { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.menu.ToString(); }
             if (inputPanel.GetChild(i).name == "PossessKey")
             { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.possess.ToString(); }
+            if (inputPanel.GetChild(i).name == "GrabKey")
+            { inputPanel.GetChild(i).GetComponentInChildren<TextMeshProUGUI>().text = InputManager.instance.grab.ToString(); }
         }
     }
 
@@ -135,6 +137,11 @@ public class InputMenu : MonoBehaviour
                 InputManager.instance.possess = newKey;
                 buttonText.text = InputManager.instance.possess.ToString();
                 PlayerPrefs.SetString("PossessKey", InputManager.instance.possess.ToString());
+                break;
+            case "grab":
+                InputManager.instance.grab = newKey;
+                buttonText.text = InputManager.instance.grab.ToString();
+                PlayerPrefs.SetString("GrabKey", InputManager.instance.grab.ToString());
                 break;
         }
     }

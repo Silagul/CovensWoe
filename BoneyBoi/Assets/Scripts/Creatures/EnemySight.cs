@@ -22,7 +22,7 @@ public class EnemySight : MonoBehaviour
     public float startingAngle;    //starting angle of the fov
     public float fov = 90f;    //the fov of the enemy
     public int rayCount = 50;  //the amount of rays, adding more makes the fov more rounded and more accurate
-    public float viewDistance = 5f;    //length of the fov
+    public float viewDistance = 10f;    //length of the fov
     //public static bool shouldDie = false;
 
     void Start()
@@ -33,6 +33,7 @@ public class EnemySight : MonoBehaviour
         GetComponent<MeshFilter>().mesh = mesh;
         angleIncrease = fov / rayCount;   //this is used to count how much we need to increase the angle for the next ray
         //StartCoroutine("CalmingDown");
+
     }
 
     private void Update()
@@ -54,7 +55,6 @@ public class EnemySight : MonoBehaviour
         {
             Vector3 vertex;
             RaycastHit2D raycastHit2D = Physics2D.Raycast(origin, gameManager.GetVectorFromAngle(angle), viewDistance, layerMask);
-
             if (raycastHit2D.collider == null)  //no hit
             {
                 vertex = gameManager.GetVectorFromAngle(angle) * viewDistance;
@@ -63,7 +63,7 @@ public class EnemySight : MonoBehaviour
             else   //hit
             {
                 vertex = transform.InverseTransformPoint(raycastHit2D.point);
-                if (raycastHit2D.collider.name == "Human")
+                if (raycastHit2D.collider.transform.parent.name == "Human")
                 {
                     //Debug.Log("Seeing Player");
 
@@ -135,7 +135,7 @@ public class EnemySight : MonoBehaviour
         //Creature.dying = true;
         if (timeInSight < timeToDie)
         {
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(0.75f);
             timeInSight += 1f;
         }
         else
