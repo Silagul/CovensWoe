@@ -31,9 +31,9 @@ public class Movable : Interactable
                 {
                     isHeld = false;
                     skeleton.transform.GetChild(0).GetComponent<Collider2D>().enabled = false;
-                    skeleton.GetComponent<Animator>().SetBool("Grappling", false);
                     skeleton.GetComponent<Skeleton>().canRotate = true;
-                    skeleton.GetComponent<Animator>().speed = 1.0f;
+                    skeleton.anim.SetBool("Grappling", false);
+                    skeleton.anim.speed = 1.0f;
                 }
         }
     }
@@ -50,6 +50,7 @@ public class Movable : Interactable
         RaycastHit2D hit = Physics2D.Raycast(next + new Vector3(0, 0.5f), Vector2.down, 3.7f, mask);
         if (hit)
         {
+            Debug.Log(hit.collider.name);
             next = new Vector3(hit.point.x, hit.point.y + 1.0f, movement.z);
             GetComponentInParent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         }
@@ -58,7 +59,7 @@ public class Movable : Interactable
         transform.parent.gameObject.layer = LayerMask.GetMask("Default");
         transform.parent.position = next;
         for (int i = 0; i < childPositions.Count; i++)
-            if (transform.parent.GetChild(i).tag == "Player" && Input.GetKey(InputManager.instance.grab))
+            if (transform.parent.GetChild(i).tag == "Player" && Input.GetKey(InputManager.instance.interact))
                 transform.parent.GetChild(i).position = childPositions[i];
     }
 
@@ -70,7 +71,7 @@ public class Movable : Interactable
             if (creature.TryGetComponent(out skeleton) && !HoldOtherThanThis())
             {
                 int floorCount = GetComponentInParent<Platform>().floorCount;
-                if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(InputManager.instance.grab))
+                if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(InputManager.instance.interact))
                 {
                     isHeld = true;
                     skeleton.canRotate = false;

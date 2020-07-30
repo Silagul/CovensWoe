@@ -139,7 +139,6 @@ public class Human : Creature
 
     void Arise()
     {
-        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         timer += Time.deltaTime;
         if (timer > 1.0f)
         {
