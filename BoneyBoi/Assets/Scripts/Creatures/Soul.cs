@@ -11,8 +11,7 @@ public class Soul : Creature
     float timer = 0.0f;
 
     Vector3 prevPosition;
-    Vector3 nextPosition;
-    private Vector3 childPosition;
+    Transform nextVessel;
 
     private GameManager gameManager;
 
@@ -29,7 +28,6 @@ public class Soul : Creature
         SetState("Default");
         transform.parent = GameManager.world.transform;
         gameManager.TimeSinceSoul();
-        childPosition = GameObject.Find("Human").transform.position;
         AudioManager.CreateAudio(possessOutAudio, false, true, this.transform);
         AudioManager.CreateAudio(flyingAudio, true, false, this.transform);
     }
@@ -48,7 +46,7 @@ public class Soul : Creature
                     if (creature.Possess())
                     {
                         prevPosition = transform.position;
-                        nextPosition = target.transform.position + Vector3.up;
+                        nextVessel = target.transform;
                         AudioManager.CreateAudio(possessInAudio, false, true, transform);
                         SetState("Possession");
                     }
@@ -90,7 +88,7 @@ public class Soul : Creature
     {
         timer += Time.deltaTime;
         transform.localScale = Vector3.Lerp(Vector3.one, Vector3.zero, timer);
-        transform.position = Vector3.Lerp(prevPosition, nextPosition, timer);
+        transform.position = Vector3.Lerp(prevPosition, nextVessel.position + Vector3.up, timer);
         if (timer > 1.0f)
         {
             gameManager.TimeAsSoul();

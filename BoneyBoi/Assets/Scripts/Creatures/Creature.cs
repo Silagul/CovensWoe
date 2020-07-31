@@ -35,8 +35,11 @@ public class Creature : MonoBehaviour
     public GameObject CollidesWith(string tag)
     {
         if (collisions.ContainsKey(tag))
-            if (collisions[tag].Count != 0)
-                return collisions[tag][0];
+            for (int i = collisions[tag].Count - 1; i >= 0; i--)
+                if (collisions[tag][i] != null)
+                    return collisions[tag][0];
+                else
+                    collisions[tag].RemoveAt(0);
         return null;
     }
     public GameObject CollidesWith(string tag, string name)
