@@ -73,7 +73,6 @@ public class EnemySight : MonoBehaviour
                         //childVisible = true;
                         StartCoroutine(KillingChild());
                     }
-                        
                 }
 
                 //else
