@@ -50,7 +50,6 @@ public class Movable : Interactable
         RaycastHit2D hit = Physics2D.Raycast(next + new Vector3(0, 0.5f), Vector2.down, 3.7f, mask);
         if (hit)
         {
-            Debug.Log(hit.collider.name);
             next = new Vector3(hit.point.x, hit.point.y + 1.0f, movement.z);
             GetComponentInParent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         }
