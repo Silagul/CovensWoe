@@ -22,26 +22,30 @@ public class Platform : MonoBehaviour
                     {
                         Physics2D.IgnoreCollision(skeleton.defaultCollider, GetComponent<Collider2D>(), true);
                         Physics2D.IgnoreCollision(skeleton.hollowCollider, GetComponent<Collider2D>(), true);
+                        Physics2D.IgnoreCollision(skeleton.transform.GetComponentsInChildren<BoxCollider2D>()[1], GetComponent<Collider2D>(), true);
                     }
                     else
                     {
                         Physics2D.IgnoreCollision(skeleton.defaultCollider, GetComponent<Collider2D>(), false);
                         Physics2D.IgnoreCollision(skeleton.hollowCollider, GetComponent<Collider2D>(), false);
+                        Physics2D.IgnoreCollision(skeleton.transform.GetComponentsInChildren<BoxCollider2D>()[1], GetComponent<Collider2D>(), false);
                     }
                 }
                 else
                 {
                     Human human = creature.GetComponent<Human>();
                     Vector3 localPosition = transform.InverseTransformPoint(creature.transform.position);
-                    if (localPosition.y + 0.1f < offsetY || (creature.isActive && Input.GetKey(KeyCode.S)))
+                    if (localPosition.y + 0.1f < offsetY || (creature.isActive && Input.GetKey(InputManager.instance.down)))
                     {
                         Physics2D.IgnoreCollision(human.defaultCollider, GetComponent<Collider2D>(), true);
                         Physics2D.IgnoreCollision(human.hollowCollider, GetComponent<Collider2D>(), true);
+                        Physics2D.IgnoreCollision(human.transform.GetComponentInChildren<BoxCollider2D>(), GetComponent<Collider2D>() , true);
                     }
                     else
                     {
                         Physics2D.IgnoreCollision(human.defaultCollider, GetComponent<Collider2D>(), false);
                         Physics2D.IgnoreCollision(human.hollowCollider, GetComponent<Collider2D>(), false);
+                        Physics2D.IgnoreCollision(human.transform.GetComponentInChildren<BoxCollider2D>(), GetComponent<Collider2D>(), false);
                     }
                 }
 

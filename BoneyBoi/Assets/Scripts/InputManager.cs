@@ -16,6 +16,7 @@ public class InputManager : MonoBehaviour
     public KeyCode menu {get; set;}
     public KeyCode possess {get; set;}
     public KeyCode grab {get; set;}
+    public KeyCode crouch { get; set; }
 
     void Awake()
     {
@@ -33,5 +34,6 @@ public class InputManager : MonoBehaviour
         menu = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("MenuKey", "Escape"));
         possess = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("PossessKey", "Q"));
         grab = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("GrabKey", "F"));
+        crouch = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString("CrouchKey", "LeftControl"));
     }
 }
