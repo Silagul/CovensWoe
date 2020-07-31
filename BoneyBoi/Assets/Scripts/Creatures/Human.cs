@@ -100,11 +100,9 @@ public class Human : Creature
                 SetState("Jump");
             }
             else
-            {
                 vertical = Mathf.Max(0.0f, vertical);
-            }
         }
-        else { vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.deltaTime); }
+        else { vertical = Mathf.Max(-20.0f, vertical - 9.81f * Time.fixedDeltaTime); }
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
