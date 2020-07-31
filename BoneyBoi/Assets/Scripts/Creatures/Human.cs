@@ -26,6 +26,7 @@ public class Human : Creature
     //public PolygonCollider2D defaultCollider;
     public CapsuleCollider2D defaultCollider;
     public PolygonCollider2D hollowCollider;
+    public CapsuleCollider2D monsterCollider;
 
     void Start()
     {
@@ -81,12 +82,16 @@ public class Human : Creature
             {
                 defaultCollider.size = new Vector2(4f, 6f);
                 defaultCollider.offset = new Vector2(0f, 3f);
+                monsterCollider.size = new Vector2(4f, 6f);
+                monsterCollider.offset = new Vector2(0f, 3f);
                 anim.SetBool("IsCrouching", true);
             }
             else
             {
                 defaultCollider.size = new Vector2(4f, 12f);
                 defaultCollider.offset = new Vector2(0f, 6f);
+                monsterCollider.size = new Vector2(4f, 12f);
+                monsterCollider.offset = new Vector2(0f, 6f);
                 anim.SetBool("IsCrouching", false);
             }
         }

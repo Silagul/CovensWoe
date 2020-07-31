@@ -39,13 +39,15 @@ public class Platform : MonoBehaviour
                     {
                         Physics2D.IgnoreCollision(human.defaultCollider, GetComponent<Collider2D>(), true);
                         Physics2D.IgnoreCollision(human.hollowCollider, GetComponent<Collider2D>(), true);
-                        Physics2D.IgnoreCollision(human.transform.GetComponentInChildren<BoxCollider2D>(), GetComponent<Collider2D>() , true);
+                        Physics2D.IgnoreCollision(human.transform.GetComponentInChildren<BoxCollider2D>(), GetComponent<Collider2D>() , true);  //this is for PopUp sign collider
+                        Physics2D.IgnoreCollision(human.transform.GetComponentsInChildren<CapsuleCollider2D>()[1], GetComponent<Collider2D>(), true);   //this is for Monster collider
                     }
                     else
                     {
                         Physics2D.IgnoreCollision(human.defaultCollider, GetComponent<Collider2D>(), false);
                         Physics2D.IgnoreCollision(human.hollowCollider, GetComponent<Collider2D>(), false);
-                        Physics2D.IgnoreCollision(human.transform.GetComponentInChildren<BoxCollider2D>(), GetComponent<Collider2D>(), false);
+                        Physics2D.IgnoreCollision(human.transform.GetComponentInChildren<BoxCollider2D>(), GetComponent<Collider2D>(), false);  //this is for PopUp sign collider
+                        Physics2D.IgnoreCollision(human.transform.GetComponentsInChildren<CapsuleCollider2D>()[1], GetComponent<Collider2D>(), false);  //this is for Monster collider
                     }
                 }
 
