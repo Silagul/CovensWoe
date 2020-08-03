@@ -24,10 +24,8 @@ public class DeathBox : MonoBehaviour
     private void LateUpdate()
     {
         if(deathBoxType == deathBoxEnum.OutOfBounds)
-        {
+            if (player != null)
             transform.position = new Vector3(player.transform.position.x, -10f);
-        }
-
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -35,30 +33,30 @@ public class DeathBox : MonoBehaviour
         switch(deathBoxType)
         {
             case deathBoxEnum.SpikePit:
-                if (collision.gameObject.transform.parent.name == "Human")
+                if (collision.transform.parent.name == "Human")
                 {
-                    collision.gameObject.transform.parent.GetComponent<Animator>().SetBool("Foothold", true);
-                    collision.gameObject.transform.parent.GetComponent<Human>().SetState("Dead");
+                    collision.transform.parent.GetComponent<Animator>().SetBool("Foothold", true);
+                    collision.transform.parent.GetComponent<Human>().SetState("Dead");
                     AudioManager.CreateAudio(spikePit, false, true, this.transform);
                 }
                 break;
             case deathBoxEnum.OutOfBounds:
-                if(collision.tag == "Player" || collision.gameObject.transform.parent.name == "Human")
+                if(collision.tag == "Player" || collision.transform.parent.name == "Human")
                 {
                     GameObject.Find("Human").GetComponent<Human>().SetState("Dead");
                 }
                 break;
             case deathBoxEnum.Fire:
-                if (collision.gameObject.transform.parent.name == "Human")
+                if (collision.transform.parent.name == "Human")
                 {
-                    collision.gameObject.transform.parent.GetComponent<Animator>().SetBool("Foothold", true);
-                    collision.gameObject.transform.parent.GetComponent<Human>().SetState("Dead");
+                    collision.transform.parent.GetComponent<Animator>().SetBool("Foothold", true);
+                    collision.transform.parent.GetComponent<Human>().SetState("Dead");
                     //AudioManager.CreateAudio(fire, false, true, this.transform);
 
                     GameObject ash = Resources.Load<GameObject>("Prefabs/Ash2");
-                    Instantiate(ash, collision.gameObject.transform.position + new Vector3(0,1.5f,0), transform.rotation);
+                    Instantiate(ash, collision.transform.position + new Vector3(0,1.5f,0), transform.rotation);
                     SpriteRenderer[] sprites;
-                    sprites = collision.gameObject.GetComponentsInChildren<SpriteRenderer>();
+                    sprites = collision.GetComponentsInChildren<SpriteRenderer>();
                     foreach (SpriteRenderer sprite in sprites)
                         sprite.enabled = false;
                 }

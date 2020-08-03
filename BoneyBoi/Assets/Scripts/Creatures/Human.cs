@@ -26,6 +26,7 @@ public class Human : Creature
     //public PolygonCollider2D defaultCollider;
     public CapsuleCollider2D defaultCollider;
     public PolygonCollider2D hollowCollider;
+    public Collider2D crouchCollider;
 
     void Start()
     {
@@ -103,6 +104,7 @@ public class Human : Creature
                 vertical = Mathf.Max(0.0f, vertical);
         }
         else { vertical = Mathf.Max(-20.0f, vertical - 9.81f * Time.fixedDeltaTime); }
+
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);

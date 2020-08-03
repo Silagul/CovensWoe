@@ -6,6 +6,7 @@ public class Platform : MonoBehaviour
 {
     public float offsetY;
     public int floorCount = 0;
+
     void Update()
     {
         foreach (Creature creature in Creature.creatures)
@@ -57,7 +58,7 @@ public class Platform : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
             collision.transform.parent = transform;
         else if (collision.gameObject.tag == "Floor")
             floorCount++;
@@ -65,7 +66,7 @@ public class Platform : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.layer == LayerMask.NameToLayer("Creature"))
             collision.transform.parent = GameManager.world.transform;
         else if (collision.gameObject.tag == "Floor")
             floorCount--;
