@@ -26,7 +26,7 @@ public class Human : Creature
     //public PolygonCollider2D defaultCollider;
     public CapsuleCollider2D defaultCollider;
     public PolygonCollider2D hollowCollider;
-    public Collider2D crouchCollider;
+    public CapsuleCollider2D monsterCollider;
 
     void Start()
     {
@@ -82,12 +82,16 @@ public class Human : Creature
             {
                 defaultCollider.size = new Vector2(4f, 6f);
                 defaultCollider.offset = new Vector2(0f, 3f);
+                monsterCollider.size = new Vector2(4f, 6f);
+                monsterCollider.offset = new Vector2(0f, 3f);
                 anim.SetBool("IsCrouching", true);
             }
             else
             {
                 defaultCollider.size = new Vector2(4f, 12f);
                 defaultCollider.offset = new Vector2(0f, 6f);
+                monsterCollider.size = new Vector2(4f, 12f);
+                monsterCollider.offset = new Vector2(0f, 6f);
                 anim.SetBool("IsCrouching", false);
             }
         }
@@ -104,7 +108,6 @@ public class Human : Creature
                 vertical = Mathf.Max(0.0f, vertical);
         }
         else { vertical = Mathf.Max(-20.0f, vertical - 9.81f * Time.fixedDeltaTime); }
-
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
