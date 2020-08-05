@@ -66,7 +66,10 @@ public class GameManager : MonoBehaviour
     private Human human;
 
     public GameObject deathBox;
-    public GameObject[] levels;
+    //public GameObject[] levels;
+    public List<GameObject> levels;
+
+    //public List<GameObject> test;
 
     private void Awake()
     {
@@ -77,7 +80,7 @@ public class GameManager : MonoBehaviour
         sfxSlider.value = PlayerPrefs.GetFloat("SFXVol");
         brightnessSlider.value = PlayerPrefs.GetFloat("Brightness");
 
-        levels = Resources.LoadAll<GameObject>("Prefabs/World/Master");
+        levels = new List<GameObject>(Resources.LoadAll<GameObject>("Prefabs/World/Master"));
     }
 
     void Start()
@@ -115,6 +118,7 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetFloat("SFXVol", sfxSlider.value);
             PlayerPrefs.SetFloat("Brightness", brightnessSlider.value);
             SetAudio();
+            PlayerPrefs.SetString("Chunk_Ch5", "");
             PlayerPrefs.Save();
         }
 
@@ -392,9 +396,29 @@ public class GameManager : MonoBehaviour
             {
                 if(PlayerPrefs.HasKey(level.name))
                 {
-                    AnalyticsEvent.LevelComplete(level.name);
-                    ar = AnalyticsEvent.LevelComplete(level.name);
-                    Debug.Log("LevelComplete " + ar.ToString());
+                    AnalyticsEvent.LevelStart(level.name);
+                    ar = AnalyticsEvent.LevelStart(level.name);
+                    Debug.Log("LevelStart " + ar.ToString());
+
+                    int index = levels.IndexOf(level) + 1;
+                    try
+                    {
+                        if (PlayerPrefs.HasKey(levels[index].name) && index <= levels.Count)
+                        {
+                            AnalyticsEvent.LevelComplete(level.name);
+                            ar = AnalyticsEvent.LevelComplete(level.name);
+                            Debug.Log("LevelComplete " + ar.ToString());
+                        }
+                    }
+                    catch
+                    {
+                        if (PlayerPrefs.HasKey("Chunk_Ch5"))
+                        {
+                            AnalyticsEvent.LevelComplete(level.name);
+                            ar = AnalyticsEvent.LevelComplete(level.name);
+                            Debug.Log("LevelComplete " + ar.ToString());
+                        }
+                    }
                 }
             }
 
