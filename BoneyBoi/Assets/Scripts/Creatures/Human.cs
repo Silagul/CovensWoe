@@ -14,6 +14,8 @@ public class Human : Creature
     public float horizontal = 0.0f;
     float acceleration = 16.0f;
     float timer = 0.0f;
+    bool jumping = true;
+    bool footheld = false;
 
     private GameManager gameManager;
     private float realStartTime = 0f;
@@ -24,7 +26,7 @@ public class Human : Creature
     public AudioClip deathAudio;
 
     //public PolygonCollider2D defaultCollider;
-    public CapsuleCollider2D defaultCollider;
+    public PolygonCollider2D defaultCollider;
     public PolygonCollider2D hollowCollider;
     public CapsuleCollider2D monsterCollider;
 
@@ -44,7 +46,7 @@ public class Human : Creature
         defaultCollider.enabled = true;
         hollowCollider.enabled = false;
         currentSpeed = speed;
-        Instantiate(Resources.Load<GameObject>("Prefabs/DeathBox"),GameManager.world.transform);
+        Instantiate(Resources.Load<GameObject>("Prefabs/DeathBox"), GameManager.world.transform);
     }
 
     void Movement()
@@ -80,16 +82,14 @@ public class Human : Creature
 
             if (Input.GetKey(InputManager.instance.crouch) && anim.GetFloat("Horizontal") == 0f)
             {
-                defaultCollider.size = new Vector2(4f, 6f);
-                defaultCollider.offset = new Vector2(0f, 3f);
+                defaultCollider.points = new Vector2[] { new Vector2(0, 0), new Vector2(-2, 2), new Vector2(-2, 6), new Vector2(0, 8), new Vector2(2, 6), new Vector2(2, 2) };
                 monsterCollider.size = new Vector2(4f, 6f);
                 monsterCollider.offset = new Vector2(0f, 3f);
                 anim.SetBool("IsCrouching", true);
             }
             else
             {
-                defaultCollider.size = new Vector2(4f, 12f);
-                defaultCollider.offset = new Vector2(0f, 6f);
+                defaultCollider.points = new Vector2[] { new Vector2(0, 0), new Vector2(-2, 2), new Vector2(-2, 10), new Vector2(0, 12), new Vector2(2, 10), new Vector2(2, 2) };
                 monsterCollider.size = new Vector2(4f, 12f);
                 monsterCollider.offset = new Vector2(0f, 6f);
                 anim.SetBool("IsCrouching", false);
@@ -99,16 +99,21 @@ public class Human : Creature
 
         if (floor != null)
         {
+            footheld = true;
             if (Input.GetKeyDown(InputManager.instance.jump) && isActive)
-            {
-                vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f);
                 SetState("Jump");
-            }
             else
                 vertical = Mathf.Max(0.0f, vertical);
         }
-        else { vertical = Mathf.Max(-20.0f, vertical - 9.81f * Time.fixedDeltaTime); }
+        else
+            vertical = Mathf.Max(-20.0f, vertical - 9.81f * Time.fixedDeltaTime);
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
+        if (!jumping && footheld && !Input.GetKey(InputManager.instance.down))
+        {
+            footheld = false;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(0, 0.1f), Vector2.down, 0.2f);
+            if (hit) transform.position = hit.point;
+        }
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         if (horizontal > 0.0f) transform.localScale = new Vector3(-0.2f, 0.2f, 1);
         else if (horizontal < 0.0f) transform.localScale = new Vector3(0.2f, 0.2f, 1);
@@ -186,6 +191,8 @@ public class Human : Creature
                 anim.Play("Jump");
                 updates.Add(Jump);
                 timer = 0.0f;
+                jumping = true;
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f);
                 break;
             case "Arise":
                 isActive = false;
@@ -227,6 +234,7 @@ public class Human : Creature
     {
         if (collision.transform.tag == "Floor" && !anim.GetBool("Foothold"))
         {
+            jumping = false;
             float t = vertical / -9.81f;
             float fallDistance = -9.81f * t * t * 0.5f;
             anim.SetBool("Foothold", true);

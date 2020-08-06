@@ -13,6 +13,8 @@ public class Skeleton : Creature
     float acceleration = 16.0f;
     float timer = 0.0f;
     public bool canRotate = true;
+    bool jumping = false;
+    bool footheld = false;
 
     private GameManager gameManager;
     private Vector3 childPosition;
@@ -72,16 +74,21 @@ public class Skeleton : Creature
 
         if (floor != null)
         {
+            footheld = true;
             if (Input.GetKey(InputManager.instance.jump) && isActive)
-            {
-                vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.4f);
                 SetState("Jump");
-            }
             else
                 vertical = Mathf.Max(0.0f, vertical);
         }
         else vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime);
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
+        if (!jumping && footheld && !Input.GetKey(InputManager.instance.down))
+        {
+            footheld = false;
+            RaycastHit2D hit = Physics2D.Raycast(transform.position + new Vector3(0, 0.1f), Vector2.down, 0.2f);
+            if (hit) transform.position = hit.point;
+        }
+        transform.rotation = Quaternion.identity;
         GetComponent<Rigidbody2D>().velocity = Vector3.zero;
         if (canRotate)
         {
@@ -163,7 +170,9 @@ public class Skeleton : Creature
                 isActive = false;
                 anim.Play("Jumping");
                 anim.SetBool("Foothold", false);
+                vertical = Mathf.Sqrt(-2.0f * -9.81f * 4.4f);
                 updates.Add(Jump);
+                jumping = true;
                 timer = 0.0f;
                 break;
             case "Arise":
@@ -215,6 +224,7 @@ public class Skeleton : Creature
     {
         if (collision.transform.tag == "Floor" && !anim.GetBool("Foothold"))
         {
+            jumping = false;
             anim.SetBool("Foothold", true);
             AudioManager.CreateAudio(landingAudio, false, true, transform);
         }
