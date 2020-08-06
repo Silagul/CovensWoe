@@ -26,7 +26,7 @@ public class Creature : MonoBehaviour
         if (collisions.ContainsKey(collider.tag))
             collisions[collider.tag].Add(collider.gameObject);
     }
-    void OnTriggerExit2D(Collider2D collider)
+    public void OnTriggerExit2D(Collider2D collider)
     {
         if (collisions.ContainsKey(collider.tag))
             collisions[collider.tag].Remove(collider.gameObject);
