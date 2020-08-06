@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     private float timeSinceSoul = 0f;
     //[SerializeField]
     private int deaths = 0;
+    [Tooltip("Only enable for a BUILD.")]
     public bool analyticsEnabled = true;
 
     //These determine how far the soul/skeleton can move from the player
@@ -65,7 +66,10 @@ public class GameManager : MonoBehaviour
     private Human human;
 
     public GameObject deathBox;
+    //public GameObject[] levels;
+    public List<GameObject> levels;
 
+    //public List<GameObject> test;
 
     private void Awake()
     {
@@ -75,6 +79,8 @@ public class GameManager : MonoBehaviour
         musicSlider.value = PlayerPrefs.GetFloat("MusicVol");
         sfxSlider.value = PlayerPrefs.GetFloat("SFXVol");
         brightnessSlider.value = PlayerPrefs.GetFloat("Brightness");
+
+        levels = new List<GameObject>(Resources.LoadAll<GameObject>("Prefabs/World/Master"));
     }
 
     void Start()
@@ -112,6 +118,7 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.SetFloat("SFXVol", sfxSlider.value);
             PlayerPrefs.SetFloat("Brightness", brightnessSlider.value);
             SetAudio();
+            PlayerPrefs.SetString("Chunk_Ch5", "");
             PlayerPrefs.Save();
         }
 
@@ -378,13 +385,46 @@ public class GameManager : MonoBehaviour
                 {"Soul", timeAsSoul}
             });
 
+            AnalyticsResult ar;
+
             AnalyticsEvent.Custom("Deaths", new Dictionary<string, object>
             {
                 {"Deaths", deaths}
             });
 
-            AnalyticsResult ar = AnalyticsEvent.Custom("TimeSpentAs");
+            foreach (GameObject level in levels)
+            {
+                if(PlayerPrefs.HasKey(level.name))
+                {
+                    AnalyticsEvent.LevelStart(level.name);
+                    ar = AnalyticsEvent.LevelStart(level.name);
+                    Debug.Log("LevelStart " + ar.ToString());
+
+                    int index = levels.IndexOf(level) + 1;
+                    try
+                    {
+                        if (PlayerPrefs.HasKey(levels[index].name) && index <= levels.Count)
+                        {
+                            AnalyticsEvent.LevelComplete(level.name);
+                            ar = AnalyticsEvent.LevelComplete(level.name);
+                            Debug.Log("LevelComplete " + ar.ToString());
+                        }
+                    }
+                    catch
+                    {
+                        if (PlayerPrefs.HasKey("Chunk_Ch5"))
+                        {
+                            AnalyticsEvent.LevelComplete(level.name);
+                            ar = AnalyticsEvent.LevelComplete(level.name);
+                            Debug.Log("LevelComplete " + ar.ToString());
+                        }
+                    }
+                }
+            }
+
+            ar = AnalyticsEvent.Custom("TimeSpentAs");
             Debug.Log("TimeSpentAs result is " + ar.ToString());
+
             ar = AnalyticsEvent.Custom("Deaths");
             Debug.Log("Deaths result is " + ar.ToString());
         }

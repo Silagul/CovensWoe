@@ -17,6 +17,7 @@ public class PopUpScript : MonoBehaviour
     private GameObject canvasPopUp;
     private TextMeshProUGUI messageText;
     private TextMeshProUGUI buttonText;
+    private BoxCollider2D collider;
 
 
     private void Start()
@@ -25,6 +26,20 @@ public class PopUpScript : MonoBehaviour
         messageText = canvasPopUp.transform.GetChild(0).GetComponentInChildren<TextMeshProUGUI>();
         buttonText = canvasPopUp.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
         //canvasPopUp.SetActive(false);
+        collider = GetComponent<BoxCollider2D>();
+    }
+
+    private void Update()
+    {
+        if(transform.parent.tag == "Player" && collider.enabled == true)
+        {
+            collider.enabled = false;
+        }
+
+        else if (transform.parent.tag == "Hollow" && collider.enabled == false)
+        {
+            collider.enabled = true;
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
