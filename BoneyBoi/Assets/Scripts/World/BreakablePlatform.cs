@@ -4,10 +4,16 @@ using UnityEngine;
 
 public class BreakablePlatform : MonoBehaviour
 {
+    public GameObject particle;
+
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.name == "Box" && collision.relativeVelocity.y < -1.0f)
+        {
             Break();
+        }
+
+        Instantiate(particle, this.transform);
     }
 
     void Break()
