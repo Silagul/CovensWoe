@@ -27,12 +27,15 @@ public class Human : Creature
 
     //public PolygonCollider2D defaultCollider;
     public PolygonCollider2D defaultCollider;
-    public PolygonCollider2D hollowCollider;
+    Vector2[] defaultPoints, hollowPoints, crouchPoints;
     public CapsuleCollider2D monsterCollider;
 
     void Start()
     {
         creatures.Add(this);
+        defaultPoints = transform.Find("DefaultCollider").GetComponent<PolygonCollider2D>().points;
+        hollowPoints = transform.Find("HollowCollider").GetComponent<PolygonCollider2D>().points;
+        crouchPoints = transform.Find("CrouchCollider").GetComponent<PolygonCollider2D>().points;
         collisions.Add("Floor", new List<GameObject>());
         collisions.Add("Slowdown", new List<GameObject>());
         gameManager = GameObject.Find("Game").GetComponent<GameManager>();
@@ -43,8 +46,7 @@ public class Human : Creature
         name = name.Substring(0, name.Length - 7);
         anim = GetComponent<Animator>();
         SetState("Default");
-        defaultCollider.enabled = true;
-        hollowCollider.enabled = false;
+        defaultCollider.points = defaultPoints;
         currentSpeed = speed;
         Instantiate(Resources.Load<GameObject>("Prefabs/DeathBox"), GameManager.world.transform);
     }
@@ -82,14 +84,14 @@ public class Human : Creature
 
             if (Input.GetKey(InputManager.instance.crouch) && anim.GetFloat("Horizontal") == 0f)
             {
-                defaultCollider.points = new Vector2[] { new Vector2(0, 0), new Vector2(-2, 2), new Vector2(-2, 6), new Vector2(0, 8), new Vector2(2, 6), new Vector2(2, 2) };
+                defaultCollider.points = crouchPoints;
                 monsterCollider.size = new Vector2(4f, 6f);
                 monsterCollider.offset = new Vector2(0f, 3f);
                 anim.SetBool("IsCrouching", true);
             }
             else
             {
-                defaultCollider.points = new Vector2[] { new Vector2(0, 0), new Vector2(-2, 2), new Vector2(-2, 10), new Vector2(0, 12), new Vector2(2, 10), new Vector2(2, 2) };
+                defaultCollider.points = defaultPoints;
                 monsterCollider.size = new Vector2(4f, 12f);
                 monsterCollider.offset = new Vector2(0f, 6f);
                 anim.SetBool("IsCrouching", false);
@@ -126,8 +128,7 @@ public class Human : Creature
         if (isActive && Input.GetKeyDown(InputManager.instance.possess) && visibleTime == 0.0f)
         {
             SetState("Hollow");
-            defaultCollider.enabled = false;
-            hollowCollider.enabled = true;
+            defaultCollider.points = hollowPoints;
             gameManager.TimeAsChild();
             Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
         }
@@ -148,11 +149,11 @@ public class Human : Creature
     void Arise()
     {
         timer += Time.deltaTime;
+        GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         if (timer > 1.0f)
         {
             SetState("Default");
-            defaultCollider.enabled = true;
-            hollowCollider.enabled = false;
+            defaultCollider.points = defaultPoints;
             gameManager.TimeSinceChild();
         }
     }
@@ -162,7 +163,10 @@ public class Human : Creature
         GetComponent<Rigidbody2D>().velocity = Vector2.zero;
         timer += Time.deltaTime;
         if (timer > 0.5f)
+        {
+            jumping = true;
             SetState("Default");
+        }
     }
 
     void Land()
@@ -191,14 +195,12 @@ public class Human : Creature
                 anim.Play("Jump");
                 updates.Add(Jump);
                 timer = 0.0f;
-                jumping = true;
                 vertical = Mathf.Sqrt(-2.0f * -9.81f * 2.4f);
                 break;
             case "Arise":
                 isActive = false;
                 tag = "Player";
                 defaultCollider.tag = tag;
-                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", true);
                 updates.Add(Arise);
                 timer = 0.0f;
@@ -213,14 +215,12 @@ public class Human : Creature
                 isActive = false;
                 tag = "Hollow";
                 defaultCollider.tag = tag;
-                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", false);
                 fixedUpdates.Add(Movement);
                 break;
             case "Default":
                 tag = "Player";
                 defaultCollider.tag = tag;
-                hollowCollider.tag = tag;
                 isActive = true;
                 updates.Add(Interact);
                 fixedUpdates.Add(Movement);
@@ -235,6 +235,7 @@ public class Human : Creature
         if (collision.transform.tag == "Floor" && !anim.GetBool("Foothold"))
         {
             jumping = false;
+            vertical = Mathf.Max(0.0f, vertical);
             float t = vertical / -9.81f;
             float fallDistance = -9.81f * t * t * 0.5f;
             anim.SetBool("Foothold", true);

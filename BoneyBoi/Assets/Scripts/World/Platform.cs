@@ -19,16 +19,14 @@ public class Platform : MonoBehaviour
                     bool isDragging = false;
                     if (skeleton.CollidesWith("Movable") != null && Input.GetKey(InputManager.instance.interact)) isDragging = true;
                     Vector3 localPosition = transform.InverseTransformPoint(creature.transform.position);
-                    if (localPosition.y + 0.1f < offsetY || (creature.isActive && Input.GetKey(InputManager.instance.down) && !isDragging))
+                    if (localPosition.y < offsetY - 0.01f || (creature.isActive && Input.GetKey(InputManager.instance.down) && !isDragging))
                     {
                         Physics2D.IgnoreCollision(skeleton.defaultCollider, GetComponent<Collider2D>(), true);
-                        Physics2D.IgnoreCollision(skeleton.hollowCollider, GetComponent<Collider2D>(), true);
                         Physics2D.IgnoreCollision(skeleton.transform.GetComponentsInChildren<BoxCollider2D>()[0], GetComponent<Collider2D>(), true);
                     }
                     else
                     {
                         Physics2D.IgnoreCollision(skeleton.defaultCollider, GetComponent<Collider2D>(), false);
-                        Physics2D.IgnoreCollision(skeleton.hollowCollider, GetComponent<Collider2D>(), false);
                         Physics2D.IgnoreCollision(skeleton.transform.GetComponentsInChildren<BoxCollider2D>()[0], GetComponent<Collider2D>(), false);
                     }
                 }
@@ -36,26 +34,21 @@ public class Platform : MonoBehaviour
                 {
                     Human human = creature.GetComponent<Human>();
                     Vector3 localPosition = transform.InverseTransformPoint(creature.transform.position);
-                    if (localPosition.y + 0.1f < offsetY || (creature.isActive && Input.GetKey(InputManager.instance.down)))
+                    if (localPosition.y < offsetY - 0.01f || (creature.isActive && Input.GetKey(InputManager.instance.down)))
                     {
                         Physics2D.IgnoreCollision(human.defaultCollider, GetComponent<Collider2D>(), true);
-                        Physics2D.IgnoreCollision(human.hollowCollider, GetComponent<Collider2D>(), true);
                         Physics2D.IgnoreCollision(human.transform.GetComponentInChildren<BoxCollider2D>(), GetComponent<Collider2D>() , true);  //this is for PopUp sign collider
                         Physics2D.IgnoreCollision(human.transform.GetComponentsInChildren<CapsuleCollider2D>()[0], GetComponent<Collider2D>(), true);   //this is for Monster collider
                     }
                     else
                     {
                         Physics2D.IgnoreCollision(human.defaultCollider, GetComponent<Collider2D>(), false);
-                        Physics2D.IgnoreCollision(human.hollowCollider, GetComponent<Collider2D>(), false);
                         Physics2D.IgnoreCollision(human.transform.GetComponentInChildren<BoxCollider2D>(), GetComponent<Collider2D>(), false);  //this is for PopUp sign collider
                         Physics2D.IgnoreCollision(human.transform.GetComponentsInChildren<CapsuleCollider2D>()[0], GetComponent<Collider2D>(), false);  //this is for Monster collider
                     }
                 }
-
-
             }
         }
-        
     }
 
     void OnCollisionEnter2D(Collision2D collision)

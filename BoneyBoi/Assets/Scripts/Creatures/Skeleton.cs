@@ -25,11 +25,13 @@ public class Skeleton : Creature
     public AudioClip landingAudio;
 
     public PolygonCollider2D defaultCollider;
-    public PolygonCollider2D hollowCollider;
+    Vector2[] defaultPoints, hollowPoints;
 
     void Start()
     {
         creatures.Add(this);
+        defaultPoints = transform.Find("DefaultCollider").GetComponent<PolygonCollider2D>().points;
+        hollowPoints = transform.Find("HollowCollider").GetComponent<PolygonCollider2D>().points;
         collisions.Add("Floor", new List<GameObject>());
         collisions.Add("Movable", new List<GameObject>());
         collisions.Add("Slowdown", new List<GameObject>());
@@ -80,7 +82,7 @@ public class Skeleton : Creature
             else
                 vertical = Mathf.Max(0.0f, vertical);
         }
-        else vertical = Mathf.Max(-9.81f, vertical - 9.81f * Time.fixedDeltaTime);
+        else vertical = Mathf.Max(-20.0f, vertical - 9.81f * Time.fixedDeltaTime);
         transform.position += new Vector3(horizontal, vertical) * Time.fixedDeltaTime;
         if (!jumping && footheld && !Input.GetKey(InputManager.instance.down))
         {
@@ -129,8 +131,7 @@ public class Skeleton : Creature
     
     void ReleasePossession()
     {
-        defaultCollider.enabled = false;
-        hollowCollider.enabled = true;
+        defaultCollider.points = hollowPoints;
         gameManager.TimeAsSkeleton();
         AudioManager.CreateAudio(collapseAudio[Random.Range(0, collapseAudio.Length)], false, true, transform);
         Instantiate(Resources.Load<GameObject>("Prefabs/Soul"), transform.position + Vector3.up, Quaternion.identity);
@@ -142,8 +143,7 @@ public class Skeleton : Creature
         if (timer > 1.0f)
         {
             SetState("Default");
-            hollowCollider.enabled = false;
-            defaultCollider.enabled = true;
+            defaultCollider.points = defaultPoints;
             gameManager.TimeSinceSkeleton();
             AudioManager.CreateAudio(buildAudio, false, true, transform);
             //childPosition = GameObject.Find("Human").transform.localPosition;
@@ -180,7 +180,6 @@ public class Skeleton : Creature
                 anim.SetBool("IsPossessed", true);
                 tag = "Player";
                 defaultCollider.tag = tag;
-                hollowCollider.tag = tag;
                 updates.Add(Arise);
                 timer = 0.0f;
                 break;
@@ -188,7 +187,6 @@ public class Skeleton : Creature
                 isActive = false;
                 tag = "Hollow";
                 defaultCollider.tag = tag;
-                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", false);
                 fixedUpdates.Add(Movement);
                 Prompt.interactKey.SetActive(false);
@@ -198,14 +196,12 @@ public class Skeleton : Creature
                 isActive = false;
                 tag = "Corpse";
                 defaultCollider.tag = tag;
-                hollowCollider.tag = tag;
                 anim.SetBool("IsPossessed", false);
                 ReleasePossession();
                 break;
             case "Default":
                 tag = "Player";
                 defaultCollider.tag = tag;
-                hollowCollider.tag = tag;
                 isActive = true;
                 fixedUpdates.Add(Movement);
                 updates.Add(Interact);
