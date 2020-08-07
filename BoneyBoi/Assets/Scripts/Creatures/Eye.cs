@@ -5,33 +5,52 @@ using UnityEngine;
 public class Eye : MonoBehaviour
 {
     float time;
-    float duration;
+    [Range(0.0f, 5.0f)]
+    public float duration;
     Vector2 lookat;
+    Vector2 offset;
+    System.Action update;
     void Start()
     {
-        transform.rotation = Quaternion.Euler(0, 0, Random.Range(0.0f, 360.0f));
-        duration = Random.Range(0.5f, 1.0f);
+        offset = transform.GetChild(0).localPosition;
         time = Random.Range(0.0f, duration);
-        lookat = Random.insideUnitCircle.normalized * 0.1f;
+        lookat = Random.insideUnitCircle.normalized * 0.2f;
+        update = WhileActive;
     }
 
     void Update()
+    {
+        update.Invoke();
+    }
+
+    void WhileActive()
     {
         time += Time.deltaTime;
         if (time >= duration)
         {
             time -= duration;
-            duration = Random.Range(0.5f, 1.0f);
-            lookat = Random.insideUnitCircle.normalized * 0.1f;
-        }
-
-        Vector2 localDirection = transform.InverseTransformDirection(GameObject.FindGameObjectWithTag("Player").transform.position - transform.position);
-        if (Camera.main.transform.position.y > 4.0f)
-        {
-            localDirection.Normalize();
-            transform.GetChild(0).localPosition = localDirection * 0.1f;
+            update = WhileBlink;
+            transform.GetChild(2).gameObject.SetActive(true);
         }
         else
-            transform.GetChild(0).localPosition = lookat;
+        {
+            string playerName = GameObject.FindGameObjectWithTag("Player").name;
+            if (playerName == "Soul")
+            {
+                Vector2 localDirection = transform.InverseTransformVector(Camera.main.transform.position - transform.position);
+                transform.GetChild(0).localPosition = offset + localDirection.normalized * 0.3f;
+            }
+            else transform.GetChild(0).localPosition = offset + lookat;
+        }
+    }
+    void WhileBlink()
+    {
+        time += Time.deltaTime;
+        if (time > 0.1f)
+        {
+            lookat = Random.insideUnitCircle.normalized * 0.3f;
+            transform.GetChild(2).gameObject.SetActive(false);
+            update = WhileActive;
+        }
     }
 }
