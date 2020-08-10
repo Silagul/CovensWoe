@@ -48,8 +48,7 @@ public class Movable : Interactable
         transform.parent.gameObject.layer = LayerMask.GetMask("Ignore Raycast");
         LayerMask mask = LayerMask.GetMask("Default");
         RaycastHit2D hit = Physics2D.Raycast(next + new Vector3(0, 0.5f), Vector2.down, 3.7f, mask);
-        if (hit)
-        {
+        if (hit) {
             next = new Vector3(hit.point.x, hit.point.y + 1.0f, movement.z);
             GetComponentInParent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         }
@@ -67,7 +66,7 @@ public class Movable : Interactable
         if (!creature.CollidesWith("Floor", transform.parent.gameObject))
         {
             Skeleton skeleton;
-            if (creature.TryGetComponent(out skeleton) && !HoldOtherThanThis())
+            if (creature.TryGetComponent(out skeleton) && !HoldOtherThanThis() && creature.CollidesWithOtherThan("Floor", transform.parent.gameObject))
             {
                 int floorCount = GetComponentInParent<Platform>().floorCount;
                 if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(InputManager.instance.grab))
@@ -77,7 +76,7 @@ public class Movable : Interactable
                     creature.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = true;
                     if (isOnRight) creature.transform.localScale = new Vector3(0.15f, 0.15f, 1);
                     else creature.transform.localScale = new Vector3(-0.15f, 0.15f, 1);
-                    creature.GetComponent<Animator>().SetBool("Grappling", true);
+                    skeleton.anim.SetBool("Grappling", true);
                     Vector2 nextPosition = creature.transform.position + offset;
                     Movement(nextPosition);
                     if (skeleton.horizontal != 0)
@@ -86,10 +85,10 @@ public class Movable : Interactable
                 else
                 {
                     isHeld = false;
+                    skeleton.canRotate = true;
                     creature.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = false;
-                    creature.GetComponent<Animator>().SetBool("Grappling", false);
-                    creature.GetComponent<Skeleton>().canRotate = true;
-                    creature.GetComponent<Animator>().speed = 1.0f;
+                    skeleton.anim.SetBool("Grappling", false);
+                    skeleton.anim.speed = 1.0f;
                 }
             }
         }

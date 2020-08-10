@@ -103,8 +103,10 @@ public class Skeleton : Creature
         Movable movable;
         if (floor != null && (movable = CollidesWith("Movable", "Box")?.GetComponent<Movable>()) != null)
             movable.Interact(this);
-        if (anim.GetBool("Grappling"))
-            if (!Movable.IsHolding()) anim.SetBool("Grappling", false);
+        if ((anim.GetBool("Grappling") && !Movable.IsHolding()) || Input.GetKey(InputManager.instance.down)) {
+            anim.SetBool("Grappling", false);
+            canRotate = true;
+        }
         //ClampMovement();
     }
 
@@ -188,6 +190,7 @@ public class Skeleton : Creature
                 tag = "Hollow";
                 defaultCollider.tag = tag;
                 anim.SetBool("IsPossessed", false);
+                anim.SetBool("Grappling", false);
                 fixedUpdates.Add(Movement);
                 Prompt.interactKey.SetActive(false);
                 //CameraMovement.SetCameraMask(new string[] { "Default", "IgnoreRaycast", "Creature", "Player", "Physics2D" });
