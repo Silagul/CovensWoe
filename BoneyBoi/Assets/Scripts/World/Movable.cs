@@ -11,13 +11,11 @@ public class Movable : Interactable
     public bool isHeld = false;
     public AudioClip boxMovingAudio;
 
-    void Awake()
-    {
+    void Awake() {
         movables.Add(this);
     }
 
-    private void OnDestroy()
-    {
+    private void OnDestroy() {
         movables.Remove(this);
     }
 
@@ -27,11 +25,10 @@ public class Movable : Interactable
         {
             Skeleton skeleton;
             if (other.TryGetComponent(out skeleton))
-                if (isHeld)
-                {
+                if (isHeld) {
                     isHeld = false;
                     skeleton.transform.GetChild(0).GetComponent<Collider2D>().enabled = false;
-                    skeleton.GetComponent<Skeleton>().canRotate = true;
+                    skeleton.canRotate = true;
                     skeleton.anim.SetBool("Grappling", false);
                     skeleton.anim.speed = 1.0f;
                 }
@@ -48,8 +45,7 @@ public class Movable : Interactable
         transform.parent.gameObject.layer = LayerMask.GetMask("Ignore Raycast");
         LayerMask mask = LayerMask.GetMask("Default");
         RaycastHit2D hit = Physics2D.Raycast(next + new Vector3(0, 0.5f), Vector2.down, 3.7f, mask);
-        if (hit)
-        {
+        if (hit) {
             next = new Vector3(hit.point.x, hit.point.y + 1.0f, movement.z);
             GetComponentInParent<Rigidbody2D>().constraints = RigidbodyConstraints2D.None;
         }
@@ -64,33 +60,28 @@ public class Movable : Interactable
 
     public override void Interact(Creature creature)
     {
-        if (!creature.CollidesWith("Floor", transform.parent.gameObject))
-        {
-            Skeleton skeleton;
-            if (creature.TryGetComponent(out skeleton) && !HoldOtherThanThis())
-            {
-                int floorCount = GetComponentInParent<Platform>().floorCount;
-                if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(InputManager.instance.grab))
-                {
-                    isHeld = true;
-                    skeleton.canRotate = false;
-                    creature.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = true;
-                    if (isOnRight) creature.transform.localScale = new Vector3(0.15f, 0.15f, 1);
-                    else creature.transform.localScale = new Vector3(-0.15f, 0.15f, 1);
-                    creature.GetComponent<Animator>().SetBool("Grappling", true);
-                    Vector2 nextPosition = creature.transform.position + offset;
-                    Movement(nextPosition);
-                    if (skeleton.horizontal != 0)
-                        AudioManager.CreateAudio(boxMovingAudio, false, false, transform);
-                }
-                else
-                {
-                    isHeld = false;
-                    creature.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = false;
-                    creature.GetComponent<Animator>().SetBool("Grappling", false);
-                    creature.GetComponent<Skeleton>().canRotate = true;
-                    creature.GetComponent<Animator>().speed = 1.0f;
-                }
+        Skeleton skeleton;
+        if (creature.TryGetComponent(out skeleton)) {
+            int floorCount = GetComponentInParent<Platform>().floorCount;
+            if (floorCount != 0 && LookAtThis(creature) && Input.GetKey(InputManager.instance.grab)
+                && !HoldOtherThanThis() && skeleton.CollidesWithOtherThan("Floor", transform.parent.gameObject)) {
+                isHeld = true;
+                skeleton.canRotate = false;
+                skeleton.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = true;
+                if (isOnRight) creature.transform.localScale = new Vector3(0.15f, 0.15f, 1);
+                else creature.transform.localScale = new Vector3(-0.15f, 0.15f, 1);
+                skeleton.anim.SetBool("Grappling", true);
+                Vector2 nextPosition = creature.transform.position + offset;
+                Movement(nextPosition);
+                if (skeleton.horizontal != 0)
+                    AudioManager.CreateAudio(boxMovingAudio, false, false, transform);
+            }
+            else {
+                isHeld = false;
+                skeleton.canRotate = true;
+                skeleton.transform.GetChild(0).gameObject.GetComponent<Collider2D>().enabled = false;
+                skeleton.anim.SetBool("Grappling", false);
+                skeleton.anim.speed = 1.0f;
             }
         }
     }

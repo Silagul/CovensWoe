@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class Human : Creature
 {
     Animator anim;
-    public float speed = 4.0f;
+    public float speed;
     public float currentSpeed;
 
     public float vertical = 0.0f;
