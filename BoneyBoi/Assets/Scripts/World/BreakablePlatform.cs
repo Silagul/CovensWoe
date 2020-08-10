@@ -5,6 +5,7 @@ using UnityEngine;
 public class BreakablePlatform : MonoBehaviour
 {
     public GameObject particle;
+    public bool isBridge;
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -13,7 +14,12 @@ public class BreakablePlatform : MonoBehaviour
             Break();
         }
 
-        Instantiate(particle, this.transform);
+        if (isBridge)
+        {
+            Instantiate(particle, this.transform);
+        }
+
+
     }
 
     void Break()
