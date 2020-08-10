@@ -7,7 +7,7 @@ public class EndGame : MonoBehaviour
     public static EndGame instance;
     System.Action update;
     float time = 0.0f;
-    float duration = 20.0f;
+    float duration = 30.0f;
     Transform cameraTransform;
 
     void Start()
@@ -25,7 +25,7 @@ public class EndGame : MonoBehaviour
     void Active()
     {
         time += Time.deltaTime;
-        transform.position = new Vector3(cameraTransform.position.x, cameraTransform.position.y + Mathf.Lerp(-15.0f, 15.0f, time / duration), -5.0f);
+        transform.position = new Vector3(cameraTransform.position.x, cameraTransform.position.y + Mathf.Lerp(-25.0f, 25.0f, time / duration), -5.0f);
         if (time >= duration)
         {
             GameManager.instance.SetGameActive(false);
@@ -43,6 +43,6 @@ public class EndGame : MonoBehaviour
     public void SetActive()
     {
         update = Active;
-        GameObject.FindGameObjectWithTag("Player").GetComponent<Human>().isActive = false;
+
     }
 }
