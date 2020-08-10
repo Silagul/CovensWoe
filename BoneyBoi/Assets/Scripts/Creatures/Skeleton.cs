@@ -103,10 +103,6 @@ public class Skeleton : Creature
         Movable movable;
         if (floor != null && (movable = CollidesWith("Movable", "Box")?.GetComponent<Movable>()) != null)
             movable.Interact(this);
-        if ((anim.GetBool("Grappling") && !Movable.IsHolding()) || Input.GetKey(InputManager.instance.down)) {
-            anim.SetBool("Grappling", false);
-            canRotate = true;
-        }
         //ClampMovement();
     }
 
