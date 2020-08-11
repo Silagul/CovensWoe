@@ -45,6 +45,10 @@ public class DeathBox : MonoBehaviour
                 {
                     GameObject.Find("Human").GetComponent<Human>().SetState("Dead");
                 }
+                //else if(collision.transform.parent.name == "Skeleton")
+                //{
+                //    Destroy(collision.gameObject);
+                //}
                 break;
             case deathBoxEnum.Fire:
                 if (collision.transform.parent.name == "Human")
