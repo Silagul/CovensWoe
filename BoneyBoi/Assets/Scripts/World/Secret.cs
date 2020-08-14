@@ -14,7 +14,7 @@ public class Secret : MonoBehaviour
     void Fadeout()
     {
         time += Time.deltaTime;
-        GetComponent<SpriteRenderer>().color = new Color32(0, 0, 0, (byte)((1.0f - time * 0.5f) * 255.0f));
+        GetComponent<SpriteRenderer>().color = new Color32(0, 0, 0, (byte)((1.0f - time * 0.99f) * 255.0f));
         if (time > 1.0f)
             fadeout = null;
     }
