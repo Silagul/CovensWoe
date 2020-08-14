@@ -79,7 +79,7 @@ public class Backforth : MonoBehaviour
 
     void FadeIn()
     {
-        GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, (byte)(Mathf.Min(time, 1.0f) * 255.0f));
+        //GetComponent<SpriteRenderer>().color = new Color32(255, 255, 255, (byte)(Mathf.Min(time, 1.0f) * 255.0f)); //What dis do?
         if (time > 1.0f)
             fadein = null;
     }
