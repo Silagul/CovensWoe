@@ -21,7 +21,6 @@ public class Fallover : Interactable
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.O)) Interact(null);
         if (active)
         {
             time += Time.deltaTime;

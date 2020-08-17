@@ -38,7 +38,8 @@ public class TimeShroom : Interactable
     {
         GetComponent<SpriteRenderer>().color = deactiveColor;
         foreach (SpriteRenderer mushroomPatch in mushroomPatches)
-            mushroomPatch.color = deactiveColor;
+            if (mushroomPatch != null)
+                mushroomPatch.color = deactiveColor;
     }
 
     void FixedUpdate()
@@ -48,7 +49,8 @@ public class TimeShroom : Interactable
             {
                 shroom.GetComponent<SpriteRenderer>().color = deactiveColor;
                 foreach (SpriteRenderer mushroomPatch in mushroomPatches)
-                    mushroomPatch.color = deactiveColor;
+                    if (mushroomPatch != null)
+                        mushroomPatch.color = deactiveColor;
                 shroom.isActive = false;
                 GameObject timerObject = GameObject.Find(mushroomTimer.name.Substring(0, mushroomTimer.name.Length - 1));
                 Destroy(timerObject);
@@ -60,7 +62,8 @@ public class TimeShroom : Interactable
         isActive = true;
         GetComponent<SpriteRenderer>().color = activeColor;
         foreach (SpriteRenderer mushroomPatch in mushroomPatches)
-            mushroomPatch.color = activeColor;
+            if (mushroomPatch != null)
+                mushroomPatch.color = activeColor;
         if (Time.time > startTime + maxDuration)
             startTime = Time.time;
         bool hasDeactive = false;

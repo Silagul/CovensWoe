@@ -13,9 +13,9 @@ public class Secret : MonoBehaviour
 
     void Fadeout()
     {
-        time += Time.deltaTime;
+        time = Mathf.Min(time + Time.deltaTime, 1.0f);
         GetComponent<SpriteRenderer>().color = new Color32(0, 0, 0, (byte)((1.0f - time) * 255.0f));
-        if (time > 1.0f)
+        if (time == 1.0f)
             fadeout = null;
     }
 

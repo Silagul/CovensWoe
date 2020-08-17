@@ -26,8 +26,6 @@ public class Backforth : MonoBehaviour
         float distance = Mathf.Abs(transform.position.y - stops[stops.Count - 1].y);
         t.position = new Vector3(t.position.x, Mathf.Lerp(transform.position.y, stops[stops.Count - 1].y, 0.5f) + 5.0f);
         t.GetComponent<SpriteRenderer>().size = new Vector2(0.245f, distance);
-        if (Input.GetKeyDown(KeyCode.P))
-            Activate();
     }
 
     void FixedUpdate()
@@ -41,7 +39,7 @@ public class Backforth : MonoBehaviour
             Vector2 movement = direction.normalized * speed * Time.fixedDeltaTime;
             if (movement.magnitude >= direction.magnitude)
             {
-                movement = direction.normalized * movement.magnitude;
+                movement = direction;
                 isActive = false;
             }
             transform.position += (Vector3)movement;
