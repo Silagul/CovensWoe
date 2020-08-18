@@ -82,7 +82,7 @@ public class Human : Creature
                 }
             }
 
-            if (Input.GetKey(InputManager.instance.crouch) && anim.GetFloat("Horizontal") == 0f)
+            if (Input.GetKey(InputManager.instance.crouch) && horizontalGoal == 0.0f)
             {
                 defaultCollider.points = crouchPoints;
                 monsterCollider.size = new Vector2(4f, 6f);

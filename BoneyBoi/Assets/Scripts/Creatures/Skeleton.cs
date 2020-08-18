@@ -101,7 +101,7 @@ public class Skeleton : Creature
         else anim.SetFloat("Horizontal", horizontal);
 
         Movable movable;
-        if (floor != null && (movable = CollidesWith("Movable", "Box")?.GetComponent<Movable>()) != null)
+        if (floor != null && (movable = CollidesWith("Movable")?.GetComponent<Movable>()) != null)
             movable.Interact(this);
         //ClampMovement();
     }
