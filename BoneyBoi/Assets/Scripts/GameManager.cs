@@ -33,8 +33,8 @@ public class GameManager : MonoBehaviour
     public bool analyticsEnabled = true;
 
     //These determine how far the soul/skeleton can move from the player
-    public float soulDistanceX;
-    public float soulDistanceY;
+    //public float soulDistanceX;
+    //public float soulDistanceY;
 
     private bool gameActive = false;
     public bool isPaused = false;
