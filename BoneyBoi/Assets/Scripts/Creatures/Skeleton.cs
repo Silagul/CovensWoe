@@ -17,7 +17,7 @@ public class Skeleton : Creature
     bool footheld = false;
 
     private GameManager gameManager;
-    private Vector3 childPosition;
+    //private Vector3 childPosition;
 
     public AudioClip[] movementAudioArray;
     public AudioClip[] collapseAudio;
@@ -42,11 +42,11 @@ public class Skeleton : Creature
         SetState("Hollow");
     }
 
-    private void UpdateChildPosition()
-    {
-        childPosition = GameObject.Find("Human").transform.position;
-        Invoke("UpdateChildPosition", 10f);
-    }
+    //private void UpdateChildPosition()
+    //{
+    //    childPosition = GameObject.Find("Human").transform.position;
+    //    Invoke("UpdateChildPosition", 10f);
+    //}
 
     void Movement()
     {
@@ -145,7 +145,7 @@ public class Skeleton : Creature
             gameManager.TimeSinceSkeleton();
             AudioManager.CreateAudio(buildAudio, false, true, transform);
             //childPosition = GameObject.Find("Human").transform.localPosition;
-            UpdateChildPosition();
+            //UpdateChildPosition();
         }
     }
 

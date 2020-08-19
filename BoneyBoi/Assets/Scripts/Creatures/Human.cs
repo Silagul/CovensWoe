@@ -32,6 +32,12 @@ public class Human : Creature
 
     void Start()
     {
+        GameObject player = GameObject.Find("Human");
+        if(player != null)
+        {
+            Destroy(player);
+        }
+
         creatures.Add(this);
         defaultPoints = transform.Find("DefaultCollider").GetComponent<PolygonCollider2D>().points;
         hollowPoints = transform.Find("HollowCollider").GetComponent<PolygonCollider2D>().points;
