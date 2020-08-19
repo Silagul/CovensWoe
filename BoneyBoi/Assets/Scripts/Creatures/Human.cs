@@ -241,9 +241,9 @@ public class Human : Creature
         if (collision.transform.tag == "Floor" && !anim.GetBool("Foothold"))
         {
             jumping = false;
-            vertical = Mathf.Max(0.0f, vertical);
             float t = vertical / -9.81f;
             float fallDistance = -9.81f * t * t * 0.5f;
+            vertical = Mathf.Max(0.0f, vertical);
             anim.SetBool("Foothold", true);
             AudioManager.CreateAudio(landingAudio, false, true, transform);
             if (fallDistance < -6.4f)
